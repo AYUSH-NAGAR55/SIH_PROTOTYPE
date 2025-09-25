@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self Diagnosis - Ayurveda AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #047857 25%, #059669 50%, #10b981 75%, #34d399 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .shadow-premium {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .shadow-premium-lg {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #059669, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-premium:hover::before {
+            left: 100%;
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); }
+        }
+        
+        .step-indicator {
+            position: relative;
+        }
+        
+        .step-indicator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transform: translateY(-50%);
+        }
+        
+        .step-indicator:last-child::after {
+            display: none;
+        }
+        
+        .typing-animation {
+            border-right: 2px solid #10b981;
+            animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #10b981; }
+        }
+        
+        .recommendation-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .dosha-vata { background: linear-gradient(135deg, #ddd6fe, #e0e7ff); }
+        .dosha-pitta { background: linear-gradient(135deg, #fed7d7, #fef2f2); }
+        .dosha-kapha { background: linear-gradient(135deg, #d1fae5, #ecfdf5); }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="hero-gradient shadow-premium-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='dashboard.html'" class="text-white hover:text-green-200 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-display font-bold text-white">AI Self Diagnosis</h1>
+                        <p class="text-sm text-white/80 font-light">Personalized Ayurvedic Health Assessment</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-white font-semibold" id="userName">Welcome Back!</p>
+                        <p class="text-white/80 text-sm">Discover your path to wellness</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30">
+                        <span class="text-white font-bold text-lg">🤖</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Progress Steps -->
+            <div id="progressSteps" class="flex justify-center mb-12 scroll-reveal">
+                <div class="flex items-center space-x-8">
+                    <div class="step-indicator flex flex-col items-center">
+                        <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold mb-2">1</div>
+                        <span class="text-sm font-semibold text-emerald-600">Personal Info</span>
+                    </div>
+                    <div class="step-indicator flex flex-col items-center">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mb-2">2</div>
+                        <span class="text-sm font-semibold text-gray-500">Health Assessment</span>
+                    </div>
+                    <div class="step-indicator flex flex-col items-center">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mb-2">3</div>
+                        <span class="text-sm font-semibold text-gray-500">AI Analysis</span>
+                    </div>
+                    <div class="step-indicator flex flex-col items-center">
+                        <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mb-2">4</div>
+                        <span class="text-sm font-semibold text-gray-500">Recommendations</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Personal Information -->
+            <section id="step1" class="scroll-reveal">
+                <div class="bg-white rounded-3xl p-8 shadow-premium border border-gray-100 max-w-4xl mx-auto">
+                    <div class="text-center mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                            👤
+                        </div>
+                        <h2 class="text-4xl font-display font-bold gradient-text mb-4">Tell Us About Yourself</h2>
+                        <p class="text-xl text-gray-600">Help our AI understand your unique constitution and health profile</p>
+                    </div>
+
+                    <form id="personalInfoForm" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                                <input type="text" id="fullName" required class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Age *</label>
+                                <input type="number" id="age" required min="1" max="120" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-lg">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Gender *</label>
+                                <select id="gender" required class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-lg">
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Weight (kg)</label>
+                                <input type="number" id="weight" min="20" max="200" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-lg">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Height (cm)</label>
+                                <input type="number" id="height" min="100" max="250" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Occupation</label>
+                                <select id="occupation" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-lg">
+                                    <option value="">Select Occupation</option>
+                                    <option value="student">Student</option>
+                                    <option value="office-worker">Office Worker</option>
+                                    <option value="healthcare">Healthcare Professional</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="engineer">Engineer</option>
+                                    <option value="business">Business Owner</option>
+                                    <option value="homemaker">Homemaker</option>
+                                    <option value="retired">Retired</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">🧬 Dosha Assessment (Body Constitution)</h3>
+                            <p class="text-gray-600 mb-4">Select the description that best matches your natural body type and characteristics:</p>
+                            
+                            <div class="space-y-4">
+                                <div class="dosha-vata rounded-xl p-4 border-2 border-transparent hover:border-purple-300 cursor-pointer transition-all" onclick="selectDosha('vata')">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="dosha" value="vata" class="mr-4 w-5 h-5">
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-purple-800 text-lg mb-2">🌪️ Vata (Air + Space)</h4>
+                                            <p class="text-sm text-purple-700">Thin build, dry skin, cold hands/feet, quick thinking, creative, irregular appetite, light sleep, tends to worry</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dosha-pitta rounded-xl p-4 border-2 border-transparent hover:border-red-300 cursor-pointer transition-all" onclick="selectDosha('pitta')">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="dosha" value="pitta" class="mr-4 w-5 h-5">
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-red-800 text-lg mb-2">🔥 Pitta (Fire + Water)</h4>
+                                            <p class="text-sm text-red-700">Medium build, warm body, good appetite, sharp intellect, organized, competitive, gets angry easily</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="dosha-kapha rounded-xl p-4 border-2 border-transparent hover:border-green-300 cursor-pointer transition-all" onclick="selectDosha('kapha')">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="dosha" value="kapha" class="mr-4 w-5 h-5">
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-green-800 text-lg mb-2">🌍 Kapha (Earth + Water)</h4>
+                                            <p class="text-sm text-green-700">Heavy build, oily skin, steady energy, calm nature, slow digestion, deep sleep, resistant to change</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white rounded-xl p-4 border-2 border-transparent hover:border-gray-300 cursor-pointer transition-all" onclick="selectDosha('mixed')">
+                                    <div class="flex items-center">
+                                        <input type="radio" name="dosha" value="mixed" class="mr-4 w-5 h-5">
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-gray-800 text-lg mb-2">⚖️ Mixed Constitution</h4>
+                                            <p class="text-sm text-gray-700">I have characteristics from multiple doshas or I'm not sure</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-premium w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 rounded-2xl font-bold text-xl hover:from-emerald-600 hover:to-green-600 transition-all duration-300 pulse-glow">
+                            Continue to Health Assessment →
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Step 2: Health Assessment -->
+            <section id="step2" class="scroll-reveal" style="display: none;">
+                <div class="bg-white rounded-3xl p-8 shadow-premium border border-gray-100 max-w-4xl mx-auto">
+                    <div class="text-center mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                            🩺
+                        </div>
+                        <h2 class="text-4xl font-display font-bold gradient-text mb-4">Health Assessment</h2>
+                        <p class="text-xl text-gray-600">Describe your current health concerns and symptoms</p>
+                    </div>
+
+                    <form id="healthAssessmentForm" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Primary Health Concern *</label>
+                            <textarea id="primaryConcern" required rows="4" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg" placeholder="Describe your main health issue, symptoms, or what you'd like to improve..."></textarea>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Symptom Duration</label>
+                                <select id="symptomDuration" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg">
+                                    <option value="">Select Duration</option>
+                                    <option value="few-days">Few days</option>
+                                    <option value="1-2-weeks">1-2 weeks</option>
+                                    <option value="1-month">1 month</option>
+                                    <option value="2-3-months">2-3 months</option>
+                                    <option value="6-months">6 months</option>
+                                    <option value="1-year">1 year or more</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Severity Level</label>
+                                <select id="severityLevel" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg">
+                                    <option value="">Select Severity</option>
+                                    <option value="mild">Mild (1-3)</option>
+                                    <option value="moderate">Moderate (4-6)</option>
+                                    <option value="severe">Severe (7-10)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">🎯 Specific Symptoms (Check all that apply)</h3>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div class="space-y-2">
+                                    <h4 class="font-semibold text-orange-800">Physical Symptoms</h4>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="headache" class="mr-2"> Headache</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="fatigue" class="mr-2"> Fatigue</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="joint-pain" class="mr-2"> Joint Pain</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="muscle-pain" class="mr-2"> Muscle Pain</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="back-pain" class="mr-2"> Back Pain</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="skin-issues" class="mr-2"> Skin Issues</label>
+                                </div>
+                                <div class="space-y-2">
+                                    <h4 class="font-semibold text-orange-800">Digestive Issues</h4>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="acidity" class="mr-2"> Acidity</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="bloating" class="mr-2"> Bloating</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="constipation" class="mr-2"> Constipation</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="diarrhea" class="mr-2"> Diarrhea</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="nausea" class="mr-2"> Nausea</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="loss-appetite" class="mr-2"> Loss of Appetite</label>
+                                </div>
+                                <div class="space-y-2">
+                                    <h4 class="font-semibold text-orange-800">Mental/Emotional</h4>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="stress" class="mr-2"> Stress</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="anxiety" class="mr-2"> Anxiety</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="depression" class="mr-2"> Depression</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="insomnia" class="mr-2"> Insomnia</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="mood-swings" class="mr-2"> Mood Swings</label>
+                                    <label class="flex items-center"><input type="checkbox" name="symptoms" value="memory-issues" class="mr-2"> Memory Issues</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Current Medications</label>
+                                <textarea id="currentMedications" rows="3" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="List any medications, supplements, or treatments you're currently taking..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Known Allergies</label>
+                                <textarea id="allergies" rows="3" class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="List any known allergies to foods, medicines, or substances..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">🏃‍♀️ Lifestyle Assessment</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Sleep Pattern</label>
+                                        <select id="sleepPattern" class="w-full p-3 border border-gray-300 rounded-xl">
+                                            <option value="">Select Pattern</option>
+                                            <option value="excellent">Excellent (7-8 hours, deep sleep)</option>
+                                            <option value="good">Good (6-7 hours, mostly restful)</option>
+                                            <option value="fair">Fair (5-6 hours, some disturbance)</option>
+                                            <option value="poor">Poor (less than 5 hours, restless)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Exercise Frequency</label>
+                                        <select id="exerciseFreq" class="w-full p-3 border border-gray-300 rounded-xl">
+                                            <option value="">Select Frequency</option>
+                                            <option value="daily">Daily exercise</option>
+                                            <option value="regular">3-4 times per week</option>
+                                            <option value="occasional">1-2 times per week</option>
+                                            <option value="none">No regular exercise</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Stress Level</label>
+                                        <select id="stressLevel" class="w-full p-3 border border-gray-300 rounded-xl">
+                                            <option value="">Select Level</option>
+                                            <option value="low">Low stress</option>
+                                            <option value="moderate">Moderate stress</option>
+                                            <option value="high">High stress</option>
+                                            <option value="extreme">Extreme stress</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Diet Type</label>
+                                        <select id="dietType" class="w-full p-3 border border-gray-300 rounded-xl">
+                                            <option value="">Select Diet</option>
+                                            <option value="vegetarian">Vegetarian</option>
+                                            <option value="vegan">Vegan</option>
+                                            <option value="non-vegetarian">Non-vegetarian</option>
+                                            <option value="mixed">Mixed diet</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <button type="button" onclick="goToStep(1)" class="flex-1 bg-gray-300 text-gray-700 py-4 rounded-xl font-semibold text-lg hover:bg-gray-400 transition-colors">
+                                ← Back
+                            </button>
+                            <button type="submit" class="flex-1 btn-premium bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-600 hover:to-indigo-600 transition-all duration-300">
+                                Analyze with AI →
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Step 3: AI Analysis -->
+            <section id="step3" class="scroll-reveal" style="display: none;">
+                <div class="bg-white rounded-3xl p-8 shadow-premium border border-gray-100 max-w-4xl mx-auto text-center">
+                    <div class="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                        🤖
+                    </div>
+                    <h2 class="text-4xl font-display font-bold gradient-text mb-6">AI Analysis in Progress</h2>
+                    <p class="text-xl text-gray-600 mb-8">Our advanced Ayurvedic AI is analyzing your health profile...</p>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
+                            <div class="flex items-center justify-center mb-4">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mr-4"></div>
+                                <span id="analysisText" class="text-lg font-semibold text-indigo-800">Analyzing your dosha constitution...</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div id="progressBar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-3 gap-4 text-sm">
+                            <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                                <div class="text-2xl mb-2">🧬</div>
+                                <h4 class="font-semibold text-green-800">Dosha Analysis</h4>
+                                <p class="text-green-700">Identifying constitutional imbalances</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-xl p-4">
+                                <div class="text-2xl mb-2">🎯</div>
+                                <h4 class="font-semibold text-orange-800">Symptom Mapping</h4>
+                                <p class="text-orange-700">Correlating symptoms with root causes</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4">
+                                <div class="text-2xl mb-2">💊</div>
+                                <h4 class="font-semibold text-purple-800">Treatment Planning</h4>
+                                <p class="text-purple-700">Generating personalized recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Recommendations -->
+            <section id="step4" class="scroll-reveal" style="display: none;">
+                <div class="space-y-8">
+                    <!-- Analysis Summary -->
+                    <div class="bg-white rounded-3xl p-8 shadow-premium border border-gray-100">
+                        <div class="text-center mb-8">
+                            <div class="w-20 h-20 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                                ✨
+                            </div>
+                            <h2 class="text-4xl font-display font-bold gradient-text mb-4">Your Personalized Health Report</h2>
+                            <p class="text-xl text-gray-600">Based on Ayurvedic principles and AI analysis</p>
+                        </div>
+
+                        <div id="analysisResults">
+                            <!-- Results will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Recommendations Grid -->
+                    <div id="recommendationsGrid" class="grid lg:grid-cols-2 gap-8">
+                        <!-- Recommendations will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="bg-white rounded-3xl p-8 shadow-premium border border-gray-100 text-center">
+                        <h3 class="text-2xl font-display font-bold text-gray-800 mb-6">Take Action on Your Health</h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <button onclick="consultDoctor()" class="btn-premium bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-4 px-6 rounded-2xl font-bold hover:from-blue-600 hover:to-indigo-600 transition-all duration-300">
+                                👨‍⚕️ Consult Doctor
+                            </button>
+                            <button onclick="buyProducts()" class="btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 px-6 rounded-2xl font-bold hover:from-emerald-600 hover:to-green-600 transition-all duration-300">
+                                🛒 Buy Recommended Products
+                            </button>
+                            <button onclick="downloadReport()" class="btn-premium bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 px-6 rounded-2xl font-bold hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
+                                📄 Download Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        let currentStep = 1;
+        let userProfile = {};
+        let analysisResults = {};
+
+        // Initialize page
+        function initializePage() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('userName').textContent = `Welcome, ${currentUser.name}!`;
+            }
+            revealOnScroll();
+        }
+
+        // Select dosha
+        function selectDosha(dosha) {
+            document.querySelector(`input[value="${dosha}"]`).checked = true;
+            
+            // Update visual selection
+            document.querySelectorAll('.dosha-vata, .dosha-pitta, .dosha-kapha').forEach(el => {
+                el.classList.remove('border-purple-300', 'border-red-300', 'border-green-300');
+            });
+            
+            const selectedElement = document.querySelector(`input[value="${dosha}"]`).closest('div');
+            if (dosha === 'vata') selectedElement.classList.add('border-purple-300');
+            else if (dosha === 'pitta') selectedElement.classList.add('border-red-300');
+            else if (dosha === 'kapha') selectedElement.classList.add('border-green-300');
+        }
+
+        // Go to specific step
+        function goToStep(step) {
+            // Hide all steps
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`step${i}`).style.display = 'none';
+            }
+            
+            // Show target step
+            document.getElementById(`step${step}`).style.display = 'block';
+            currentStep = step;
+            
+            // Update progress indicators
+            updateProgressIndicators();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Update progress indicators
+        function updateProgressIndicators() {
+            const steps = document.querySelectorAll('.step-indicator');
+            steps.forEach((step, index) => {
+                const stepNumber = index + 1;
+                const circle = step.querySelector('div');
+                const text = step.querySelector('span');
+                
+                if (stepNumber <= currentStep) {
+                    circle.className = 'w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold mb-2';
+                    text.className = 'text-sm font-semibold text-emerald-600';
+                } else {
+                    circle.className = 'w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mb-2';
+                    text.className = 'text-sm font-semibold text-gray-500';
+                }
+            });
+        }
+
+        // Handle personal info form submission
+        document.getElementById('personalInfoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect personal information
+            userProfile.personalInfo = {
+                fullName: document.getElementById('fullName').value,
+                age: parseInt(document.getElementById('age').value),
+                gender: document.getElementById('gender').value,
+                weight: document.getElementById('weight').value,
+                height: document.getElementById('height').value,
+                occupation: document.getElementById('occupation').value,
+                dosha: document.querySelector('input[name="dosha"]:checked')?.value
+            };
+            
+            goToStep(2);
+        });
+
+        // Handle health assessment form submission
+        document.getElementById('healthAssessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect health information
+            const symptoms = Array.from(document.querySelectorAll('input[name="symptoms"]:checked')).map(cb => cb.value);
+            
+            userProfile.healthInfo = {
+                primaryConcern: document.getElementById('primaryConcern').value,
+                symptomDuration: document.getElementById('symptomDuration').value,
+                severityLevel: document.getElementById('severityLevel').value,
+                symptoms: symptoms,
+                currentMedications: document.getElementById('currentMedications').value,
+                allergies: document.getElementById('allergies').value,
+                sleepPattern: document.getElementById('sleepPattern').value,
+                exerciseFreq: document.getElementById('exerciseFreq').value,
+                stressLevel: document.getElementById('stressLevel').value,
+                dietType: document.getElementById('dietType').value
+            };
+            
+            // Start AI analysis
+            startAIAnalysis();
+        });
+
+        // Start AI analysis simulation
+        function startAIAnalysis() {
+            goToStep(3);
+            
+            const analysisSteps = [
+                "Analyzing your dosha constitution...",
+                "Evaluating symptom patterns...",
+                "Identifying root causes...",
+                "Mapping Ayurvedic treatments...",
+                "Generating personalized recommendations...",
+                "Finalizing your health report..."
+            ];
+            
+            let currentAnalysisStep = 0;
+            const progressBar = document.getElementById('progressBar');
+            const analysisText = document.getElementById('analysisText');
+            
+            const analysisInterval = setInterval(() => {
+                if (currentAnalysisStep < analysisSteps.length) {
+                    analysisText.textContent = analysisSteps[currentAnalysisStep];
+                    progressBar.style.width = `${((currentAnalysisStep + 1) / analysisSteps.length) * 100}%`;
+                    currentAnalysisStep++;
+                } else {
+                    clearInterval(analysisInterval);
+                    setTimeout(() => {
+                        generateRecommendations();
+                        goToStep(4);
+                    }, 1000);
+                }
+            }, 1500);
+        }
+
+        // Generate AI recommendations
+        function generateRecommendations() {
+            const { personalInfo, healthInfo } = userProfile;
+            
+            // Generate analysis based on user input
+            analysisResults = generateAyurvedicAnalysis(personalInfo, healthInfo);
+            
+            // Display results
+            displayAnalysisResults();
+            displayRecommendations();
+        }
+
+        // Generate Ayurvedic analysis
+        function generateAyurvedicAnalysis(personalInfo, healthInfo) {
+            const dosha = personalInfo.dosha;
+            const primaryConcern = healthInfo.primaryConcern.toLowerCase();
+            const symptoms = healthInfo.symptoms;
+            
+            let analysis = {
+                doshaAnalysis: "",
+                imbalances: [],
+                rootCauses: [],
+                recommendations: {
+                    medicines: [],
+                    diet: { include: [], avoid: [] },
+                    lifestyle: [],
+                    yoga: [],
+                    treatments: []
+                },
+                doctorRecommendations: [],
+                products: []
+            };
+            
+            // Dosha-specific analysis
+            switch(dosha) {
+                case 'vata':
+                    analysis.doshaAnalysis = "Your Vata constitution shows signs of imbalance. Vata governs movement, circulation, and nervous system function.";
+                    analysis.imbalances = ["Nervous system agitation", "Irregular digestion", "Sleep disturbances"];
+                    analysis.rootCauses = ["Irregular lifestyle", "Excessive mental activity", "Cold and dry foods"];
+                    break;
+                case 'pitta':
+                    analysis.doshaAnalysis = "Your Pitta constitution indicates heat-related imbalances. Pitta controls metabolism, digestion, and body temperature.";
+                    analysis.imbalances = ["Excess body heat", "Hyperacidity", "Inflammatory conditions"];
+                    analysis.rootCauses = ["Spicy and hot foods", "Excessive stress", "Overwork and competition"];
+                    break;
+                case 'kapha':
+                    analysis.doshaAnalysis = "Your Kapha constitution shows signs of stagnation. Kapha provides structure, immunity, and emotional stability.";
+                    analysis.imbalances = ["Sluggish metabolism", "Excess mucus", "Weight gain tendency"];
+                    analysis.rootCauses = ["Sedentary lifestyle", "Heavy and oily foods", "Lack of physical activity"];
+                    break;
+                default:
+                    analysis.doshaAnalysis = "Your mixed constitution requires balanced approach to maintain harmony among all three doshas.";
+                    analysis.imbalances = ["Multi-dosha imbalance", "Constitutional confusion", "Variable symptoms"];
+                    analysis.rootCauses = ["Lifestyle inconsistency", "Seasonal changes", "Stress and irregular routine"];
+            }
+            
+            // Symptom-specific recommendations
+            if (symptoms.includes('stress') || symptoms.includes('anxiety')) {
+                analysis.recommendations.medicines.push(
+                    { name: "Ashwagandha Capsules", dosage: "500mg twice daily", benefits: "Stress relief and nervous system support" },
+                    { name: "Brahmi Syrup", dosage: "10ml twice daily", benefits: "Mental clarity and emotional balance" }
+                );
+                analysis.recommendations.yoga.push("Pranayama (breathing exercises)", "Meditation", "Gentle Hatha Yoga");
+            }
+            
+            if (symptoms.includes('acidity') || symptoms.includes('bloating')) {
+                analysis.recommendations.medicines.push(
+                    { name: "Avipattikar Churna", dosage: "1 tsp before meals", benefits: "Digestive health and acidity relief" },
+                    { name: "Triphala Tablets", dosage: "2 tablets at bedtime", benefits: "Digestive cleansing and regularity" }
+                );
+                analysis.recommendations.diet.avoid.push("Spicy foods", "Citrus fruits", "Fried foods");
+                analysis.recommendations.diet.include.push("Coconut water", "Buttermilk", "Sweet fruits");
+            }
+            
+            if (symptoms.includes('joint-pain') || symptoms.includes('muscle-pain')) {
+                analysis.recommendations.medicines.push(
+                    { name: "Yogaraja Guggulu", dosage: "2 tablets twice daily", benefits: "Joint health and pain relief" },
+                    { name: "Mahanarayana Oil", dosage: "External massage", benefits: "Muscle and joint support" }
+                );
+                analysis.recommendations.treatments.push("Abhyanga (oil massage)", "Steam therapy", "Gentle stretching");
+            }
+            
+            // General lifestyle recommendations
+            analysis.recommendations.lifestyle = [
+                "Maintain regular daily routine (Dinacharya)",
+                "Practice mindful eating with proper meal timing",
+                "Ensure adequate sleep (7-8 hours)",
+                "Stay hydrated with room temperature water",
+                "Practice stress management techniques"
+            ];
+            
+            // Doctor recommendations based on severity
+            if (healthInfo.severityLevel === 'severe') {
+                analysis.doctorRecommendations = [
+                    { name: "Dr. Rajesh Sharma", specialization: "Panchakarma Specialist", reason: "For detoxification therapy" },
+                    { name: "Dr. Priya Nair", specialization: "General Ayurveda", reason: "For comprehensive treatment plan" }
+                ];
+            } else {
+                analysis.doctorRecommendations = [
+                    { name: "Dr. Amit Gupta", specialization: "General Medicine", reason: "For ongoing health management" }
+                ];
+            }
+            
+            // Product recommendations
+            analysis.products = [
+                { name: "Organic Turmeric Powder", price: "₹299", benefits: "Anti-inflammatory support" },
+                { name: "Ayurvedic Herbal Tea Blend", price: "₹450", benefits: "Daily wellness support" },
+                { name: "Meditation Cushion Set", price: "₹1,200", benefits: "Enhance meditation practice" },
+                { name: "Copper Water Bottle", price: "₹800", benefits: "Ayurvedic water therapy" }
+            ];
+            
+            return analysis;
+        }
+
+        // Display analysis results
+        function displayAnalysisResults() {
+            const resultsContainer = document.getElementById('analysisResults');
+            const { personalInfo } = userProfile;
+            
+            resultsContainer.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
+                        <h3 class="text-xl font-bold text-indigo-800 mb-4">🧬 Constitutional Analysis</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-700">Primary Dosha:</span>
+                                <span class="font-semibold text-indigo-700">${personalInfo.dosha?.toUpperCase() || 'Mixed'}</span>
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                <p>${analysisResults.doshaAnalysis}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6">
+                        <h3 class="text-xl font-bold text-orange-800 mb-4">⚠️ Identified Imbalances</h3>
+                        <ul class="space-y-2">
+                            ${analysisResults.imbalances.map(imbalance => 
+                                `<li class="flex items-center text-sm text-orange-700">
+                                    <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                                    ${imbalance}
+                                </li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-red-800 mb-4">🎯 Root Causes (Hetu)</h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        ${analysisResults.rootCauses.map(cause => 
+                            `<div class="bg-white rounded-xl p-3 border border-red-200">
+                                <p class="text-sm text-red-700">${cause}</p>
+                            </div>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Display recommendations
+        function displayRecommendations() {
+            const gridContainer = document.getElementById('recommendationsGrid');
+            
+            gridContainer.innerHTML = `
+                <!-- Herbal Medicines -->
+                <div class="recommendation-card rounded-3xl p-8 shadow-premium">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mr-4 text-2xl">
+                            🌿
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Recommended Medicines</h3>
+                    </div>
+                    <div class="space-y-4">
+                        ${analysisResults.recommendations.medicines.map(medicine => `
+                            <div class="bg-white rounded-xl p-4 border border-green-200">
+                                <h4 class="font-semibold text-green-800 mb-2">${medicine.name}</h4>
+                                <div class="grid grid-cols-2 gap-2 text-sm">
+                                    <div><strong>Dosage:</strong> ${medicine.dosage}</div>
+                                    <div><strong>Benefits:</strong> ${medicine.benefits}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="buyMedicines()" class="w-full mt-6 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-600 transition-all">
+                        🛒 Order Medicines
+                    </button>
+                </div>
+                
+                <!-- Diet Recommendations -->
+                <div class="recommendation-card rounded-3xl p-8 shadow-premium">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mr-4 text-2xl">
+                            🍽️
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Dietary Guidelines</h3>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-semibold text-green-700 mb-3">✅ Include in Diet</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                ${analysisResults.recommendations.diet.include.map(food => 
+                                    `<div class="bg-green-50 text-green-800 px-3 py-2 rounded-lg text-sm">${food}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-red-700 mb-3">❌ Avoid</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                ${analysisResults.recommendations.diet.avoid.map(food => 
+                                    `<div class="bg-red-50 text-red-800 px-3 py-2 rounded-lg text-sm">${food}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Lifestyle Recommendations -->
+                <div class="recommendation-card rounded-3xl p-8 shadow-premium">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4 text-2xl">
+                            🧘‍♀️
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Lifestyle Changes</h3>
+                    </div>
+                    <div class="space-y-4">
+                        ${analysisResults.recommendations.lifestyle.map(lifestyle => `
+                            <div class="bg-white rounded-xl p-4 border border-purple-200">
+                                <p class="text-sm text-purple-800">${lifestyle}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- Yoga & Treatments -->
+                <div class="recommendation-card rounded-3xl p-8 shadow-premium">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full flex items-center justify-center mr-4 text-2xl">
+                            🕉️
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Yoga & Treatments</h3>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-semibold text-indigo-700 mb-3">Recommended Yoga Practices</h4>
+                            <div class="space-y-2">
+                                ${analysisResults.recommendations.yoga.map(yoga => 
+                                    `<div class="bg-indigo-50 text-indigo-800 px-3 py-2 rounded-lg text-sm">${yoga}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-blue-700 mb-3">Ayurvedic Treatments</h4>
+                            <div class="space-y-2">
+                                ${analysisResults.recommendations.treatments.map(treatment => 
+                                    `<div class="bg-blue-50 text-blue-800 px-3 py-2 rounded-lg text-sm">${treatment}</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Doctor Recommendations -->
+                <div class="recommendation-card rounded-3xl p-8 shadow-premium lg:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mr-4 text-2xl">
+                            👨‍⚕️
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Recommended Doctors</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        ${analysisResults.doctorRecommendations.map(doctor => `
+                            <div class="bg-white rounded-xl p-6 border border-emerald-200">
+                                <h4 class="font-bold text-emerald-800 text-lg mb-2">${doctor.name}</h4>
+                                <p class="text-emerald-600 font-semibold mb-2">${doctor.specialization}</p>
+                                <p class="text-sm text-gray-600 mb-4">${doctor.reason}</p>
+                                <button onclick="bookDoctorConsultation('${doctor.name}')" class="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-2 rounded-lg font-semibold hover:from-emerald-600 hover:to-green-600 transition-all">
+                                    Book Consultation
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- Product Recommendations -->
+                <div class="recommendation-card rounded-3xl p-8 shadow-premium lg:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mr-4 text-2xl">
+                            🛍️
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Recommended Products</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        ${analysisResults.products.map(product => `
+                            <div class="bg-white rounded-xl p-4 border border-yellow-200">
+                                <h4 class="font-semibold text-yellow-800 mb-2">${product.name}</h4>
+                                <p class="text-lg font-bold text-yellow-600 mb-2">${product.price}</p>
+                                <p class="text-xs text-gray-600 mb-3">${product.benefits}</p>
+                                <button onclick="addToCart('${product.name}')" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white py-2 rounded-lg text-sm font-semibold hover:from-yellow-600 hover:to-orange-600 transition-all">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Action functions
+        function consultDoctor() {
+            window.location.href = 'doctor.html';
+        }
+
+        function buyProducts() {
+            window.location.href = 'buy.html';
+        }
+
+        function buyMedicines() {
+            showNotification('🌿 Redirecting to Ayurvedic medicine store...', 'success');
+            setTimeout(() => {
+                window.location.href = 'buy.html?category=medicines';
+            }, 1500);
+        }
+
+        function bookDoctorConsultation(doctorName) {
+            showNotification(`📅 Booking consultation with ${doctorName}...`, 'success');
+            setTimeout(() => {
+                window.location.href = 'doctor.html';
+            }, 1500);
+        }
+
+        function addToCart(productName) {
+            showNotification(`🛒 ${productName} added to cart!`, 'success');
+        }
+
+        function downloadReport() {
+            showNotification('📄 Downloading your personalized health report...', 'success');
+        }
+
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('revealed');
+                }
+            });
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-gradient-to-r from-emerald-500 to-green-500',
+                error: 'bg-gradient-to-r from-red-500 to-pink-500',
+                info: 'bg-gradient-to-r from-blue-500 to-indigo-500'
+            };
+            
+            notification.className = `fixed top-6 right-6 z-50 p-6 rounded-2xl shadow-premium-lg max-w-sm text-white ${colors[type]}`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="flex-1 font-semibold text-lg">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white/80 hover:text-white">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize page
+        window.addEventListener('load', () => {
+            initializePage();
+        });
+
+        window.addEventListener('scroll', revealOnScroll);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97f0056bb103b8fe',t:'MTc1Nzg1NDM0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

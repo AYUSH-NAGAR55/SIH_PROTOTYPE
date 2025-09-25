@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Consultation - Ayurveda Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #047857 25%, #059669 50%, #10b981 75%, #34d399 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .shadow-premium {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .shadow-premium-lg {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #059669, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-premium:hover::before {
+            left: 100%;
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .rating-stars {
+            color: #fbbf24;
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="hero-gradient shadow-premium-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='dashboard.html'" class="text-white hover:text-green-200 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-display font-bold text-white">Doctor Consultation</h1>
+                        <p class="text-sm text-white/80 font-light">Connect with Ayurvedic Experts</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="text-right">
+                        <p class="text-white font-semibold" id="userName">Welcome Back!</p>
+                        <p class="text-white/80 text-sm">Choose your healer</p>
+                    </div>
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30">
+                        <span class="text-white font-bold text-lg">👤</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Hero Section -->
+            <section class="text-center mb-16 scroll-reveal">
+                <div class="inline-block bg-gradient-to-r from-emerald-500 to-green-500 text-white px-8 py-3 rounded-full text-lg font-semibold mb-6 shadow-lg">
+                    🩺 Expert Ayurvedic Consultation
+                </div>
+                <h2 class="text-6xl font-display font-bold gradient-text mb-6">Meet Our Healers</h2>
+                <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">Connect with certified Ayurvedic practitioners who combine ancient wisdom with modern expertise to guide your wellness journey</p>
+            </section>
+
+            <!-- Filters -->
+            <section class="mb-12 scroll-reveal">
+                <div class="bg-white rounded-3xl p-8 shadow-premium border border-gray-100">
+                    <h3 class="text-2xl font-display font-bold text-gray-800 mb-6">Find Your Perfect Healer</h3>
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Specialization</label>
+                            <select id="specializationFilter" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">All Specializations</option>
+                                <option value="Panchakarma">Panchakarma (Detox)</option>
+                                <option value="Rasayana">Rasayana (Anti-aging)</option>
+                                <option value="Kayachikitsa">Kayachikitsa (General Medicine)</option>
+                                <option value="Shalya">Shalya (Surgery)</option>
+                                <option value="Prasuti">Prasuti (Women's Health)</option>
+                                <option value="Kaumarbhritya">Kaumarbhritya (Child Care)</option>
+                                <option value="Shalakya">Shalakya (ENT/Eye Care)</option>
+                                <option value="Agada">Agada (Detox)</option>
+                                <option value="Bhuta Vidya">Bhuta Vidya (Mental Health)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Experience</label>
+                            <select id="experienceFilter" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Any Experience</option>
+                                <option value="5-10">5-10 Years</option>
+                                <option value="10-15">10-15 Years</option>
+                                <option value="15-20">15-20 Years</option>
+                                <option value="20+">20+ Years</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Consultation Fee</label>
+                            <select id="feeFilter" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Any Fee Range</option>
+                                <option value="500-1000">₹500 - ₹1000</option>
+                                <option value="1000-2000">₹1000 - ₹2000</option>
+                                <option value="2000-3000">₹2000 - ₹3000</option>
+                                <option value="3000+">₹3000+</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Rating</label>
+                            <select id="ratingFilter" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <option value="">Any Rating</option>
+                                <option value="4.5+">4.5+ Stars</option>
+                                <option value="4.0+">4.0+ Stars</option>
+                                <option value="3.5+">3.5+ Stars</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Doctors Grid -->
+            <section id="doctorsGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Doctors will be populated by JavaScript -->
+            </section>
+        </div>
+    </main>
+
+    <!-- Consultation Modal -->
+    <div id="consultationModal" class="modal">
+        <div class="bg-white rounded-3xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-premium-lg">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-display font-bold gradient-text">Book Consultation</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-3xl">&times;</button>
+            </div>
+            
+            <div id="modalContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Prescription Modal -->
+    <div id="prescriptionModal" class="modal">
+        <div class="bg-white rounded-3xl p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-premium-lg">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-display font-bold gradient-text">Your Prescription</h3>
+                <button onclick="closePrescriptionModal()" class="text-gray-500 hover:text-gray-700 text-3xl">&times;</button>
+            </div>
+            
+            <div id="prescriptionContent">
+                <!-- Prescription content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="bg-white rounded-3xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto shadow-premium-lg">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-3xl font-display font-bold gradient-text">Secure Payment</h3>
+                <button onclick="closePaymentModal()" class="text-gray-500 hover:text-gray-700 text-3xl">&times;</button>
+            </div>
+            
+            <div id="paymentContent">
+                <!-- Payment content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Doctor data
+        const doctors = [
+            {
+                id: 1,
+                name: "Dr. Rajesh Sharma",
+                specialization: "Panchakarma (Detox)",
+                degree: "BAMS, MD (Panchakarma)",
+                experience: "15 Years",
+                rating: 4.9,
+                reviews: 1250,
+                fee: 1500,
+                image: "👨‍⚕️",
+                about: "Renowned Panchakarma specialist with expertise in detoxification and rejuvenation therapies. Trained at Kerala Ayurveda Academy.",
+                languages: ["Hindi", "English", "Sanskrit"],
+                availability: "Mon-Sat: 9 AM - 6 PM",
+                treatments: ["Abhyanga (Oil Massage)", "Shirodhara (Oil Pouring)", "Basti (Enema)", "Nasya (Nasal)", "Virechana (Purging)"]
+            },
+            {
+                id: 2,
+                name: "Dr. Priya Nair",
+                specialization: "Rasayana (Anti-aging)",
+                degree: "BAMS, PhD (Rasayana Tantra)",
+                experience: "12 Years",
+                rating: 4.8,
+                reviews: 980,
+                fee: 1200,
+                image: "👩‍⚕️",
+                about: "Anti-aging and longevity expert specializing in Rasayana therapies for holistic wellness and vitality enhancement.",
+                languages: ["English", "Malayalam", "Tamil"],
+                availability: "Tue-Sun: 10 AM - 7 PM",
+                treatments: ["Chyawanprash Therapy", "Medhya Rasayana (Brain Tonic)", "Ojas Enhancement", "Immunity Boosting"]
+            },
+            {
+                id: 3,
+                name: "Dr. Amit Gupta",
+                specialization: "Kayachikitsa (General Medicine)",
+                degree: "BAMS, MD (Kayachikitsa)",
+                experience: "18 Years",
+                rating: 4.9,
+                reviews: 1450,
+                fee: 1800,
+                image: "👨‍⚕️",
+                about: "Internal medicine specialist with expertise in chronic diseases, diabetes, hypertension, and digestive disorders.",
+                languages: ["Hindi", "English", "Punjabi"],
+                availability: "Mon-Fri: 8 AM - 5 PM",
+                treatments: ["Diabetes Management", "Digestive Disorders", "Respiratory Issues", "Cardiac Care"]
+            },
+            {
+                id: 4,
+                name: "Dr. Sunita Reddy",
+                specialization: "Prasuti (Women's Health)",
+                degree: "BAMS, MS (Prasuti Tantra)",
+                experience: "14 Years",
+                rating: 4.7,
+                reviews: 890,
+                fee: 1400,
+                image: "👩‍⚕️",
+                about: "Women's health specialist focusing on pregnancy care, fertility treatments, and gynecological disorders using Ayurvedic principles.",
+                languages: ["Telugu", "English", "Hindi"],
+                availability: "Mon-Sat: 9 AM - 6 PM",
+                treatments: ["Fertility Enhancement", "Pregnancy Care", "PCOS Treatment", "Menstrual Disorders"]
+            },
+            {
+                id: 5,
+                name: "Dr. Vikram Singh",
+                specialization: "Shalya (Surgery)",
+                degree: "BAMS, MS (Shalya Tantra)",
+                experience: "20 Years",
+                rating: 4.8,
+                reviews: 1100,
+                fee: 2000,
+                image: "👨‍⚕️",
+                about: "Ayurvedic surgeon specializing in Kshar Sutra therapy, wound healing, and minimally invasive procedures.",
+                languages: ["Hindi", "English", "Rajasthani"],
+                availability: "Mon-Thu: 10 AM - 4 PM",
+                treatments: ["Kshar Sutra (Thread Treatment)", "Wound Healing", "Fistula Treatment", "Hemorrhoids"]
+            },
+            {
+                id: 6,
+                name: "Dr. Meera Joshi",
+                specialization: "Kaumarbhritya (Child Care)",
+                degree: "BAMS, MD (Kaumarbhritya)",
+                experience: "10 Years",
+                rating: 4.6,
+                reviews: 750,
+                fee: 1000,
+                image: "👩‍⚕️",
+                about: "Pediatric Ayurveda specialist focusing on child health, growth disorders, and immunity enhancement in children.",
+                languages: ["Marathi", "Hindi", "English"],
+                availability: "Tue-Sat: 11 AM - 7 PM",
+                treatments: ["Child Immunity", "Growth Enhancement", "Digestive Issues", "Respiratory Care"]
+            },
+            {
+                id: 7,
+                name: "Dr. Arjun Patel",
+                specialization: "Shalakya (ENT/Eye Care)",
+                degree: "BAMS, MS (Shalakya Tantra)",
+                experience: "16 Years",
+                rating: 4.7,
+                reviews: 920,
+                fee: 1600,
+                image: "👨‍⚕️",
+                about: "ENT and Ophthalmology specialist treating eye, ear, nose, and throat disorders with traditional Ayurvedic methods.",
+                languages: ["Gujarati", "Hindi", "English"],
+                availability: "Mon-Fri: 9 AM - 5 PM",
+                treatments: ["Eye Care", "Sinusitis", "Hearing Issues", "Throat Disorders"]
+            },
+            {
+                id: 8,
+                name: "Dr. Kavitha Menon",
+                specialization: "Agada (Detox)",
+                degree: "BAMS, PhD (Agada Tantra)",
+                experience: "13 Years",
+                rating: 4.5,
+                reviews: 680,
+                fee: 1300,
+                image: "👩‍⚕️",
+                about: "Toxicology expert specializing in detoxification, poison management, and environmental health disorders.",
+                languages: ["Malayalam", "Tamil", "English"],
+                availability: "Wed-Sun: 10 AM - 6 PM",
+                treatments: ["Detoxification", "Heavy Metal Removal", "Food Poisoning", "Environmental Toxins"]
+            },
+            {
+                id: 9,
+                name: "Dr. Rohit Agarwal",
+                specialization: "Bhuta Vidya (Mental Health)",
+                degree: "BAMS, MD (Manas Roga)",
+                experience: "11 Years",
+                rating: 4.6,
+                reviews: 540,
+                fee: 1100,
+                image: "👨‍⚕️",
+                about: "Mental health specialist combining Ayurvedic psychiatry with modern therapeutic approaches for holistic mental wellness.",
+                languages: ["Hindi", "English", "Bengali"],
+                availability: "Mon-Sat: 2 PM - 8 PM",
+                treatments: ["Anxiety Disorders", "Depression", "Stress Management", "Sleep Disorders"]
+            },
+            {
+                id: 10,
+                name: "Dr. Lakshmi Iyer",
+                specialization: "Panchakarma (Detox)",
+                degree: "BAMS, MD (Panchakarma)",
+                experience: "22 Years",
+                rating: 4.9,
+                reviews: 1600,
+                fee: 2200,
+                image: "👩‍⚕️",
+                about: "Senior Panchakarma consultant with extensive experience in authentic Kerala Ayurveda treatments and therapies.",
+                languages: ["Tamil", "Malayalam", "English"],
+                availability: "Tue-Sat: 8 AM - 4 PM",
+                treatments: ["Traditional Panchakarma", "Rejuvenation", "Chronic Disease Management", "Wellness Programs"]
+            },
+            {
+                id: 11,
+                name: "Dr. Manoj Kumar",
+                specialization: "Kayachikitsa (General Medicine)",
+                degree: "BAMS, MD (Kayachikitsa)",
+                experience: "17 Years",
+                rating: 4.8,
+                reviews: 1320,
+                fee: 1700,
+                image: "👨‍⚕️",
+                about: "Internal medicine expert specializing in metabolic disorders, autoimmune conditions, and lifestyle diseases.",
+                languages: ["Hindi", "English", "Bhojpuri"],
+                availability: "Mon-Fri: 9 AM - 6 PM",
+                treatments: ["Thyroid Disorders", "Arthritis", "Skin Diseases", "Metabolic Syndrome"]
+            },
+            {
+                id: 12,
+                name: "Dr. Anjali Desai",
+                specialization: "Rasayana (Anti-aging)",
+                degree: "BAMS, PhD (Dravyaguna)",
+                experience: "19 Years",
+                rating: 4.7,
+                reviews: 1180,
+                fee: 1900,
+                image: "👩‍⚕️",
+                about: "Herbal medicine and rejuvenation specialist with deep knowledge of medicinal plants and their therapeutic applications.",
+                languages: ["Gujarati", "Hindi", "English"],
+                availability: "Wed-Sun: 10 AM - 5 PM",
+                treatments: ["Herbal Formulations", "Anti-aging", "Cognitive Enhancement", "Vitality Restoration"]
+            },
+            {
+                id: 13,
+                name: "Dr. Suresh Pillai",
+                specialization: "Shalya (Surgery)",
+                degree: "BAMS, MS (Shalya Tantra)",
+                experience: "25 Years",
+                rating: 4.9,
+                reviews: 1800,
+                fee: 2500,
+                image: "👨‍⚕️",
+                about: "Veteran Ayurvedic surgeon with expertise in complex procedures, trauma care, and post-surgical rehabilitation.",
+                languages: ["Malayalam", "Tamil", "English"],
+                availability: "Mon-Thu: 9 AM - 3 PM",
+                treatments: ["Complex Surgeries", "Trauma Care", "Orthopedic Issues", "Post-surgical Care"]
+            },
+            {
+                id: 14,
+                name: "Dr. Radha Krishnan",
+                specialization: "Prasuti (Women's Health)",
+                degree: "BAMS, MD (Prasuti Tantra)",
+                experience: "16 Years",
+                rating: 4.8,
+                reviews: 1050,
+                fee: 1600,
+                image: "👩‍⚕️",
+                about: "Maternal and reproductive health specialist focusing on natural childbirth, fertility enhancement, and women's wellness.",
+                languages: ["Tamil", "Telugu", "English"],
+                availability: "Tue-Sat: 9 AM - 7 PM",
+                treatments: ["Natural Childbirth", "Fertility Treatments", "Hormonal Balance", "Reproductive Health"]
+            },
+            {
+                id: 15,
+                name: "Dr. Ashwin Bhatt",
+                specialization: "Kaumarbhritya (Child Care)",
+                degree: "BAMS, MD (Kaumarbhritya)",
+                experience: "14 Years",
+                rating: 4.6,
+                reviews: 860,
+                fee: 1250,
+                image: "👨‍⚕️",
+                about: "Pediatric specialist with expertise in child development, behavioral issues, and natural immunity building in children.",
+                languages: ["Gujarati", "Hindi", "English"],
+                availability: "Mon-Sat: 10 AM - 6 PM",
+                treatments: ["Child Development", "Behavioral Issues", "Immunity Building", "Nutritional Guidance"]
+            }
+        ];
+
+        let selectedDoctor = null;
+
+        // Initialize page
+        function initializePage() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('userName').textContent = `Welcome, ${currentUser.name}!`;
+            }
+            
+            displayDoctors(doctors);
+            setupFilters();
+            revealOnScroll();
+        }
+
+        // Display doctors
+        function displayDoctors(doctorList) {
+            const grid = document.getElementById('doctorsGrid');
+            grid.innerHTML = '';
+
+            doctorList.forEach(doctor => {
+                const doctorCard = createDoctorCard(doctor);
+                grid.appendChild(doctorCard);
+            });
+        }
+
+        // Create doctor card
+        function createDoctorCard(doctor) {
+            const card = document.createElement('div');
+            card.className = 'card-hover bg-white rounded-3xl p-8 shadow-premium border border-gray-100 scroll-reveal';
+            
+            card.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="w-24 h-24 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-lg">
+                        ${doctor.image}
+                    </div>
+                    <h3 class="text-2xl font-display font-bold text-gray-800 mb-2">${doctor.name}</h3>
+                    <p class="text-emerald-600 font-semibold text-lg">${doctor.specialization}</p>
+                    <p class="text-gray-600 text-sm">${doctor.degree}</p>
+                </div>
+                
+                <div class="space-y-4 mb-6">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Experience:</span>
+                        <span class="font-semibold text-gray-800">${doctor.experience}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Rating:</span>
+                        <div class="flex items-center">
+                            <div class="rating-stars mr-2">
+                                ${'★'.repeat(Math.floor(doctor.rating))}${'☆'.repeat(5 - Math.floor(doctor.rating))}
+                            </div>
+                            <span class="text-sm text-gray-600">${doctor.rating} (${doctor.reviews})</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600">Consultation Fee:</span>
+                        <span class="font-bold text-emerald-600 text-xl">₹${doctor.fee}</span>
+                    </div>
+                    
+                    <div class="text-sm text-gray-600">
+                        <p class="mb-2"><strong>Languages:</strong> ${doctor.languages.join(', ')}</p>
+                        <p><strong>Available:</strong> ${doctor.availability}</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-3">
+                    <button onclick="viewDoctorProfile(${doctor.id})" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-indigo-600 transition-all duration-300">
+                        View Profile
+                    </button>
+                    <button onclick="bookConsultation(${doctor.id})" class="btn-premium w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:from-emerald-600 hover:to-green-600 transition-all duration-300 pulse-glow">
+                        Book Consultation
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Setup filters
+        function setupFilters() {
+            const filters = ['specializationFilter', 'experienceFilter', 'feeFilter', 'ratingFilter'];
+            
+            filters.forEach(filterId => {
+                document.getElementById(filterId).addEventListener('change', applyFilters);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const specialization = document.getElementById('specializationFilter').value;
+            const experience = document.getElementById('experienceFilter').value;
+            const fee = document.getElementById('feeFilter').value;
+            const rating = document.getElementById('ratingFilter').value;
+            
+            let filteredDoctors = doctors.filter(doctor => {
+                let matches = true;
+                
+                if (specialization && doctor.specialization !== specialization) matches = false;
+                
+                if (experience) {
+                    const expYears = parseInt(doctor.experience);
+                    switch(experience) {
+                        case '5-10': matches = matches && expYears >= 5 && expYears <= 10; break;
+                        case '10-15': matches = matches && expYears >= 10 && expYears <= 15; break;
+                        case '15-20': matches = matches && expYears >= 15 && expYears <= 20; break;
+                        case '20+': matches = matches && expYears >= 20; break;
+                    }
+                }
+                
+                if (fee) {
+                    switch(fee) {
+                        case '500-1000': matches = matches && doctor.fee >= 500 && doctor.fee <= 1000; break;
+                        case '1000-2000': matches = matches && doctor.fee >= 1000 && doctor.fee <= 2000; break;
+                        case '2000-3000': matches = matches && doctor.fee >= 2000 && doctor.fee <= 3000; break;
+                        case '3000+': matches = matches && doctor.fee >= 3000; break;
+                    }
+                }
+                
+                if (rating) {
+                    const minRating = parseFloat(rating.replace('+', ''));
+                    matches = matches && doctor.rating >= minRating;
+                }
+                
+                return matches;
+            });
+            
+            displayDoctors(filteredDoctors);
+        }
+
+        // View doctor profile
+        function viewDoctorProfile(doctorId) {
+            const doctor = doctors.find(d => d.id === doctorId);
+            const modal = document.getElementById('consultationModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="text-center mb-6">
+                            <div class="w-32 h-32 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-6xl shadow-xl">
+                                ${doctor.image}
+                            </div>
+                            <h3 class="text-3xl font-display font-bold text-gray-800 mb-2">${doctor.name}</h3>
+                            <p class="text-emerald-600 font-semibold text-xl">${doctor.specialization}</p>
+                            <p class="text-gray-600">${doctor.degree}</p>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-4">
+                                <h4 class="font-bold text-gray-800 mb-2">About Doctor</h4>
+                                <p class="text-gray-600 text-sm leading-relaxed">${doctor.about}</p>
+                            </div>
+                            
+                            <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-4">
+                                <h4 class="font-bold text-gray-800 mb-2">Specializations</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    ${doctor.treatments.map(treatment => 
+                                        `<span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">${treatment}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl p-6 mb-6">
+                            <h4 class="font-bold text-gray-800 mb-4">Consultation Details</h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Experience:</span>
+                                    <span class="font-semibold">${doctor.experience}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Rating:</span>
+                                    <div class="flex items-center">
+                                        <div class="rating-stars mr-2">
+                                            ${'★'.repeat(Math.floor(doctor.rating))}${'☆'.repeat(5 - Math.floor(doctor.rating))}
+                                        </div>
+                                        <span class="text-sm">${doctor.rating}</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Languages:</span>
+                                    <span class="font-semibold">${doctor.languages.join(', ')}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Availability:</span>
+                                    <span class="font-semibold">${doctor.availability}</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-2 border-t">
+                                    <span class="text-gray-600">Consultation Fee:</span>
+                                    <span class="font-bold text-emerald-600 text-2xl">₹${doctor.fee}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="bookConsultation(${doctor.id})" class="btn-premium w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 rounded-2xl font-bold text-lg hover:from-emerald-600 hover:to-green-600 transition-all duration-300 pulse-glow">
+                            Book Consultation - ₹${doctor.fee}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Book consultation
+        function bookConsultation(doctorId) {
+            selectedDoctor = doctors.find(d => d.id === doctorId);
+            const modal = document.getElementById('consultationModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 mb-8">
+                        <div class="flex items-center">
+                            <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mr-4 text-2xl">
+                                ${selectedDoctor.image}
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800">${selectedDoctor.name}</h4>
+                                <p class="text-emerald-600 font-semibold">${selectedDoctor.specialization}</p>
+                                <p class="text-gray-600 text-sm">Consultation Fee: ₹${selectedDoctor.fee}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="consultationForm" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                                <input type="text" id="patientName" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Age *</label>
+                                <input type="number" id="patientAge" required min="1" max="120" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Gender *</label>
+                                <select id="patientGender" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
+                                <input type="tel" id="patientPhone" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address *</label>
+                            <input type="email" id="patientEmail" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Primary Health Concern *</label>
+                            <textarea id="healthConcern" required rows="3" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Describe your main health issue or concern..."></textarea>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4">🧬 Dosha Assessment (Body Type)</h4>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Primary Dosha (Body Type)</label>
+                                    <select id="primaryDosha" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">Select Primary Dosha</option>
+                                        <option value="vata">Vata (Air Type - Thin/Active)</option>
+                                        <option value="pitta">Pitta (Fire Type - Medium/Hot)</option>
+                                        <option value="kapha">Kapha (Earth Type - Heavy/Calm)</option>
+                                        <option value="vata-pitta">Vata-Pitta (Mixed Type)</option>
+                                        <option value="pitta-kapha">Pitta-Kapha (Mixed Type)</option>
+                                        <option value="vata-kapha">Vata-Kapha (Mixed Type)</option>
+                                        <option value="tridosha">Tridosha (Balanced Type)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Body Type</label>
+                                    <select id="bodyType" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">Select Body Type</option>
+                                        <option value="thin">Thin/Lean (Air Type)</option>
+                                        <option value="medium">Medium Build (Fire Type)</option>
+                                        <option value="heavy">Heavy/Sturdy (Earth Type)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Energy Level</label>
+                                    <select id="energyLevel" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="">Select Energy Level</option>
+                                        <option value="high">High Energy</option>
+                                        <option value="moderate">Moderate Energy</option>
+                                        <option value="low">Low Energy</option>
+                                        <option value="variable">Variable Energy</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Current Medications</label>
+                                <textarea id="currentMedications" rows="3" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="List any current medications or supplements..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Allergies</label>
+                                <textarea id="allergies" rows="3" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" placeholder="List any known allergies..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Lifestyle Information</label>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">Sleep Pattern</label>
+                                    <select id="sleepPattern" class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                                        <option value="">Select</option>
+                                        <option value="early-riser">Early Riser</option>
+                                        <option value="night-owl">Night Owl</option>
+                                        <option value="irregular">Irregular</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">Exercise Frequency</label>
+                                    <select id="exerciseFreq" class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                                        <option value="">Select</option>
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">3-4 times/week</option>
+                                        <option value="occasional">Occasional</option>
+                                        <option value="none">None</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-gray-600 mb-1">Stress Level</label>
+                                    <select id="stressLevel" class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                                        <option value="">Select</option>
+                                        <option value="low">Low</option>
+                                        <option value="moderate">Moderate</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Preferred Consultation Date & Time</label>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <input type="date" id="consultationDate" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                <select id="consultationTime" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
+                                    <option value="">Select Time</option>
+                                    <option value="09:00">09:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="14:00">02:00 PM</option>
+                                    <option value="15:00">03:00 PM</option>
+                                    <option value="16:00">04:00 PM</option>
+                                    <option value="17:00">05:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 border border-yellow-200">
+                            <div class="flex items-start">
+                                <div class="text-2xl mr-3">⚠️</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">Important Note</h4>
+                                    <p class="text-sm text-gray-600">This consultation is for educational purposes. Please consult with your primary healthcare provider for serious medical conditions. All information provided will be kept confidential.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" id="agreeTerms" required class="mr-3 w-4 h-4 text-emerald-600">
+                            <label for="agreeTerms" class="text-sm text-gray-600">I agree to the terms and conditions and privacy policy</label>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <button type="button" onclick="closeModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-400 transition-colors">
+                                Cancel
+                            </button>
+                            <button type="submit" class="flex-1 btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:from-emerald-600 hover:to-green-600 transition-all duration-300">
+                                Submit & Get Prescription
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('consultationDate').min = today;
+            
+            // Handle form submission
+            document.getElementById('consultationForm').addEventListener('submit', handleConsultationSubmit);
+            
+            modal.classList.add('active');
+        }
+
+        // Handle consultation form submission
+        function handleConsultationSubmit(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                patientName: document.getElementById('patientName').value,
+                patientAge: document.getElementById('patientAge').value,
+                patientGender: document.getElementById('patientGender').value,
+                patientPhone: document.getElementById('patientPhone').value,
+                patientEmail: document.getElementById('patientEmail').value,
+                healthConcern: document.getElementById('healthConcern').value,
+                primaryDosha: document.getElementById('primaryDosha').value,
+                bodyType: document.getElementById('bodyType').value,
+                energyLevel: document.getElementById('energyLevel').value,
+                currentMedications: document.getElementById('currentMedications').value,
+                allergies: document.getElementById('allergies').value,
+                sleepPattern: document.getElementById('sleepPattern').value,
+                exerciseFreq: document.getElementById('exerciseFreq').value,
+                stressLevel: document.getElementById('stressLevel').value,
+                consultationDate: document.getElementById('consultationDate').value,
+                consultationTime: document.getElementById('consultationTime').value
+            };
+            
+            // Generate prescription based on form data
+            generatePrescription(formData);
+        }
+
+        // Generate prescription
+        function generatePrescription(formData) {
+            closeModal();
+            
+            // Generate prescription based on health concern and dosha
+            const prescription = generateAyurvedicPrescription(formData);
+            
+            const modal = document.getElementById('prescriptionModal');
+            const content = document.getElementById('prescriptionContent');
+            
+            content.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <!-- Prescription Header -->
+                    <div class="bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-2xl p-6 mb-8">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-2xl font-bold mb-2">Ayurvedic Prescription</h3>
+                                <p class="text-emerald-100">Personalized treatment plan by ${selectedDoctor.name}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-emerald-100">Date: ${new Date().toLocaleDateString()}</p>
+                                <p class="text-emerald-100">Prescription ID: #AYU${Date.now()}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Patient Information -->
+                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">Patient Information</h4>
+                        <div class="grid md:grid-cols-2 gap-4 text-sm">
+                            <div><strong>Name:</strong> ${formData.patientName}</div>
+                            <div><strong>Age:</strong> ${formData.patientAge} years</div>
+                            <div><strong>Gender:</strong> ${formData.patientGender}</div>
+                            <div><strong>Primary Dosha:</strong> ${formData.primaryDosha || 'Not specified'}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Diagnosis -->
+                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🔍 Ayurvedic Assessment</h4>
+                        <div class="space-y-3">
+                            <p><strong>Primary Concern:</strong> ${formData.healthConcern}</p>
+                            <p><strong>Dosha Analysis:</strong> ${prescription.doshaAnalysis}</p>
+                            <p><strong>Root Cause (Hetu):</strong> ${prescription.rootCause}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Herbal Medicines -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🌿 Herbal Medicines (Aushadhi)</h4>
+                        <div class="space-y-4">
+                            ${prescription.medicines.map(medicine => `
+                                <div class="bg-white rounded-xl p-4 border border-green-200">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h5 class="font-semibold text-gray-800">${medicine.name}</h5>
+                                        <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">${medicine.type}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-2">${medicine.description}</p>
+                                    <div class="grid md:grid-cols-3 gap-2 text-sm">
+                                        <div><strong>Dosage:</strong> ${medicine.dosage}</div>
+                                        <div><strong>Timing:</strong> ${medicine.timing}</div>
+                                        <div><strong>Duration:</strong> ${medicine.duration}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Dietary Guidelines -->
+                    <div class="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6 mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🍽️ Dietary Guidelines (Ahara)</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-semibold text-green-700 mb-2">✅ Recommended Foods</h5>
+                                <ul class="text-sm space-y-1">
+                                    ${prescription.diet.recommended.map(food => `<li>• ${food}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-red-700 mb-2">❌ Foods to Avoid</h5>
+                                <ul class="text-sm space-y-1">
+                                    ${prescription.diet.avoid.map(food => `<li>• ${food}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Lifestyle Recommendations -->
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 mb-6">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">🧘‍♀️ Lifestyle Recommendations (Vihara)</h4>
+                        <div class="space-y-3">
+                            ${prescription.lifestyle.map(recommendation => `
+                                <div class="bg-white rounded-xl p-3 border border-purple-200">
+                                    <p class="text-sm">${recommendation}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Follow-up Instructions -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-6 mb-8">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">📅 Follow-up Instructions</h4>
+                        <div class="space-y-2 text-sm">
+                            <p>• Follow this prescription for ${prescription.duration}</p>
+                            <p>• Schedule follow-up consultation after 2 weeks</p>
+                            <p>• Contact immediately if any adverse reactions occur</p>
+                            <p>• Maintain a daily health diary</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Doctor's Note -->
+                    <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl p-6 mb-8">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">👨‍⚕️ Doctor's Note</h4>
+                        <p class="text-sm text-gray-600 italic">"${prescription.doctorNote}"</p>
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <p class="text-sm"><strong>Dr. ${selectedDoctor.name}</strong></p>
+                            <p class="text-xs text-gray-600">${selectedDoctor.degree}</p>
+                            <p class="text-xs text-gray-600">${selectedDoctor.specialization} Specialist</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button onclick="downloadPrescription()" class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-indigo-600 transition-all duration-300">
+                            📄 Download PDF
+                        </button>
+                        <button onclick="proceedToPayment()" class="flex-1 btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:from-emerald-600 hover:to-green-600 transition-all duration-300 pulse-glow">
+                            💳 Pay ₹${selectedDoctor.fee}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Generate Ayurvedic prescription based on form data
+        function generateAyurvedicPrescription(formData) {
+            const healthConcern = formData.healthConcern.toLowerCase();
+            const dosha = formData.primaryDosha;
+            
+            // Base prescription template
+            let prescription = {
+                doshaAnalysis: "",
+                rootCause: "",
+                medicines: [],
+                diet: { recommended: [], avoid: [] },
+                lifestyle: [],
+                duration: "4-6 weeks",
+                doctorNote: ""
+            };
+            
+            // Customize based on health concern
+            if (healthConcern.includes('stress') || healthConcern.includes('anxiety')) {
+                prescription.doshaAnalysis = "Vata dosha imbalance causing mental agitation and nervous system disturbance";
+                prescription.rootCause = "Excessive mental activity, irregular lifestyle, and accumulated stress";
+                prescription.medicines = [
+                    {
+                        name: "Ashwagandha Churna (Stress Relief Powder)",
+                        type: "Rasayana (Tonic)",
+                        description: "Adaptogenic herb for stress relief and nervous system support",
+                        dosage: "1 tsp (3g)",
+                        timing: "Twice daily with warm milk",
+                        duration: "6 weeks"
+                    },
+                    {
+                        name: "Brahmi Ghrita (Brain Tonic Oil)",
+                        type: "Medhya Rasayana (Brain Tonic)",
+                        description: "Brain tonic for mental clarity and emotional balance",
+                        dosage: "1 tsp (5ml)",
+                        timing: "Morning on empty stomach",
+                        duration: "4 weeks"
+                    },
+                    {
+                        name: "Saraswatarishta (Memory Syrup)",
+                        type: "Arishta (Herbal Wine)",
+                        description: "Fermented herbal tonic for cognitive enhancement",
+                        dosage: "15ml",
+                        timing: "After meals with equal water",
+                        duration: "6 weeks"
+                    }
+                ];
+                prescription.diet.recommended = [
+                    "Warm, cooked foods", "Sweet fruits like dates and figs", "Nuts and seeds", 
+                    "Warm milk with turmeric", "Ghee and sesame oil", "Whole grains like rice and wheat"
+                ];
+                prescription.diet.avoid = [
+                    "Cold and raw foods", "Excessive caffeine", "Processed foods", 
+                    "Spicy and pungent foods", "Alcohol", "Irregular meal timings"
+                ];
+                prescription.lifestyle = [
+                    "Practice Pranayama (breathing exercises) for 15 minutes daily",
+                    "Maintain regular sleep schedule (10 PM - 6 AM)",
+                    "Daily oil massage (Abhyanga) with sesame oil",
+                    "Meditation for 20 minutes twice daily",
+                    "Gentle yoga and walking in nature"
+                ];
+                prescription.doctorNote = "Stress-related disorders respond well to Ayurvedic treatment. Focus on establishing daily routines and incorporating calming practices. Avoid overstimulation and maintain work-life balance.";
+            }
+            else if (healthConcern.includes('digestion') || healthConcern.includes('stomach') || healthConcern.includes('acidity')) {
+                prescription.doshaAnalysis = "Pitta dosha aggravation affecting digestive fire (Agni) and causing gastric disturbances";
+                prescription.rootCause = "Irregular eating habits, spicy foods, stress, and excessive heat in the body";
+                prescription.medicines = [
+                    {
+                        name: "Avipattikar Churna (Acidity Relief Powder)",
+                        type: "Digestive",
+                        description: "Classical formulation for hyperacidity and digestive disorders",
+                        dosage: "1 tsp (3g)",
+                        timing: "Before meals with water",
+                        duration: "4 weeks"
+                    },
+                    {
+                        name: "Dadimashtak Churna (Pomegranate Powder)",
+                        type: "Digestive",
+                        description: "Pomegranate-based formula for improving digestion",
+                        dosage: "1/2 tsp (1.5g)",
+                        timing: "After meals with buttermilk",
+                        duration: "6 weeks"
+                    },
+                    {
+                        name: "Kamadudha Ras (Cooling Tablets)",
+                        type: "Mineral",
+                        description: "Cooling mineral preparation for acidity and gastritis",
+                        dosage: "1 tablet",
+                        timing: "Twice daily with coconut water",
+                        duration: "3 weeks"
+                    }
+                ];
+                prescription.diet.recommended = [
+                    "Cool, sweet foods", "Fresh fruits like pomegranate and grapes", "Coconut water", 
+                    "Buttermilk", "Green leafy vegetables", "Basmati rice and barley"
+                ];
+                prescription.diet.avoid = [
+                    "Spicy and hot foods", "Citrus fruits", "Tomatoes and onions", 
+                    "Fried and oily foods", "Alcohol and smoking", "Late night eating"
+                ];
+                prescription.lifestyle = [
+                    "Eat meals at regular times in a calm environment",
+                    "Avoid eating when stressed or emotional",
+                    "Take short walks after meals",
+                    "Practice Sheetali Pranayama (cooling breath)",
+                    "Maintain adequate hydration with room temperature water"
+                ];
+                prescription.doctorNote = "Digestive disorders require dietary discipline and lifestyle modifications. Follow the prescribed diet strictly and avoid trigger foods. Gradual improvement expected within 2-3 weeks.";
+            }
+            else if (healthConcern.includes('joint') || healthConcern.includes('arthritis') || healthConcern.includes('pain')) {
+                prescription.doshaAnalysis = "Vata dosha vitiation causing joint stiffness, pain, and reduced mobility";
+                prescription.rootCause = "Accumulation of Ama (toxins), weak digestion, and Vata aggravating lifestyle";
+                prescription.medicines = [
+                    {
+                        name: "Yogaraja Guggulu (Joint Pain Tablets)",
+                        type: "Guggulu (Resin Medicine)",
+                        description: "Classical formulation for joint disorders and arthritis",
+                        dosage: "2 tablets",
+                        timing: "Twice daily with warm water",
+                        duration: "8 weeks"
+                    },
+                    {
+                        name: "Dashmool Kwath (Ten Root Decoction)",
+                        type: "Kwath (Herbal Tea)",
+                        description: "Ten-root decoction for Vata disorders and inflammation",
+                        dosage: "20ml",
+                        timing: "Twice daily before meals",
+                        duration: "6 weeks"
+                    },
+                    {
+                        name: "Mahanarayana Taila (Joint Massage Oil)",
+                        type: "External",
+                        description: "Medicated oil for external application on joints",
+                        dosage: "As needed",
+                        timing: "Daily massage before bath",
+                        duration: "Ongoing"
+                    }
+                ];
+                prescription.diet.recommended = [
+                    "Warm, cooked foods", "Ginger and turmeric", "Garlic and black pepper", 
+                    "Sesame oil and ghee", "Warm soups and broths", "Cooked vegetables"
+                ];
+                prescription.diet.avoid = [
+                    "Cold and frozen foods", "Raw vegetables", "Nightshade vegetables", 
+                    "Processed foods", "Excessive dairy", "Cold drinks"
+                ];
+                prescription.lifestyle = [
+                    "Regular gentle exercise and yoga",
+                    "Daily oil massage of affected joints",
+                    "Keep joints warm, especially in cold weather",
+                    "Practice Surya Namaskara (Sun Salutations)",
+                    "Maintain regular sleep schedule"
+                ];
+                prescription.doctorNote = "Joint disorders require patience and consistent treatment. Combine internal medicines with external therapies for best results. Avoid cold exposure and maintain active lifestyle within comfort limits.";
+            }
+            else {
+                // Generic prescription for general health concerns
+                prescription.doshaAnalysis = `${dosha || 'Tridosha'} imbalance affecting overall health and vitality`;
+                prescription.rootCause = "Lifestyle factors, dietary irregularities, and accumulated stress affecting natural balance";
+                prescription.medicines = [
+                    {
+                        name: "Chyawanprash (Health Jam)",
+                        type: "Rasayana (Tonic)",
+                        description: "General health tonic and immunity booster",
+                        dosage: "1 tbsp (15g)",
+                        timing: "Morning with warm milk",
+                        duration: "6 weeks"
+                    },
+                    {
+                        name: "Triphala Churna (Three Fruit Powder)",
+                        type: "Digestive",
+                        description: "Three-fruit powder for detoxification and digestion",
+                        dosage: "1 tsp (3g)",
+                        timing: "Before bed with warm water",
+                        duration: "4 weeks"
+                    }
+                ];
+                prescription.diet.recommended = [
+                    "Fresh, seasonal foods", "Adequate hydration", "Regular meal timings", 
+                    "Balanced nutrition", "Fresh fruits and vegetables", "Whole grains"
+                ];
+                prescription.diet.avoid = [
+                    "Processed and packaged foods", "Excessive sugar and salt", "Irregular eating", 
+                    "Overeating", "Cold drinks with meals", "Stale food"
+                ];
+                prescription.lifestyle = [
+                    "Maintain regular daily routine",
+                    "Practice yoga and meditation",
+                    "Ensure adequate sleep (7-8 hours)",
+                    "Regular physical activity",
+                    "Stress management techniques"
+                ];
+                prescription.doctorNote = "Focus on establishing healthy daily routines and dietary habits. Ayurveda emphasizes prevention through lifestyle. Follow the recommendations consistently for optimal results.";
+            }
+            
+            return prescription;
+        }
+
+        // Proceed to payment
+        function proceedToPayment() {
+            closePrescriptionModal();
+            
+            const modal = document.getElementById('paymentModal');
+            const content = document.getElementById('paymentContent');
+            
+            content.innerHTML = `
+                <div class="max-w-2xl mx-auto">
+                    <!-- Payment Summary -->
+                    <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 mb-8">
+                        <h4 class="text-xl font-bold text-gray-800 mb-4">Payment Summary</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Doctor Consultation</span>
+                                <span class="font-semibold">₹${selectedDoctor.fee}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Platform Fee</span>
+                                <span class="font-semibold">₹50</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">GST (18%)</span>
+                                <span class="font-semibold">₹${Math.round((selectedDoctor.fee + 50) * 0.18)}</span>
+                            </div>
+                            <hr class="border-gray-300">
+                            <div class="flex justify-between items-center text-lg font-bold">
+                                <span>Total Amount</span>
+                                <span class="text-emerald-600">₹${Math.round((selectedDoctor.fee + 50) * 1.18)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Methods -->
+                    <div class="space-y-6">
+                        <h4 class="text-xl font-bold text-gray-800">Choose Payment Method</h4>
+                        
+                        <!-- UPI Payment -->
+                        <div class="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-500 transition-colors cursor-pointer" onclick="selectPaymentMethod('upi')">
+                            <div class="flex items-center">
+                                <input type="radio" name="paymentMethod" value="upi" class="mr-4">
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-gray-800 mb-2">UPI Payment</h5>
+                                    <p class="text-sm text-gray-600">Pay using Google Pay, PhonePe, Paytm, or any UPI app</p>
+                                </div>
+                                <div class="text-3xl">📱</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Payment -->
+                        <div class="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-500 transition-colors cursor-pointer" onclick="selectPaymentMethod('card')">
+                            <div class="flex items-center">
+                                <input type="radio" name="paymentMethod" value="card" class="mr-4">
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-gray-800 mb-2">Credit/Debit Card</h5>
+                                    <p class="text-sm text-gray-600">Visa, Mastercard, RuPay cards accepted</p>
+                                </div>
+                                <div class="text-3xl">💳</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Net Banking -->
+                        <div class="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-500 transition-colors cursor-pointer" onclick="selectPaymentMethod('netbanking')">
+                            <div class="flex items-center">
+                                <input type="radio" name="paymentMethod" value="netbanking" class="mr-4">
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-gray-800 mb-2">Net Banking</h5>
+                                    <p class="text-sm text-gray-600">All major banks supported</p>
+                                </div>
+                                <div class="text-3xl">🏦</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Wallet -->
+                        <div class="bg-white border-2 border-gray-200 rounded-2xl p-6 hover:border-emerald-500 transition-colors cursor-pointer" onclick="selectPaymentMethod('wallet')">
+                            <div class="flex items-center">
+                                <input type="radio" name="paymentMethod" value="wallet" class="mr-4">
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-gray-800 mb-2">Digital Wallet</h5>
+                                    <p class="text-sm text-gray-600">Paytm, Amazon Pay, Mobikwik</p>
+                                </div>
+                                <div class="text-3xl">👛</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Form -->
+                    <div id="paymentForm" class="mt-8" style="display: none;">
+                        <!-- Payment form will be populated based on selected method -->
+                    </div>
+                    
+                    <!-- Security Note -->
+                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-4 mt-6">
+                        <div class="flex items-center">
+                            <div class="text-2xl mr-3">🔒</div>
+                            <div>
+                                <h5 class="font-semibold text-gray-800 mb-1">Secure Payment</h5>
+                                <p class="text-sm text-gray-600">Your payment information is encrypted and secure. We use industry-standard security measures.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4 mt-8">
+                        <button onclick="closePaymentModal()" class="flex-1 bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-400 transition-colors">
+                            Cancel
+                        </button>
+                        <button id="proceedPaymentBtn" onclick="processPayment()" disabled class="flex-1 btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:from-emerald-600 hover:to-green-600 transition-all duration-300 opacity-50 cursor-not-allowed">
+                            Proceed to Pay
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Select payment method
+        function selectPaymentMethod(method) {
+            // Update radio button
+            document.querySelector(`input[value="${method}"]`).checked = true;
+            
+            // Enable proceed button
+            const proceedBtn = document.getElementById('proceedPaymentBtn');
+            proceedBtn.disabled = false;
+            proceedBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            // Show payment form based on method
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm.style.display = 'block';
+            
+            let formHTML = '';
+            
+            switch(method) {
+                case 'upi':
+                    formHTML = `
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6">
+                            <h5 class="font-semibold text-gray-800 mb-4">UPI Payment Details</h5>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">UPI ID</label>
+                                    <input type="text" placeholder="yourname@paytm" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600 mb-4">Or scan QR code with any UPI app</p>
+                                    <div class="w-32 h-32 bg-white border-2 border-gray-300 rounded-xl mx-auto flex items-center justify-center">
+                                        <span class="text-4xl">📱</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'card':
+                    formHTML = `
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
+                            <h5 class="font-semibold text-gray-800 mb-4">Card Details</h5>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Card Number</label>
+                                    <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">Expiry Date</label>
+                                        <input type="text" placeholder="MM/YY" maxlength="5" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">CVV</label>
+                                        <input type="password" placeholder="123" maxlength="3" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Cardholder Name</label>
+                                    <input type="text" placeholder="Name on Card" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'netbanking':
+                    formHTML = `
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6">
+                            <h5 class="font-semibold text-gray-800 mb-4">Select Your Bank</h5>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button class="p-3 border border-gray-300 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors text-left">
+                                    <div class="font-semibold">State Bank of India</div>
+                                </button>
+                                <button class="p-3 border border-gray-300 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors text-left">
+                                    <div class="font-semibold">HDFC Bank</div>
+                                </button>
+                                <button class="p-3 border border-gray-300 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors text-left">
+                                    <div class="font-semibold">ICICI Bank</div>
+                                </button>
+                                <button class="p-3 border border-gray-300 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors text-left">
+                                    <div class="font-semibold">Axis Bank</div>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'wallet':
+                    formHTML = `
+                        <div class="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6">
+                            <h5 class="font-semibold text-gray-800 mb-4">Select Wallet</h5>
+                            <div class="space-y-3">
+                                <button class="w-full p-4 border border-gray-300 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-colors flex items-center">
+                                    <div class="text-2xl mr-4">📱</div>
+                                    <div class="text-left">
+                                        <div class="font-semibold">Paytm Wallet</div>
+                                        <div class="text-sm text-gray-600">Balance: ₹2,500</div>
+                                    </div>
+                                </button>
+                                <button class="w-full p-4 border border-gray-300 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition-colors flex items-center">
+                                    <div class="text-2xl mr-4">🛒</div>
+                                    <div class="text-left">
+                                        <div class="font-semibold">Amazon Pay</div>
+                                        <div class="text-sm text-gray-600">Balance: ₹1,200</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            paymentForm.innerHTML = formHTML;
+        }
+
+        // Process payment
+        function processPayment() {
+            // Show loading state
+            const proceedBtn = document.getElementById('proceedPaymentBtn');
+            proceedBtn.innerHTML = 'Processing...';
+            proceedBtn.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                closePaymentModal();
+                showPaymentSuccess();
+            }, 3000);
+        }
+
+        // Show payment success
+        function showPaymentSuccess() {
+            const modal = document.getElementById('paymentModal');
+            const content = document.getElementById('paymentContent');
+            
+            content.innerHTML = `
+                <div class="text-center max-w-md mx-auto">
+                    <div class="w-24 h-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                        ✅
+                    </div>
+                    
+                    <h3 class="text-3xl font-display font-bold gradient-text mb-4">Payment Successful!</h3>
+                    <p class="text-gray-600 mb-6">Your consultation has been booked successfully. You will receive a confirmation email shortly.</p>
+                    
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 mb-6">
+                        <h4 class="font-bold text-gray-800 mb-4">Booking Details</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span>Transaction ID:</span>
+                                <span class="font-semibold">#TXN${Date.now()}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Amount Paid:</span>
+                                <span class="font-semibold">₹${Math.round((selectedDoctor.fee + 50) * 1.18)}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Doctor:</span>
+                                <span class="font-semibold">${selectedDoctor.name}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Status:</span>
+                                <span class="font-semibold text-green-600">Confirmed</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <button onclick="downloadReceipt()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-indigo-600 transition-all duration-300">
+                            📄 Download Receipt
+                        </button>
+                        <button onclick="closePaymentModal(); window.location.href='dashboard.html'" class="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:from-emerald-600 hover:to-green-600 transition-all duration-300">
+                            🏠 Back to Dashboard
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Download prescription (demo)
+        function downloadPrescription() {
+            showNotification('📄 Prescription downloaded successfully!', 'success');
+        }
+
+        // Download receipt (demo)
+        function downloadReceipt() {
+            showNotification('📄 Receipt downloaded successfully!', 'success');
+        }
+
+        // Modal functions
+        function closeModal() {
+            document.getElementById('consultationModal').classList.remove('active');
+        }
+
+        function closePrescriptionModal() {
+            document.getElementById('prescriptionModal').classList.remove('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('revealed');
+                }
+            });
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-gradient-to-r from-emerald-500 to-green-500',
+                error: 'bg-gradient-to-r from-red-500 to-pink-500',
+                info: 'bg-gradient-to-r from-blue-500 to-indigo-500'
+            };
+            
+            notification.className = `fixed top-6 right-6 z-50 p-6 rounded-2xl shadow-premium-lg max-w-sm text-white ${colors[type]}`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="flex-1 font-semibold text-lg">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white/80 hover:text-white">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize page
+        window.addEventListener('load', () => {
+            initializePage();
+        });
+
+        window.addEventListener('scroll', revealOnScroll);
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97effbee962bc08d',t:'MTc1Nzg1Mzk1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

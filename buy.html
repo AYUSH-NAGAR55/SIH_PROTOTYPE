@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayurvedic Products Store - Premium Herbal Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #065f46 0%, #047857 25%, #059669 50%, #10b981 75%, #34d399 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .shadow-premium {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .shadow-premium-lg {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #059669, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-premium:hover::before {
+            left: 100%;
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); }
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .filter-active {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .star-rating {
+            color: #fbbf24;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .quantity-btn {
+            background: #f9fafb;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        
+        .quantity-btn:hover {
+            background: #e5e7eb;
+        }
+        
+        .quantity-input {
+            border: none;
+            text-align: center;
+            width: 60px;
+            padding: 8px;
+            font-weight: bold;
+        }
+        
+        .checkout-step {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .checkout-step.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .payment-method {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method.selected {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .delivery-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delivery-option.selected {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="hero-gradient shadow-premium-lg sticky top-0 z-40">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='dashboard.html'" class="text-white hover:text-green-200 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-display font-bold text-white">Ayurvedic Store</h1>
+                        <p class="text-sm text-white/80 font-light">Premium Herbal Products</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Search products..." class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-2 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 w-64">
+                        <svg class="w-5 h-5 text-white/70 absolute right-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    
+                    <!-- Cart Icon -->
+                    <button onclick="toggleCart()" class="relative text-white hover:text-green-200 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+                        </svg>
+                        <span id="cartBadge" class="cart-badge">0</span>
+                    </button>
+                    
+                    <div class="text-right">
+                        <p class="text-white font-semibold" id="userName">Welcome!</p>
+                        <p class="text-white/80 text-sm">Shop with confidence</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Filters and Categories -->
+        <div class="bg-white rounded-3xl p-6 shadow-premium border border-gray-100 mb-8 scroll-reveal">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="filterProducts('all')" class="filter-btn filter-active px-6 py-3 rounded-full font-semibold transition-all">All Products</button>
+                    <button onclick="filterProducts('skincare')" class="filter-btn px-6 py-3 rounded-full font-semibold bg-gray-100 hover:bg-gray-200 transition-all">Skincare</button>
+                    <button onclick="filterProducts('haircare')" class="filter-btn px-6 py-3 rounded-full font-semibold bg-gray-100 hover:bg-gray-200 transition-all">Hair Care</button>
+                    <button onclick="filterProducts('medicines')" class="filter-btn px-6 py-3 rounded-full font-semibold bg-gray-100 hover:bg-gray-200 transition-all">Medicines</button>
+                    <button onclick="filterProducts('wellness')" class="filter-btn px-6 py-3 rounded-full font-semibold bg-gray-100 hover:bg-gray-200 transition-all">Wellness</button>
+                    <button onclick="filterProducts('oils')" class="filter-btn px-6 py-3 rounded-full font-semibold bg-gray-100 hover:bg-gray-200 transition-all">Oils</button>
+                    <button onclick="filterProducts('supplements')" class="filter-btn px-6 py-3 rounded-full font-semibold bg-gray-100 hover:bg-gray-200 transition-all">Supplements</button>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <select id="sortSelect" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                        <option value="name">Sort by Name</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="productsGrid" class="product-grid scroll-reveal">
+            <!-- Products will be populated by JavaScript -->
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+            <button id="loadMoreBtn" onclick="loadMoreProducts()" class="btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-emerald-600 hover:to-green-600 transition-all duration-300">
+                Load More Products
+            </button>
+        </div>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content w-full max-w-6xl p-8">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
+            <div id="productDetailContent">
+                <!-- Product details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cartSidebar" class="fixed top-0 right-0 h-full w-96 bg-white shadow-premium-lg transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-800">Shopping Cart</h3>
+                <button onclick="toggleCart()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+            <!-- Cart items will be populated by JavaScript -->
+        </div>
+        
+        <div class="border-t border-gray-200 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-lg font-semibold">Total:</span>
+                <span id="cartTotal" class="text-2xl font-bold text-emerald-600">₹0</span>
+            </div>
+            <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-green-600 transition-all">
+                Proceed to Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content w-full max-w-4xl p-8">
+            <button onclick="closeCheckout()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-2xl font-bold">×</button>
+            
+            <h2 class="text-3xl font-display font-bold gradient-text mb-8 text-center">Secure Checkout</h2>
+            
+            <!-- Checkout Steps -->
+            <div class="flex justify-center mb-8">
+                <div class="flex items-center space-x-4">
+                    <div class="checkout-step active flex flex-col items-center">
+                        <div class="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold mb-2">1</div>
+                        <span class="text-sm font-semibold">Address</span>
+                    </div>
+                    <div class="w-16 h-1 bg-gray-300"></div>
+                    <div class="checkout-step flex flex-col items-center">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mb-2">2</div>
+                        <span class="text-sm font-semibold">Payment</span>
+                    </div>
+                    <div class="w-16 h-1 bg-gray-300"></div>
+                    <div class="checkout-step flex flex-col items-center">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-600 font-bold mb-2">3</div>
+                        <span class="text-sm font-semibold">Confirm</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="checkoutContent">
+                <!-- Checkout content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content w-full max-w-md p-8 text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                ✅
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Order Placed Successfully!</h3>
+            <p class="text-gray-600 mb-6">Your order has been confirmed and will be delivered soon.</p>
+            <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                <p class="text-sm text-gray-600">Order ID: <span id="orderIdDisplay" class="font-bold text-gray-800">#AYU12345</span></p>
+                <p class="text-sm text-gray-600">Estimated Delivery: <span class="font-bold text-gray-800">3-5 business days</span></p>
+            </div>
+            <button onclick="closeSuccessModal()" class="w-full bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-bold hover:from-emerald-600 hover:to-green-600 transition-all">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Product Database
+        const products = [
+            // Skincare Products
+            {
+                id: 1,
+                name: "Neem Face Wash",
+                category: "skincare",
+                price: 299,
+                originalPrice: 399,
+                rating: 4.5,
+                reviews: 1250,
+                image: "🧴",
+                description: "Natural neem-based face wash for acne-prone skin. Gently cleanses and purifies without over-drying.",
+                ingredients: ["Neem Extract", "Turmeric", "Aloe Vera", "Tea Tree Oil"],
+                benefits: ["Anti-bacterial", "Reduces acne", "Controls oil", "Gentle cleansing"],
+                howToUse: "Apply on wet face, massage gently, rinse with water. Use twice daily.",
+                skinType: "Oily, Acne-prone",
+                size: "100ml",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 2,
+                name: "Turmeric Glow Soap",
+                category: "skincare",
+                price: 149,
+                originalPrice: 199,
+                rating: 4.3,
+                reviews: 890,
+                image: "🧼",
+                description: "Handmade turmeric soap for natural glow and even skin tone. Enriched with coconut oil and honey.",
+                ingredients: ["Turmeric", "Coconut Oil", "Honey", "Glycerin"],
+                benefits: ["Natural glow", "Even skin tone", "Moisturizing", "Anti-inflammatory"],
+                howToUse: "Lather on wet skin, massage gently, rinse thoroughly. Use daily.",
+                skinType: "All skin types",
+                size: "75g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 3,
+                name: "Rose Water Toner",
+                category: "skincare",
+                price: 249,
+                originalPrice: 299,
+                rating: 4.6,
+                reviews: 2100,
+                image: "💧",
+                description: "Pure rose water toner for hydration and pH balance. Suitable for sensitive skin.",
+                ingredients: ["Pure Rose Water", "Glycerin", "Vitamin E"],
+                benefits: ["Hydrates skin", "Balances pH", "Soothes irritation", "Natural fragrance"],
+                howToUse: "Apply with cotton pad or spray directly. Use after cleansing.",
+                skinType: "All skin types, especially sensitive",
+                size: "200ml",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 4,
+                name: "Aloe Vera Gel",
+                category: "skincare",
+                price: 199,
+                originalPrice: 249,
+                rating: 4.4,
+                reviews: 1560,
+                image: "🌿",
+                description: "99% pure aloe vera gel for soothing and healing. Perfect for sunburns and dry skin.",
+                ingredients: ["Aloe Vera Extract", "Vitamin E", "Cucumber Extract"],
+                benefits: ["Soothes sunburn", "Heals cuts", "Moisturizes", "Anti-inflammatory"],
+                howToUse: "Apply generously on affected area. Can be used multiple times daily.",
+                skinType: "All skin types",
+                size: "150ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 5,
+                name: "Sandalwood Face Pack",
+                category: "skincare",
+                price: 349,
+                originalPrice: 449,
+                rating: 4.7,
+                reviews: 780,
+                image: "🎭",
+                description: "Premium sandalwood face pack for deep cleansing and brightening. Reduces tan and pigmentation.",
+                ingredients: ["Sandalwood Powder", "Multani Mitti", "Rose Petals", "Milk Powder"],
+                benefits: ["Deep cleansing", "Brightens skin", "Reduces tan", "Tightens pores"],
+                howToUse: "Mix with water/milk, apply evenly, leave for 15-20 minutes, rinse off.",
+                skinType: "Normal to oily",
+                size: "100g",
+                inStock: true,
+                popular: true
+            },
+
+            // Hair Care Products
+            {
+                id: 6,
+                name: "Amla Hair Oil",
+                category: "haircare",
+                price: 399,
+                originalPrice: 499,
+                rating: 4.5,
+                reviews: 1890,
+                image: "🛢️",
+                description: "Pure amla hair oil for hair growth and strength. Prevents premature graying and dandruff.",
+                ingredients: ["Amla Extract", "Coconut Oil", "Sesame Oil", "Fenugreek"],
+                benefits: ["Promotes hair growth", "Prevents graying", "Reduces dandruff", "Strengthens hair"],
+                howToUse: "Massage into scalp and hair, leave for 2 hours or overnight, wash with shampoo.",
+                hairType: "All hair types",
+                size: "200ml",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 7,
+                name: "Shikakai Shampoo",
+                category: "haircare",
+                price: 279,
+                originalPrice: 349,
+                rating: 4.2,
+                reviews: 1120,
+                image: "🧴",
+                description: "Natural shikakai shampoo for gentle cleansing. Sulfate-free and suitable for daily use.",
+                ingredients: ["Shikakai Extract", "Reetha", "Amla", "Bhringraj"],
+                benefits: ["Gentle cleansing", "Natural shine", "Reduces hair fall", "Chemical-free"],
+                howToUse: "Apply to wet hair, massage gently, rinse thoroughly. Use 2-3 times a week.",
+                hairType: "All hair types",
+                size: "250ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 8,
+                name: "Bhringraj Hair Mask",
+                category: "haircare",
+                price: 449,
+                originalPrice: 599,
+                rating: 4.6,
+                reviews: 650,
+                image: "🥣",
+                description: "Intensive bhringraj hair mask for deep nourishment and repair. Ideal for damaged hair.",
+                ingredients: ["Bhringraj Extract", "Coconut Milk", "Honey", "Argan Oil"],
+                benefits: ["Deep nourishment", "Repairs damage", "Adds shine", "Strengthens roots"],
+                howToUse: "Apply to damp hair, leave for 30 minutes, rinse with lukewarm water.",
+                hairType: "Dry, damaged hair",
+                size: "200g",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 9,
+                name: "Wooden Hair Comb",
+                category: "haircare",
+                price: 199,
+                originalPrice: 299,
+                rating: 4.3,
+                reviews: 890,
+                image: "🪮",
+                description: "Handcrafted neem wood comb for healthy hair. Reduces static and prevents hair breakage.",
+                ingredients: ["Neem Wood"],
+                benefits: ["Reduces static", "Prevents breakage", "Massages scalp", "Eco-friendly"],
+                howToUse: "Use daily for combing and scalp massage. Clean regularly with mild soap.",
+                hairType: "All hair types",
+                size: "Standard",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 10,
+                name: "Curry Leaves Hair Serum",
+                category: "haircare",
+                price: 329,
+                originalPrice: 429,
+                rating: 4.4,
+                reviews: 540,
+                image: "💧",
+                description: "Lightweight curry leaves serum for hair growth and shine. Non-greasy formula.",
+                ingredients: ["Curry Leaves Extract", "Jojoba Oil", "Vitamin E", "Rosemary Oil"],
+                benefits: ["Promotes growth", "Adds shine", "Non-greasy", "Strengthens hair"],
+                howToUse: "Apply few drops to damp hair, focus on ends. Do not rinse.",
+                hairType: "All hair types",
+                size: "50ml",
+                inStock: true,
+                popular: false
+            },
+
+            // Medicines
+            {
+                id: 11,
+                name: "Ashwagandha Capsules",
+                category: "medicines",
+                price: 599,
+                originalPrice: 799,
+                rating: 4.7,
+                reviews: 2340,
+                image: "💊",
+                description: "Premium ashwagandha capsules for stress relief and energy boost. Standardized extract.",
+                ingredients: ["Ashwagandha Root Extract (500mg)", "Vegetarian Capsule"],
+                benefits: ["Reduces stress", "Boosts energy", "Improves immunity", "Better sleep"],
+                howToUse: "Take 1-2 capsules daily with water after meals or as directed by physician.",
+                dosage: "500mg per capsule",
+                size: "60 capsules",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 12,
+                name: "Triphala Powder",
+                category: "medicines",
+                price: 249,
+                originalPrice: 349,
+                rating: 4.5,
+                reviews: 1670,
+                image: "🥄",
+                description: "Pure triphala powder for digestive health and detoxification. Traditional Ayurvedic formula.",
+                ingredients: ["Amla", "Haritaki", "Bibhitaki"],
+                benefits: ["Improves digestion", "Detoxifies body", "Boosts immunity", "Natural laxative"],
+                howToUse: "Mix 1 tsp with warm water, take before bedtime or as directed.",
+                dosage: "1 teaspoon daily",
+                size: "100g",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 13,
+                name: "Brahmi Syrup",
+                category: "medicines",
+                price: 399,
+                originalPrice: 499,
+                rating: 4.4,
+                reviews: 890,
+                image: "🍯",
+                description: "Brahmi syrup for memory enhancement and mental clarity. Suitable for all ages.",
+                ingredients: ["Brahmi Extract", "Shankhpushpi", "Mandukaparni", "Honey"],
+                benefits: ["Enhances memory", "Improves focus", "Reduces anxiety", "Brain tonic"],
+                howToUse: "Take 10-15ml twice daily with water or as directed by physician.",
+                dosage: "10-15ml twice daily",
+                size: "200ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 14,
+                name: "Giloy Tablets",
+                category: "medicines",
+                price: 349,
+                originalPrice: 449,
+                rating: 4.6,
+                reviews: 1230,
+                image: "💊",
+                description: "Giloy tablets for immunity boost and fever management. Natural immunomodulator.",
+                ingredients: ["Giloy Stem Extract (250mg)", "Excipients"],
+                benefits: ["Boosts immunity", "Reduces fever", "Anti-inflammatory", "Liver support"],
+                howToUse: "Take 1-2 tablets twice daily with water after meals.",
+                dosage: "250mg per tablet",
+                size: "60 tablets",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 15,
+                name: "Chyawanprash",
+                category: "medicines",
+                price: 449,
+                originalPrice: 599,
+                rating: 4.8,
+                reviews: 3450,
+                image: "🍯",
+                description: "Traditional chyawanprash with 40+ herbs for overall health and immunity.",
+                ingredients: ["Amla", "Ashwagandha", "Giloy", "Honey", "Ghee", "40+ Herbs"],
+                benefits: ["Boosts immunity", "Improves energy", "Respiratory health", "Anti-aging"],
+                howToUse: "Take 1-2 teaspoons daily with milk or water, preferably in morning.",
+                dosage: "1-2 teaspoons daily",
+                size: "500g",
+                inStock: true,
+                popular: true
+            },
+
+            // Wellness Products
+            {
+                id: 16,
+                name: "Herbal Tea Blend",
+                category: "wellness",
+                price: 299,
+                originalPrice: 399,
+                rating: 4.3,
+                reviews: 780,
+                image: "🍵",
+                description: "Relaxing herbal tea blend with chamomile, tulsi, and ginger for daily wellness.",
+                ingredients: ["Chamomile", "Tulsi", "Ginger", "Cardamom", "Cinnamon"],
+                benefits: ["Relaxation", "Digestive support", "Immunity boost", "Stress relief"],
+                howToUse: "Steep 1 tsp in hot water for 5 minutes. Drink 2-3 cups daily.",
+                caffeine: "Caffeine-free",
+                size: "100g (50 servings)",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 17,
+                name: "Meditation Cushion",
+                category: "wellness",
+                price: 1299,
+                originalPrice: 1699,
+                rating: 4.5,
+                reviews: 340,
+                image: "🪑",
+                description: "Comfortable meditation cushion filled with buckwheat hulls. Supports proper posture.",
+                ingredients: ["Organic Cotton Cover", "Buckwheat Hull Filling"],
+                benefits: ["Proper posture", "Comfortable seating", "Durable", "Washable cover"],
+                howToUse: "Place on floor, sit cross-legged for meditation or yoga practice.",
+                dimensions: "33cm diameter x 15cm height",
+                size: "Standard",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 18,
+                name: "Copper Water Bottle",
+                category: "wellness",
+                price: 899,
+                originalPrice: 1199,
+                rating: 4.4,
+                reviews: 1120,
+                image: "🍶",
+                description: "Pure copper water bottle for Ayurvedic water therapy. Antimicrobial properties.",
+                ingredients: ["99.9% Pure Copper"],
+                benefits: ["Antimicrobial", "Improves digestion", "Boosts immunity", "Eco-friendly"],
+                howToUse: "Fill with water, store overnight, drink in morning on empty stomach.",
+                capacity: "1 Liter",
+                size: "1L",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 19,
+                name: "Yoga Mat",
+                category: "wellness",
+                price: 1599,
+                originalPrice: 2199,
+                rating: 4.6,
+                reviews: 890,
+                image: "🧘‍♀️",
+                description: "Eco-friendly yoga mat with excellent grip and cushioning. Perfect for daily practice.",
+                ingredients: ["Natural Rubber", "Eco-friendly Materials"],
+                benefits: ["Excellent grip", "Good cushioning", "Eco-friendly", "Durable"],
+                howToUse: "Unroll on flat surface for yoga, meditation, or exercise practice.",
+                dimensions: "183cm x 61cm x 6mm",
+                size: "Standard",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 20,
+                name: "Incense Sticks Set",
+                category: "wellness",
+                price: 199,
+                originalPrice: 299,
+                rating: 4.2,
+                reviews: 560,
+                image: "🕯️",
+                description: "Natural incense sticks set with sandalwood, jasmine, and rose fragrances.",
+                ingredients: ["Natural Herbs", "Essential Oils", "Bamboo Sticks"],
+                benefits: ["Aromatherapy", "Relaxation", "Meditation aid", "Natural fragrance"],
+                howToUse: "Light tip, blow out flame, place in holder. Use during meditation or relaxation.",
+                varieties: "Sandalwood, Jasmine, Rose",
+                size: "60 sticks (20 each)",
+                inStock: true,
+                popular: false
+            },
+
+            // Oils
+            {
+                id: 21,
+                name: "Sesame Oil",
+                category: "oils",
+                price: 349,
+                originalPrice: 449,
+                rating: 4.5,
+                reviews: 1340,
+                image: "🛢️",
+                description: "Cold-pressed sesame oil for massage and cooking. Rich in vitamins and minerals.",
+                ingredients: ["100% Pure Sesame Seeds"],
+                benefits: ["Rich in vitamins", "Good for massage", "Cooking oil", "Skin nourishment"],
+                howToUse: "Use for body massage, hair care, or cooking as needed.",
+                extraction: "Cold-pressed",
+                size: "500ml",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 22,
+                name: "Coconut Oil",
+                category: "oils",
+                price: 299,
+                originalPrice: 399,
+                rating: 4.6,
+                reviews: 2100,
+                image: "🥥",
+                description: "Virgin coconut oil for hair, skin, and cooking. Unrefined and chemical-free.",
+                ingredients: ["100% Virgin Coconut Oil"],
+                benefits: ["Hair nourishment", "Skin moisturizer", "Cooking oil", "Antimicrobial"],
+                howToUse: "Apply on hair/skin or use for cooking. Solid at room temperature.",
+                extraction: "Cold-pressed virgin",
+                size: "500ml",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 23,
+                name: "Mustard Oil",
+                category: "oils",
+                price: 249,
+                originalPrice: 329,
+                rating: 4.3,
+                reviews: 890,
+                image: "🛢️",
+                description: "Pure mustard oil for massage and cooking. Warming properties, good for joint pain.",
+                ingredients: ["100% Pure Mustard Seeds"],
+                benefits: ["Warming effect", "Joint pain relief", "Cooking oil", "Hair growth"],
+                howToUse: "Warm slightly before massage. Use for cooking traditional dishes.",
+                extraction: "Cold-pressed",
+                size: "500ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 24,
+                name: "Castor Oil",
+                category: "oils",
+                price: 199,
+                originalPrice: 279,
+                rating: 4.4,
+                reviews: 670,
+                image: "🛢️",
+                description: "Pure castor oil for hair growth and skin care. Thick consistency, highly nourishing.",
+                ingredients: ["100% Pure Castor Seeds"],
+                benefits: ["Hair growth", "Thick eyebrows", "Skin healing", "Moisturizing"],
+                howToUse: "Apply small amount on hair roots or affected skin area. Leave overnight.",
+                extraction: "Cold-pressed",
+                size: "200ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 25,
+                name: "Almond Oil",
+                category: "oils",
+                price: 599,
+                originalPrice: 799,
+                rating: 4.7,
+                reviews: 1560,
+                image: "🛢️",
+                description: "Sweet almond oil for baby massage and skin care. Light texture, easily absorbed.",
+                ingredients: ["100% Sweet Almond Oil"],
+                benefits: ["Baby massage", "Skin softening", "Light texture", "Vitamin E rich"],
+                howToUse: "Gentle massage for babies and adults. Good for facial skin care.",
+                extraction: "Cold-pressed",
+                size: "200ml",
+                inStock: true,
+                popular: true
+            },
+
+            // Supplements
+            {
+                id: 26,
+                name: "Moringa Powder",
+                category: "supplements",
+                price: 399,
+                originalPrice: 549,
+                rating: 4.5,
+                reviews: 890,
+                image: "🥄",
+                description: "Organic moringa leaf powder, superfood rich in vitamins and minerals.",
+                ingredients: ["100% Organic Moringa Leaves"],
+                benefits: ["Rich in vitamins", "Boosts energy", "Antioxidant", "Immune support"],
+                howToUse: "Mix 1 tsp in water, juice, or smoothie. Take daily on empty stomach.",
+                dosage: "1 teaspoon daily",
+                size: "100g",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 27,
+                name: "Spirulina Tablets",
+                category: "supplements",
+                price: 699,
+                originalPrice: 899,
+                rating: 4.6,
+                reviews: 1230,
+                image: "💊",
+                description: "Pure spirulina tablets for protein and energy. Rich in amino acids and vitamins.",
+                ingredients: ["100% Pure Spirulina"],
+                benefits: ["High protein", "Energy boost", "Detoxification", "Immune support"],
+                howToUse: "Take 2-4 tablets daily with water before meals.",
+                dosage: "500mg per tablet",
+                size: "60 tablets",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 28,
+                name: "Wheatgrass Powder",
+                category: "supplements",
+                price: 449,
+                originalPrice: 599,
+                rating: 4.3,
+                reviews: 560,
+                image: "🌱",
+                description: "Organic wheatgrass powder for detox and nutrition. Rich in chlorophyll.",
+                ingredients: ["100% Organic Wheatgrass"],
+                benefits: ["Detoxification", "Rich in chlorophyll", "Alkalizing", "Nutrient dense"],
+                howToUse: "Mix 1 tsp in water or juice. Take on empty stomach in morning.",
+                dosage: "1 teaspoon daily",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 29,
+                name: "Turmeric Capsules",
+                category: "supplements",
+                price: 549,
+                originalPrice: 699,
+                rating: 4.7,
+                reviews: 1890,
+                image: "💊",
+                description: "Curcumin-rich turmeric capsules with black pepper for better absorption.",
+                ingredients: ["Turmeric Extract (95% Curcumin)", "Black Pepper Extract"],
+                benefits: ["Anti-inflammatory", "Joint health", "Antioxidant", "Better absorption"],
+                howToUse: "Take 1-2 capsules daily with meals or as directed by physician.",
+                dosage: "500mg per capsule",
+                size: "60 capsules",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 30,
+                name: "Amla Powder",
+                category: "supplements",
+                price: 299,
+                originalPrice: 399,
+                rating: 4.4,
+                reviews: 1120,
+                image: "🥄",
+                description: "Pure amla powder, vitamin C powerhouse for immunity and hair health.",
+                ingredients: ["100% Pure Amla (Indian Gooseberry)"],
+                benefits: ["High vitamin C", "Immunity boost", "Hair health", "Antioxidant"],
+                howToUse: "Mix 1 tsp with water or honey. Take daily in morning.",
+                dosage: "1 teaspoon daily",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+
+            // Additional Products (31-55)
+            {
+                id: 31,
+                name: "Neem Oil",
+                category: "oils",
+                price: 249,
+                originalPrice: 349,
+                rating: 4.2,
+                reviews: 450,
+                image: "🛢️",
+                description: "Pure neem oil for skin problems and plant care. Natural pesticide properties.",
+                ingredients: ["100% Pure Neem Oil"],
+                benefits: ["Skin healing", "Anti-fungal", "Plant care", "Natural pesticide"],
+                howToUse: "Apply diluted on skin or use for plant care. Strong smell.",
+                extraction: "Cold-pressed",
+                size: "100ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 32,
+                name: "Kumkumadi Oil",
+                category: "oils",
+                price: 1299,
+                originalPrice: 1699,
+                rating: 4.8,
+                reviews: 340,
+                image: "🛢️",
+                description: "Premium kumkumadi face oil with saffron for glowing skin. Anti-aging formula.",
+                ingredients: ["Saffron", "Sandalwood", "Lotus", "Manjistha", "Sesame Oil"],
+                benefits: ["Anti-aging", "Glowing skin", "Reduces pigmentation", "Premium formula"],
+                howToUse: "Apply 2-3 drops on clean face at night. Massage gently.",
+                extraction: "Traditional method",
+                size: "12ml",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 33,
+                name: "Arjuna Powder",
+                category: "medicines",
+                price: 349,
+                originalPrice: 449,
+                rating: 4.5,
+                reviews: 230,
+                image: "🥄",
+                description: "Arjuna bark powder for heart health and cardiovascular support.",
+                ingredients: ["100% Arjuna Bark Powder"],
+                benefits: ["Heart health", "Blood pressure support", "Cardiovascular wellness", "Natural tonic"],
+                howToUse: "Mix 1 tsp with water twice daily before meals or as directed.",
+                dosage: "1 teaspoon twice daily",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 34,
+                name: "Guduchi Capsules",
+                category: "medicines",
+                price: 449,
+                originalPrice: 599,
+                rating: 4.6,
+                reviews: 670,
+                image: "💊",
+                description: "Guduchi capsules for immunity and liver health. Natural detoxifier.",
+                ingredients: ["Guduchi Stem Extract (300mg)"],
+                benefits: ["Immunity boost", "Liver health", "Detoxification", "Anti-inflammatory"],
+                howToUse: "Take 1-2 capsules twice daily with water after meals.",
+                dosage: "300mg per capsule",
+                size: "60 capsules",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 35,
+                name: "Honey (Raw)",
+                category: "wellness",
+                price: 399,
+                originalPrice: 499,
+                rating: 4.7,
+                reviews: 1890,
+                image: "🍯",
+                description: "Raw unprocessed honey with natural enzymes. Collected from forest flowers.",
+                ingredients: ["100% Raw Honey"],
+                benefits: ["Natural enzymes", "Antibacterial", "Energy boost", "Cough relief"],
+                howToUse: "Take 1-2 tsp daily. Can be mixed with warm water or taken directly.",
+                source: "Forest flowers",
+                size: "500g",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 36,
+                name: "Ghee (A2 Cow)",
+                category: "wellness",
+                price: 899,
+                originalPrice: 1199,
+                rating: 4.8,
+                reviews: 1560,
+                image: "🧈",
+                description: "Pure A2 cow ghee made from desi cow milk. Traditional bilona method.",
+                ingredients: ["100% A2 Cow Milk"],
+                benefits: ["Easy digestion", "Rich in vitamins", "Cooking medium", "Ayurvedic medicine"],
+                howToUse: "Use for cooking, take 1 tsp daily, or as directed in Ayurvedic treatments.",
+                method: "Traditional bilona",
+                size: "500ml",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 37,
+                name: "Multani Mitti",
+                category: "skincare",
+                price: 149,
+                originalPrice: 199,
+                rating: 4.3,
+                reviews: 890,
+                image: "🏺",
+                description: "Pure multani mitti (Fuller's earth) for oily skin and acne treatment.",
+                ingredients: ["100% Natural Fuller's Earth"],
+                benefits: ["Oil control", "Acne treatment", "Deep cleansing", "Cooling effect"],
+                howToUse: "Mix with water/rose water, apply as face pack, wash after 15 minutes.",
+                skinType: "Oily, acne-prone",
+                size: "200g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 38,
+                name: "Besan (Gram Flour)",
+                category: "skincare",
+                price: 99,
+                originalPrice: 149,
+                rating: 4.1,
+                reviews: 560,
+                image: "🥄",
+                description: "Fine besan for natural face packs and body scrubs. Gentle exfoliation.",
+                ingredients: ["100% Gram Flour"],
+                benefits: ["Natural exfoliation", "Oil control", "Brightening", "Gentle cleansing"],
+                howToUse: "Mix with water/milk, apply as scrub or face pack, rinse gently.",
+                skinType: "All skin types",
+                size: "500g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 39,
+                name: "Kalonji Oil",
+                category: "oils",
+                price: 399,
+                originalPrice: 549,
+                rating: 4.4,
+                reviews: 340,
+                image: "🛢️",
+                description: "Black seed (kalonji) oil for hair growth and skin health. Rich in nutrients.",
+                ingredients: ["100% Black Seed Oil"],
+                benefits: ["Hair growth", "Skin health", "Anti-inflammatory", "Immune support"],
+                howToUse: "Apply on hair/skin or take 1 tsp daily with honey.",
+                extraction: "Cold-pressed",
+                size: "100ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 40,
+                name: "Fenugreek Powder",
+                category: "supplements",
+                price: 199,
+                originalPrice: 279,
+                rating: 4.2,
+                reviews: 450,
+                image: "🥄",
+                description: "Fenugreek seed powder for diabetes management and hair health.",
+                ingredients: ["100% Fenugreek Seeds"],
+                benefits: ["Blood sugar control", "Hair health", "Digestive aid", "Lactation support"],
+                howToUse: "Mix 1 tsp with water, take before meals or as directed.",
+                dosage: "1 teaspoon daily",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 41,
+                name: "Hing (Asafoetida)",
+                category: "medicines",
+                price: 299,
+                originalPrice: 399,
+                rating: 4.3,
+                reviews: 230,
+                image: "🥄",
+                description: "Pure hing for digestive problems and gas relief. Strong aroma and flavor.",
+                ingredients: ["100% Pure Asafoetida"],
+                benefits: ["Digestive aid", "Gas relief", "Antispasmodic", "Flavor enhancer"],
+                howToUse: "Pinch in cooking or mix tiny amount with water for digestive issues.",
+                grade: "Premium quality",
+                size: "50g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 42,
+                name: "Ajwain (Carom Seeds)",
+                category: "medicines",
+                price: 149,
+                originalPrice: 199,
+                rating: 4.4,
+                reviews: 670,
+                image: "🌿",
+                description: "Organic ajwain seeds for digestive health and respiratory problems.",
+                ingredients: ["100% Organic Carom Seeds"],
+                benefits: ["Digestive health", "Respiratory relief", "Anti-bacterial", "Weight management"],
+                howToUse: "Chew 1 tsp after meals or boil in water and drink.",
+                quality: "Organic",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 43,
+                name: "Jeera Powder",
+                category: "supplements",
+                price: 179,
+                originalPrice: 229,
+                rating: 4.2,
+                reviews: 340,
+                image: "🥄",
+                description: "Roasted cumin powder for digestion and weight management. Aromatic spice.",
+                ingredients: ["100% Roasted Cumin Seeds"],
+                benefits: ["Digestive aid", "Weight management", "Iron rich", "Flavor enhancer"],
+                howToUse: "Mix in buttermilk, use in cooking, or take with warm water.",
+                processing: "Roasted and ground",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 44,
+                name: "Shatavari Powder",
+                category: "medicines",
+                price: 549,
+                originalPrice: 699,
+                rating: 4.6,
+                reviews: 890,
+                image: "🥄",
+                description: "Shatavari root powder for women's health and hormonal balance.",
+                ingredients: ["100% Shatavari Root Powder"],
+                benefits: ["Women's health", "Hormonal balance", "Lactation support", "Reproductive health"],
+                howToUse: "Mix 1 tsp with milk twice daily or as directed by physician.",
+                dosage: "1 teaspoon twice daily",
+                size: "100g",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 45,
+                name: "Gokshura Capsules",
+                category: "medicines",
+                price: 449,
+                originalPrice: 599,
+                rating: 4.5,
+                reviews: 560,
+                image: "💊",
+                description: "Gokshura capsules for kidney health and urinary problems. Men's wellness.",
+                ingredients: ["Gokshura Extract (400mg)"],
+                benefits: ["Kidney health", "Urinary wellness", "Men's health", "Strength building"],
+                howToUse: "Take 1-2 capsules twice daily with water after meals.",
+                dosage: "400mg per capsule",
+                size: "60 capsules",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 46,
+                name: "Manjistha Powder",
+                category: "medicines",
+                price: 399,
+                originalPrice: 499,
+                rating: 4.3,
+                reviews: 230,
+                image: "🥄",
+                description: "Manjistha root powder for blood purification and skin health.",
+                ingredients: ["100% Manjistha Root Powder"],
+                benefits: ["Blood purification", "Skin health", "Anti-inflammatory", "Detoxification"],
+                howToUse: "Mix 1/2 tsp with water twice daily or as directed.",
+                dosage: "1/2 teaspoon twice daily",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 47,
+                name: "Punarnava Capsules",
+                category: "medicines",
+                price: 399,
+                originalPrice: 549,
+                rating: 4.4,
+                reviews: 340,
+                image: "💊",
+                description: "Punarnava capsules for kidney health and water retention problems.",
+                ingredients: ["Punarnava Extract (300mg)"],
+                benefits: ["Kidney support", "Reduces water retention", "Liver health", "Detoxification"],
+                howToUse: "Take 1-2 capsules twice daily with water before meals.",
+                dosage: "300mg per capsule",
+                size: "60 capsules",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 48,
+                name: "Kesar (Saffron)",
+                category: "wellness",
+                price: 2999,
+                originalPrice: 3999,
+                rating: 4.9,
+                reviews: 450,
+                image: "🌸",
+                description: "Premium Kashmir saffron for cooking and health benefits. Authentic quality.",
+                ingredients: ["100% Pure Kashmir Saffron"],
+                benefits: ["Mood enhancement", "Skin glow", "Digestive aid", "Antioxidant"],
+                howToUse: "Soak few strands in warm milk/water. Use in cooking or drink.",
+                origin: "Kashmir",
+                size: "1g",
+                inStock: true,
+                popular: true
+            },
+            {
+                id: 49,
+                name: "Cardamom Powder",
+                category: "wellness",
+                price: 399,
+                originalPrice: 499,
+                rating: 4.5,
+                reviews: 670,
+                image: "🥄",
+                description: "Fresh cardamom powder for digestive health and aromatic cooking.",
+                ingredients: ["100% Green Cardamom"],
+                benefits: ["Digestive aid", "Fresh breath", "Aromatic spice", "Antioxidant"],
+                howToUse: "Use in cooking, tea, or mix pinch with water for digestion.",
+                processing: "Freshly ground",
+                size: "50g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 50,
+                name: "Cinnamon Powder",
+                category: "wellness",
+                price: 249,
+                originalPrice: 329,
+                rating: 4.4,
+                reviews: 560,
+                image: "🥄",
+                description: "Ceylon cinnamon powder for blood sugar control and warming spice.",
+                ingredients: ["100% Ceylon Cinnamon"],
+                benefits: ["Blood sugar control", "Anti-inflammatory", "Warming spice", "Antioxidant"],
+                howToUse: "Use in cooking, tea, or mix 1/2 tsp with honey daily.",
+                variety: "Ceylon cinnamon",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 51,
+                name: "Black Pepper Powder",
+                category: "wellness",
+                price: 299,
+                originalPrice: 399,
+                rating: 4.3,
+                reviews: 340,
+                image: "🥄",
+                description: "Fresh black pepper powder for digestion and nutrient absorption.",
+                ingredients: ["100% Black Peppercorns"],
+                benefits: ["Enhances absorption", "Digestive aid", "Anti-inflammatory", "Metabolism boost"],
+                howToUse: "Use in cooking or mix pinch with turmeric for better absorption.",
+                processing: "Freshly ground",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 52,
+                name: "Ginger Powder",
+                category: "medicines",
+                price: 199,
+                originalPrice: 279,
+                rating: 4.5,
+                reviews: 890,
+                image: "🥄",
+                description: "Dried ginger powder for digestive problems and nausea relief.",
+                ingredients: ["100% Dried Ginger"],
+                benefits: ["Digestive aid", "Nausea relief", "Anti-inflammatory", "Warming effect"],
+                howToUse: "Mix 1/2 tsp with warm water or use in cooking.",
+                processing: "Sun-dried and ground",
+                size: "100g",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 53,
+                name: "Clove Oil",
+                category: "oils",
+                price: 199,
+                originalPrice: 299,
+                rating: 4.2,
+                reviews: 230,
+                image: "🛢️",
+                description: "Pure clove oil for dental care and pain relief. Strong antiseptic properties.",
+                ingredients: ["100% Clove Essential Oil"],
+                benefits: ["Dental care", "Pain relief", "Antiseptic", "Aromatherapy"],
+                howToUse: "Apply diluted on affected area or use 1-2 drops for dental care.",
+                concentration: "100% pure essential oil",
+                size: "15ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 54,
+                name: "Eucalyptus Oil",
+                category: "oils",
+                price: 249,
+                originalPrice: 349,
+                rating: 4.4,
+                reviews: 450,
+                image: "🛢️",
+                description: "Pure eucalyptus oil for respiratory problems and muscle pain relief.",
+                ingredients: ["100% Eucalyptus Essential Oil"],
+                benefits: ["Respiratory relief", "Muscle pain relief", "Antiseptic", "Aromatherapy"],
+                howToUse: "Inhale steam with few drops or apply diluted on chest/muscles.",
+                concentration: "100% pure essential oil",
+                size: "15ml",
+                inStock: true,
+                popular: false
+            },
+            {
+                id: 55,
+                name: "Tea Tree Oil",
+                category: "oils",
+                price: 399,
+                originalPrice: 549,
+                rating: 4.6,
+                reviews: 670,
+                image: "🛢️",
+                description: "Pure tea tree oil for acne treatment and antiseptic use. Powerful antimicrobial.",
+                ingredients: ["100% Tea Tree Essential Oil"],
+                benefits: ["Acne treatment", "Antiseptic", "Antifungal", "Skin healing"],
+                howToUse: "Apply diluted on acne spots or mix with carrier oil for skin use.",
+                concentration: "100% pure essential oil",
+                size: "15ml",
+                inStock: true,
+                popular: true
+            }
+        ];
+
+        // Global variables
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let currentProducts = [...products];
+        let displayedProducts = 12;
+        let currentFilter = 'all';
+        let currentSort = 'name';
+
+        // Initialize page
+        function initializePage() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('userName').textContent = `Welcome, ${currentUser.name}!`;
+            }
+            
+            displayProducts();
+            updateCartBadge();
+            setupEventListeners();
+            revealOnScroll();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('sortSelect').addEventListener('change', handleSort);
+        }
+
+        // Display products
+        function displayProducts() {
+            const grid = document.getElementById('productsGrid');
+            const productsToShow = currentProducts.slice(0, displayedProducts);
+            
+            grid.innerHTML = productsToShow.map(product => `
+                <div class="product-card bg-white rounded-3xl p-6 shadow-premium border border-gray-100 card-hover scroll-reveal" data-category="${product.category}">
+                    <div class="relative mb-4">
+                        <div class="w-full h-48 bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl flex items-center justify-center text-6xl mb-4">
+                            ${product.image}
+                        </div>
+                        ${product.popular ? '<div class="absolute top-2 right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">Popular</div>' : ''}
+                        ${product.originalPrice > product.price ? '<div class="absolute top-2 left-2 bg-gradient-to-r from-emerald-500 to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">Sale</div>' : ''}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">${product.name}</h3>
+                        <p class="text-sm text-gray-600 mb-3 line-clamp-2">${product.description}</p>
+                        
+                        <div class="flex items-center mb-3">
+                            <div class="flex items-center star-rating mr-2">
+                                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                            </div>
+                            <span class="text-sm text-gray-600">${product.rating} (${product.reviews})</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-2xl font-bold text-emerald-600">₹${product.price}</span>
+                                ${product.originalPrice > product.price ? `<span class="text-lg text-gray-500 line-through">₹${product.originalPrice}</span>` : ''}
+                            </div>
+                            ${product.originalPrice > product.price ? `<div class="bg-red-100 text-red-800 px-2 py-1 rounded-lg text-xs font-bold">${Math.round((1 - product.price/product.originalPrice) * 100)}% OFF</div>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button onclick="viewProduct(${product.id})" class="flex-1 bg-gray-100 text-gray-800 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+                            View Details
+                        </button>
+                        <button onclick="addToCart(${product.id})" class="flex-1 btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-3 rounded-xl font-semibold hover:from-emerald-600 hover:to-green-600 transition-all">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update load more button
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            if (displayedProducts >= currentProducts.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'block';
+            }
+            
+            revealOnScroll();
+        }
+
+        // Filter products
+        function filterProducts(category) {
+            currentFilter = category;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('filter-active');
+                btn.classList.add('bg-gray-100', 'hover:bg-gray-200');
+            });
+            
+            event.target.classList.add('filter-active');
+            event.target.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+            
+            // Filter products
+            if (category === 'all') {
+                currentProducts = [...products];
+            } else {
+                currentProducts = products.filter(product => product.category === category);
+            }
+            
+            displayedProducts = 12;
+            displayProducts();
+        }
+
+        // Handle search
+        function handleSearch(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                if (currentFilter === 'all') {
+                    currentProducts = [...products];
+                } else {
+                    currentProducts = products.filter(product => product.category === currentFilter);
+                }
+            } else {
+                const baseProducts = currentFilter === 'all' ? products : products.filter(product => product.category === currentFilter);
+                currentProducts = baseProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.description.toLowerCase().includes(searchTerm) ||
+                    product.ingredients.some(ingredient => ingredient.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            displayedProducts = 12;
+            displayProducts();
+        }
+
+        // Handle sort
+        function handleSort(event) {
+            const sortBy = event.target.value;
+            currentSort = sortBy;
+            
+            switch(sortBy) {
+                case 'name':
+                    currentProducts.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'price-low':
+                    currentProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    currentProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'rating':
+                    currentProducts.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'popular':
+                    currentProducts.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
+                    break;
+            }
+            
+            displayProducts();
+        }
+
+        // Load more products
+        function loadMoreProducts() {
+            displayedProducts += 12;
+            displayProducts();
+        }
+
+        // View product details
+        function viewProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const modal = document.getElementById('productModal');
+            const content = document.getElementById('productDetailContent');
+            
+            content.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <div class="w-full h-96 bg-gradient-to-br from-emerald-50 to-green-50 rounded-3xl flex items-center justify-center text-8xl mb-6 relative">
+                            ${product.image}
+                            ${product.popular ? '<div class="absolute top-4 right-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">Popular</div>' : ''}
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-4 text-center">
+                                <div class="text-2xl mb-2">⭐</div>
+                                <div class="text-lg font-bold text-emerald-600">${product.rating}</div>
+                                <div class="text-sm text-gray-600">${product.reviews} reviews</div>
+                            </div>
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 text-center">
+                                <div class="text-2xl mb-2">📦</div>
+                                <div class="text-lg font-bold text-blue-600">${product.inStock ? 'In Stock' : 'Out of Stock'}</div>
+                                <div class="text-sm text-gray-600">Ready to ship</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="text-4xl font-display font-bold text-gray-800 mb-4">${product.name}</h2>
+                        <p class="text-lg text-gray-600 mb-6">${product.description}</p>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-3xl font-bold text-emerald-600">₹${product.price}</span>
+                                ${product.originalPrice > product.price ? `<span class="text-xl text-gray-500 line-through">₹${product.originalPrice}</span>` : ''}
+                            </div>
+                            ${product.originalPrice > product.price ? `<div class="bg-red-100 text-red-800 px-4 py-2 rounded-xl font-bold">${Math.round((1 - product.price/product.originalPrice) * 100)}% OFF</div>` : ''}
+                        </div>
+                        
+                        <div class="space-y-6 mb-8">
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-3">🌿 Key Ingredients</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    ${product.ingredients.map(ingredient => `
+                                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">${ingredient}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-3">✨ Benefits</h4>
+                                <div class="grid grid-cols-2 gap-2">
+                                    ${product.benefits.map(benefit => `
+                                        <div class="flex items-center text-sm text-gray-700">
+                                            <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
+                                            ${benefit}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-3">📋 How to Use</h4>
+                                <p class="text-gray-700 bg-gray-50 rounded-xl p-4">${product.howToUse}</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                ${product.skinType ? `<div><strong>Skin Type:</strong> ${product.skinType}</div>` : ''}
+                                ${product.hairType ? `<div><strong>Hair Type:</strong> ${product.hairType}</div>` : ''}
+                                ${product.dosage ? `<div><strong>Dosage:</strong> ${product.dosage}</div>` : ''}
+                                <div><strong>Size:</strong> ${product.size}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 mb-6">
+                            <label class="text-sm font-semibold text-gray-700">Quantity:</label>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
+                                <input type="number" id="productQuantity" class="quantity-input" value="1" min="1" max="10">
+                                <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <button onclick="addToCartFromModal(${product.id})" class="flex-1 btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 rounded-2xl font-bold text-lg hover:from-emerald-600 hover:to-green-600 transition-all">
+                                Add to Cart
+                            </button>
+                            <button onclick="buyNow(${product.id})" class="flex-1 btn-premium bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 rounded-2xl font-bold text-lg hover:from-orange-600 hover:to-red-600 transition-all">
+                                Buy Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Change quantity in modal
+        function changeQuantity(change) {
+            const input = document.getElementById('productQuantity');
+            const currentValue = parseInt(input.value);
+            const newValue = Math.max(1, Math.min(10, currentValue + change));
+            input.value = newValue;
+        }
+
+        // Add to cart
+        function addToCart(productId, quantity = 1) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: quantity
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartBadge();
+            showNotification(`${product.name} added to cart!`, 'success');
+        }
+
+        // Add to cart from modal
+        function addToCartFromModal(productId) {
+            const quantity = parseInt(document.getElementById('productQuantity').value);
+            addToCart(productId, quantity);
+            closeModal();
+        }
+
+        // Buy now
+        function buyNow(productId) {
+            const quantity = parseInt(document.getElementById('productQuantity')?.value || 1);
+            addToCart(productId, quantity);
+            closeModal();
+            proceedToCheckout();
+        }
+
+        // Update cart badge
+        function updateCartBadge() {
+            const badge = document.getElementById('cartBadge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalItems;
+        }
+
+        // Toggle cart sidebar
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            const isOpen = !sidebar.classList.contains('translate-x-full');
+            
+            if (isOpen) {
+                sidebar.classList.add('translate-x-full');
+            } else {
+                sidebar.classList.remove('translate-x-full');
+                displayCartItems();
+            }
+        }
+
+        // Display cart items
+        function displayCartItems() {
+            const container = document.getElementById('cartItems');
+            const totalElement = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">🛒</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Your cart is empty</h3>
+                        <p class="text-gray-600">Add some products to get started!</p>
+                    </div>
+                `;
+                totalElement.textContent = '₹0';
+                return;
+            }
+            
+            container.innerHTML = cart.map(item => `
+                <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-xl mb-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl flex items-center justify-center text-2xl">
+                        ${item.image}
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-800">${item.name}</h4>
+                        <p class="text-sm text-gray-600">₹${item.price} each</p>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <button onclick="updateCartQuantity(${item.id}, -1)" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-bold hover:bg-gray-300">-</button>
+                            <span class="font-semibold">${item.quantity}</span>
+                            <button onclick="updateCartQuantity(${item.id}, 1)" class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-bold hover:bg-gray-300">+</button>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-bold text-emerald-600">₹${item.price * item.quantity}</div>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700 text-sm mt-1">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            totalElement.textContent = `₹${total}`;
+        }
+
+        // Update cart quantity
+        function updateCartQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (!item) return;
+            
+            item.quantity += change;
+            
+            if (item.quantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                localStorage.setItem('cart', JSON.stringify(cart));
+                displayCartItems();
+                updateCartBadge();
+            }
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCartItems();
+            updateCartBadge();
+        }
+
+        // Proceed to checkout
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!', 'error');
+                return;
+            }
+            
+            toggleCart(); // Close cart sidebar
+            showCheckoutModal();
+        }
+
+        // Show checkout modal
+        function showCheckoutModal() {
+            const modal = document.getElementById('checkoutModal');
+            modal.classList.add('active');
+            showAddressStep();
+        }
+
+        // Show address step
+        function showAddressStep() {
+            const content = document.getElementById('checkoutContent');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            content.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Delivery Address</h3>
+                        <form id="addressForm" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                                    <input type="text" id="fullName" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number *</label>
+                                    <input type="tel" id="phone" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Address Line 1 *</label>
+                                <input type="text" id="address1" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Address Line 2</label>
+                                <input type="text" id="address2" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">City *</label>
+                                    <input type="text" id="city" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">State *</label>
+                                    <select id="state" required class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                        <option value="">Select State</option>
+                                        <option value="andhra-pradesh">Andhra Pradesh</option>
+                                        <option value="delhi">Delhi</option>
+                                        <option value="gujarat">Gujarat</option>
+                                        <option value="karnataka">Karnataka</option>
+                                        <option value="maharashtra">Maharashtra</option>
+                                        <option value="tamil-nadu">Tamil Nadu</option>
+                                        <option value="uttar-pradesh">Uttar Pradesh</option>
+                                        <option value="west-bengal">West Bengal</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-2">PIN Code *</label>
+                                    <input type="text" id="pincode" required pattern="[0-9]{6}" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">Delivery Options</h4>
+                                <div class="space-y-3">
+                                    <div class="delivery-option selected" onclick="selectDeliveryOption(this, 'standard')">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <h5 class="font-semibold">Standard Delivery (5-7 days)</h5>
+                                                <p class="text-sm text-gray-600">Free delivery on orders above ₹500</p>
+                                            </div>
+                                            <div class="text-lg font-bold text-emerald-600">Free</div>
+                                        </div>
+                                    </div>
+                                    <div class="delivery-option" onclick="selectDeliveryOption(this, 'express')">
+                                        <div class="flex justify-between items-center">
+                                            <div>
+                                                <h5 class="font-semibold">Express Delivery (2-3 days)</h5>
+                                                <p class="text-sm text-gray-600">Faster delivery option</p>
+                                            </div>
+                                            <div class="text-lg font-bold text-orange-600">₹99</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h3>
+                        <div class="bg-gray-50 rounded-2xl p-6">
+                            <div class="space-y-4 mb-6">
+                                ${cart.map(item => `
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-xl">${item.image}</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">${item.name}</h5>
+                                                <p class="text-sm text-gray-600">Qty: ${item.quantity}</p>
+                                            </div>
+                                        </div>
+                                        <div class="font-bold text-gray-800">₹${item.price * item.quantity}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="border-t border-gray-300 pt-4 space-y-2">
+                                <div class="flex justify-between">
+                                    <span>Subtotal:</span>
+                                    <span>₹${total}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Delivery:</span>
+                                    <span id="deliveryCharge">Free</span>
+                                </div>
+                                <div class="flex justify-between text-lg font-bold">
+                                    <span>Total:</span>
+                                    <span id="finalTotal">₹${total}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="proceedToPayment()" class="w-full mt-6 btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 rounded-2xl font-bold text-lg hover:from-emerald-600 hover:to-green-600 transition-all">
+                            Proceed to Payment
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Select delivery option
+        function selectDeliveryOption(element, type) {
+            document.querySelectorAll('.delivery-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            const deliveryCharge = document.getElementById('deliveryCharge');
+            const finalTotal = document.getElementById('finalTotal');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            if (type === 'express') {
+                deliveryCharge.textContent = '₹99';
+                finalTotal.textContent = `₹${subtotal + 99}`;
+            } else {
+                deliveryCharge.textContent = 'Free';
+                finalTotal.textContent = `₹${subtotal}`;
+            }
+        }
+
+        // Proceed to payment
+        function proceedToPayment() {
+            const form = document.getElementById('addressForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            showPaymentStep();
+        }
+
+        // Show payment step
+        function showPaymentStep() {
+            const content = document.getElementById('checkoutContent');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryCharge = document.getElementById('deliveryCharge').textContent === 'Free' ? 0 : 99;
+            const finalTotal = total + deliveryCharge;
+            
+            // Update checkout steps
+            document.querySelectorAll('.checkout-step').forEach((step, index) => {
+                if (index <= 1) {
+                    step.classList.add('active');
+                    step.querySelector('div').className = 'w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white font-bold mb-2';
+                }
+            });
+            
+            content.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Payment Method</h3>
+                        <div class="space-y-4">
+                            <div class="payment-method selected" onclick="selectPaymentMethod(this, 'upi')">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">📱</div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">UPI Payment</h4>
+                                        <p class="text-sm text-gray-600">Pay using Google Pay, PhonePe, Paytm</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method" onclick="selectPaymentMethod(this, 'card')">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-2xl">💳</div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">Credit/Debit Card</h4>
+                                        <p class="text-sm text-gray-600">Visa, Mastercard, RuPay accepted</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method" onclick="selectPaymentMethod(this, 'netbanking')">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center text-2xl">🏦</div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">Net Banking</h4>
+                                        <p class="text-sm text-gray-600">All major banks supported</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method" onclick="selectPaymentMethod(this, 'cod')">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center text-2xl">💰</div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">Cash on Delivery</h4>
+                                        <p class="text-sm text-gray-600">Pay when you receive the order</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="paymentDetails" class="mt-6">
+                            <!-- Payment details will be shown based on selection -->
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Order Summary</h3>
+                        <div class="bg-gray-50 rounded-2xl p-6 mb-6">
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between">
+                                    <span>Subtotal:</span>
+                                    <span>₹${total}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Delivery:</span>
+                                    <span>${deliveryCharge === 0 ? 'Free' : '₹' + deliveryCharge}</span>
+                                </div>
+                                <div class="flex justify-between text-lg font-bold border-t border-gray-300 pt-2">
+                                    <span>Total:</span>
+                                    <span>₹${finalTotal}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <button onclick="showAddressStep()" class="flex-1 bg-gray-300 text-gray-700 py-4 rounded-xl font-semibold hover:bg-gray-400 transition-colors">
+                                ← Back
+                            </button>
+                            <button onclick="placeOrder()" class="flex-1 btn-premium bg-gradient-to-r from-emerald-500 to-green-500 text-white py-4 rounded-xl font-bold hover:from-emerald-600 hover:to-green-600 transition-all">
+                                Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            selectPaymentMethod(document.querySelector('.payment-method'), 'upi');
+        }
+
+        // Select payment method
+        function selectPaymentMethod(element, method) {
+            document.querySelectorAll('.payment-method').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            const detailsContainer = document.getElementById('paymentDetails');
+            
+            switch(method) {
+                case 'upi':
+                    detailsContainer.innerHTML = `
+                        <div class="bg-purple-50 rounded-xl p-4">
+                            <h5 class="font-bold text-purple-800 mb-3">UPI Payment</h5>
+                            <div class="space-y-3">
+                                <input type="text" placeholder="Enter UPI ID (e.g., user@paytm)" class="w-full p-3 border border-purple-300 rounded-xl focus:ring-2 focus:ring-purple-500">
+                                <p class="text-sm text-purple-700">You will be redirected to your UPI app to complete the payment</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'card':
+                    detailsContainer.innerHTML = `
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h5 class="font-bold text-blue-800 mb-3">Card Details</h5>
+                            <div class="space-y-3">
+                                <input type="text" placeholder="Card Number" class="w-full p-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <input type="text" placeholder="MM/YY" class="w-full p-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                                    <input type="text" placeholder="CVV" class="w-full p-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <input type="text" placeholder="Cardholder Name" class="w-full p-3 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'netbanking':
+                    detailsContainer.innerHTML = `
+                        <div class="bg-green-50 rounded-xl p-4">
+                            <h5 class="font-bold text-green-800 mb-3">Select Your Bank</h5>
+                            <select class="w-full p-3 border border-green-300 rounded-xl focus:ring-2 focus:ring-green-500">
+                                <option value="">Choose your bank</option>
+                                <option value="sbi">State Bank of India</option>
+                                <option value="hdfc">HDFC Bank</option>
+                                <option value="icici">ICICI Bank</option>
+                                <option value="axis">Axis Bank</option>
+                                <option value="pnb">Punjab National Bank</option>
+                            </select>
+                        </div>
+                    `;
+                    break;
+                case 'cod':
+                    detailsContainer.innerHTML = `
+                        <div class="bg-orange-50 rounded-xl p-4">
+                            <h5 class="font-bold text-orange-800 mb-3">Cash on Delivery</h5>
+                            <p class="text-sm text-orange-700">You can pay in cash when the order is delivered to your address. Please keep the exact amount ready.</p>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // Place order
+        function placeOrder() {
+            // Simulate order processing
+            showNotification('Processing your order...', 'info');
+            
+            setTimeout(() => {
+                const orderId = 'AYU' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                document.getElementById('orderIdDisplay').textContent = '#' + orderId;
+                
+                // Clear cart
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartBadge();
+                
+                // Close checkout modal and show success
+                closeCheckout();
+                document.getElementById('successModal').classList.add('active');
+            }, 2000);
+        }
+
+        // Close modals
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            reveals.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('revealed');
+                }
+            });
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-gradient-to-r from-emerald-500 to-green-500',
+                error: 'bg-gradient-to-r from-red-500 to-pink-500',
+                info: 'bg-gradient-to-r from-blue-500 to-indigo-500'
+            };
+            
+            notification.className = `fixed top-6 right-6 z-50 p-6 rounded-2xl shadow-premium-lg max-w-sm text-white ${colors[type]}`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="flex-1 font-semibold text-lg">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white/80 hover:text-white">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize page
+        window.addEventListener('load', () => {
+            initializePage();
+        });
+
+        window.addEventListener('scroll', revealOnScroll);
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97f01849e0047ec4',t:'MTc1Nzg1NTExNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

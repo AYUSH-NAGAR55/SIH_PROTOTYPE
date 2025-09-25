@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellnessHub - Complete Health Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><pattern id="wellness" patternUnits="userSpaceOnUse" width="100" height="100"><rect width="100" height="100" fill="%23f8fafc"/><text x="20" y="30" font-size="20" fill="%233b82f6">💊</text><text x="60" y="30" font-size="20" fill="%239333ea">🧬</text><text x="20" y="70" font-size="20" fill="%2310b981">🌿</text><text x="60" y="70" font-size="20" fill="%23f59e0b">⚕️</text></pattern></defs><rect width="100%" height="100%" fill="url(%23wellness)" opacity="0.3"/></svg>') center/cover;
+            min-height: 100vh;
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #9333ea, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .rotating-circle {
+            animation: rotate 30s linear infinite;
+            transform-origin: center;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .bundle-item {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: counter-rotate 30s linear infinite reverse;
+        }
+        
+        @keyframes counter-rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .bundle-item:hover {
+            transform: scale(1.2) rotate(0deg);
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .bundle-1 { top: 0; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .bundle-2 { top: 15%; right: 15%; background: linear-gradient(135deg, #4ecdc4, #44bd87); }
+        .bundle-3 { top: 40%; right: 0; background: linear-gradient(135deg, #45b7d1, #96ceb4); }
+        .bundle-4 { bottom: 40%; right: 0; background: linear-gradient(135deg, #f9ca24, #f0932b); }
+        .bundle-5 { bottom: 15%; right: 15%; background: linear-gradient(135deg, #eb4d4b, #6639a6); }
+        .bundle-6 { bottom: 0; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #a55eea, #26de81); }
+        .bundle-7 { bottom: 15%; left: 15%; background: linear-gradient(135deg, #fd79a8, #fdcb6e); }
+        .bundle-8 { bottom: 40%; left: 0; background: linear-gradient(135deg, #6c5ce7, #fd79a8); }
+        .bundle-9 { top: 40%; left: 0; background: linear-gradient(135deg, #00b894, #00cec9); }
+        .bundle-10 { top: 15%; left: 15%; background: linear-gradient(135deg, #0984e3, #6c5ce7); }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 95vw;
+            max-height: 95vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .cure-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .cure-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .floating-help {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 40;
+            animation: pulse 2s infinite;
+        }
+        
+        .floating-help:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.6);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .stats-counter {
+            animation: countUp 2s ease-out;
+        }
+        
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .benefit-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .search-bar {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 50;
+            display: none;
+        }
+        
+        .search-results.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-40 border-b border-blue-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='dashboard.html'" class="text-blue-700 hover:text-blue-500 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-display font-bold text-blue-800">WellnessHub</h1>
+                        <p class="text-sm text-blue-600 font-light">Complete Health Solutions Platform</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="search-bar">
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            placeholder="Search health solutions..." 
+                            class="w-80 px-4 py-2 border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            oninput="handleSearch()"
+                        >
+                        <div id="searchResults" class="search-results">
+                            <!-- Search results will appear here -->
+                        </div>
+                    </div>
+                    
+                    <div class="text-right">
+                        <p class="text-blue-800 font-semibold" id="userName">Welcome!</p>
+                        <p class="text-blue-600 text-sm">Your health journey starts here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-12">
+        <div class="text-center mb-16">
+            <h2 class="text-6xl font-display font-bold text-blue-800 mb-6">
+                Transform Your Health with
+                <span class="gradient-text">Expert Solutions</span>
+            </h2>
+            <p class="text-xl text-blue-700 mb-8 max-w-4xl mx-auto">
+                Discover comprehensive wellness solutions across 10+ health categories. From sexual wellness to digestive health, 
+                we provide evidence-based treatments and natural remedies for optimal well-being.
+            </p>
+            
+            <!-- Stats -->
+            <div class="grid md:grid-cols-4 gap-6 mb-12">
+                <div class="glass-effect rounded-2xl p-6 text-center stats-counter">
+                    <div class="text-4xl mb-2">🏥</div>
+                    <div class="text-3xl font-bold text-blue-800">10+</div>
+                    <div class="text-sm text-blue-600">Health Categories</div>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center stats-counter">
+                    <div class="text-4xl mb-2">💊</div>
+                    <div class="text-3xl font-bold text-purple-800">100+</div>
+                    <div class="text-sm text-purple-600">Treatment Options</div>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center stats-counter">
+                    <div class="text-4xl mb-2">🌿</div>
+                    <div class="text-3xl font-bold text-green-800">50+</div>
+                    <div class="text-sm text-green-600">Natural Remedies</div>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center stats-counter">
+                    <div class="text-4xl mb-2">⭐</div>
+                    <div class="text-3xl font-bold text-yellow-600">98%</div>
+                    <div class="text-sm text-yellow-600">Success Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rotating Wellness Bundles -->
+        <div class="relative mb-20">
+            <h3 class="text-4xl font-display font-bold text-center text-blue-800 mb-12">
+                Choose Your Wellness Journey
+            </h3>
+            
+            <div class="relative w-96 h-96 mx-auto">
+                <div class="rotating-circle w-full h-full relative">
+                    <!-- Central Hub -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-2xl z-20">
+                        <div class="text-center">
+                            <div class="text-3xl mb-1">🏥</div>
+                            <div class="text-sm">Health Hub</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Wellness Bundles -->
+                    <div class="bundle-item bundle-1" onclick="openBundle('sexual-wellness')">
+                        <div class="text-3xl mb-1">💕</div>
+                        <div class="text-xs font-bold text-white text-center">Sexual Wellness</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-2" onclick="openBundle('digestive-health')">
+                        <div class="text-3xl mb-1">🍽️</div>
+                        <div class="text-xs font-bold text-white text-center">Digestive Health</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-3" onclick="openBundle('mental-wellness')">
+                        <div class="text-3xl mb-1">🧠</div>
+                        <div class="text-xs font-bold text-white text-center">Mental Wellness</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-4" onclick="openBundle('heart-health')">
+                        <div class="text-3xl mb-1">❤️</div>
+                        <div class="text-xs font-bold text-white text-center">Heart Health</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-5" onclick="openBundle('skin-beauty')">
+                        <div class="text-3xl mb-1">✨</div>
+                        <div class="text-xs font-bold text-white text-center">Skin & Beauty</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-6" onclick="openBundle('immune-system')">
+                        <div class="text-3xl mb-1">🛡️</div>
+                        <div class="text-xs font-bold text-white text-center">Immune System</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-7" onclick="openBundle('weight-management')">
+                        <div class="text-3xl mb-1">⚖️</div>
+                        <div class="text-xs font-bold text-white text-center">Weight Management</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-8" onclick="openBundle('sleep-wellness')">
+                        <div class="text-3xl mb-1">😴</div>
+                        <div class="text-xs font-bold text-white text-center">Sleep Wellness</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-9" onclick="openBundle('respiratory-health')">
+                        <div class="text-3xl mb-1">🫁</div>
+                        <div class="text-xs font-bold text-white text-center">Respiratory Health</div>
+                    </div>
+                    
+                    <div class="bundle-item bundle-10" onclick="openBundle('bone-joint')">
+                        <div class="text-3xl mb-1">🦴</div>
+                        <div class="text-xs font-bold text-white text-center">Bone & Joint</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-blue-600 mt-8 text-lg">
+                Click on any wellness category to explore comprehensive treatment options
+            </p>
+        </div>
+
+        <!-- Featured Benefits -->
+        <div class="glass-effect rounded-3xl p-8 mb-12">
+            <h3 class="text-3xl font-display font-bold text-center text-blue-800 mb-8">
+                Why Choose WellnessHub?
+            </h3>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="benefit-icon bg-gradient-to-br from-blue-500 to-purple-600 text-white mx-auto">
+                        🎯
+                    </div>
+                    <h4 class="text-xl font-bold text-blue-800 mb-3">Personalized Solutions</h4>
+                    <p class="text-blue-600">Tailored treatment plans based on your specific health needs and lifestyle</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="benefit-icon bg-gradient-to-br from-green-500 to-teal-600 text-white mx-auto">
+                        🌿
+                    </div>
+                    <h4 class="text-xl font-bold text-green-800 mb-3">Natural & Safe</h4>
+                    <p class="text-green-600">Evidence-based natural remedies with minimal side effects</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="benefit-icon bg-gradient-to-br from-purple-500 to-pink-600 text-white mx-auto">
+                        👨‍⚕️
+                    </div>
+                    <h4 class="text-xl font-bold text-purple-800 mb-3">Expert Guidance</h4>
+                    <p class="text-purple-600">Developed by healthcare professionals and wellness experts</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bundle Detail Modal -->
+    <div id="bundleModal" class="modal">
+        <div class="modal-content w-full max-w-7xl p-8">
+            <button onclick="closeBundleModal()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="bundleContent">
+                <!-- Bundle content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cure Detail Modal -->
+    <div id="cureModal" class="modal">
+        <div class="modal-content w-full max-w-5xl p-8">
+            <button onclick="closeCureModal()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="cureContent">
+                <!-- Cure details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Help Button -->
+    <div class="floating-help" onclick="showHelp()" title="Get Help">
+        💬
+    </div>
+
+    <script>
+        // Comprehensive wellness bundles database
+        const wellnessBundles = {
+            'sexual-wellness': {
+                title: 'Sexual Wellness Solutions',
+                icon: '💕',
+                description: 'Comprehensive solutions for sexual health, intimacy, and reproductive wellness',
+                color: 'from-pink-500 to-rose-600',
+                cures: [
+                    {
+                        id: 1,
+                        name: 'Libido Enhancement Program',
+                        type: 'Natural Therapy',
+                        duration: '4-6 weeks',
+                        effectiveness: '92%',
+                        description: 'Natural approach to boost sexual desire and energy',
+                        ingredients: ['Maca Root', 'Ginseng', 'Tribulus Terrestris', 'Zinc'],
+                        benefits: ['Increased libido', 'Better energy', 'Improved mood', 'Enhanced performance'],
+                        instructions: 'Take supplements daily with meals, practice stress reduction techniques, maintain regular exercise routine',
+                        precautions: 'Consult doctor if on blood pressure medication',
+                        price: '$89'
+                    },
+                    {
+                        id: 2,
+                        name: 'Erectile Function Support',
+                        type: 'Herbal Formula',
+                        duration: '6-8 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural support for healthy erectile function',
+                        ingredients: ['L-Arginine', 'Horny Goat Weed', 'Ginkgo Biloba', 'Pomegranate'],
+                        benefits: ['Improved blood flow', 'Better stamina', 'Enhanced confidence', 'Natural support'],
+                        instructions: 'Take 2 capsules daily, maintain healthy diet, regular exercise recommended',
+                        precautions: 'Not suitable for those on nitrate medications',
+                        price: '$95'
+                    },
+                    {
+                        id: 3,
+                        name: 'Female Vitality Complex',
+                        type: 'Hormonal Support',
+                        duration: '3-4 weeks',
+                        effectiveness: '90%',
+                        description: 'Comprehensive support for female sexual wellness',
+                        ingredients: ['Red Clover', 'Black Cohosh', 'Dong Quai', 'Vitamin E'],
+                        benefits: ['Hormonal balance', 'Increased sensitivity', 'Better lubrication', 'Mood enhancement'],
+                        instructions: 'Take with breakfast daily, maintain hydration, practice relaxation techniques',
+                        precautions: 'Consult healthcare provider if pregnant or nursing',
+                        price: '$78'
+                    },
+                    {
+                        id: 4,
+                        name: 'Premature Ejaculation Control',
+                        type: 'Behavioral Therapy',
+                        duration: '8-12 weeks',
+                        effectiveness: '85%',
+                        description: 'Natural techniques and supplements for better control',
+                        ingredients: ['5-HTP', 'Magnesium', 'Ashwagandha', 'B-Complex'],
+                        benefits: ['Better control', 'Reduced anxiety', 'Improved confidence', 'Enhanced intimacy'],
+                        instructions: 'Combine supplements with breathing exercises and mindfulness practices',
+                        precautions: 'May cause drowsiness initially',
+                        price: '$72'
+                    },
+                    {
+                        id: 5,
+                        name: 'Fertility Boost Protocol',
+                        type: 'Reproductive Health',
+                        duration: '3-6 months',
+                        effectiveness: '82%',
+                        description: 'Comprehensive approach to enhance fertility naturally',
+                        ingredients: ['Coenzyme Q10', 'Folic Acid', 'Selenium', 'Omega-3'],
+                        benefits: ['Improved egg quality', 'Better sperm health', 'Hormonal balance', 'Reproductive support'],
+                        instructions: 'Take daily with meals, maintain healthy lifestyle, track ovulation',
+                        precautions: 'Consult fertility specialist for personalized advice',
+                        price: '$120'
+                    },
+                    {
+                        id: 6,
+                        name: 'Menopause Comfort Care',
+                        type: 'Hormonal Support',
+                        duration: '6-8 weeks',
+                        effectiveness: '87%',
+                        description: 'Natural relief for menopausal symptoms',
+                        ingredients: ['Evening Primrose Oil', 'Sage', 'Wild Yam', 'Calcium'],
+                        benefits: ['Reduced hot flashes', 'Better sleep', 'Mood stability', 'Bone health'],
+                        instructions: 'Take twice daily, maintain cool environment, practice stress management',
+                        precautions: 'Monitor for any allergic reactions',
+                        price: '$85'
+                    },
+                    {
+                        id: 7,
+                        name: 'Testosterone Support Natural',
+                        type: 'Hormonal Enhancement',
+                        duration: '8-10 weeks',
+                        effectiveness: '89%',
+                        description: 'Natural support for healthy testosterone levels',
+                        ingredients: ['D-Aspartic Acid', 'Vitamin D3', 'Fenugreek', 'Boron'],
+                        benefits: ['Increased energy', 'Better muscle mass', 'Improved mood', 'Enhanced libido'],
+                        instructions: 'Take with morning meal, combine with resistance training',
+                        precautions: 'Regular blood tests recommended',
+                        price: '$98'
+                    },
+                    {
+                        id: 8,
+                        name: 'Intimacy Enhancement Kit',
+                        type: 'Relationship Wellness',
+                        duration: '4-6 weeks',
+                        effectiveness: '91%',
+                        description: 'Holistic approach to improve intimacy and connection',
+                        ingredients: ['Damiana', 'Muira Puama', 'Catuaba', 'Yohimbe'],
+                        benefits: ['Enhanced sensation', 'Better communication', 'Increased desire', 'Deeper connection'],
+                        instructions: 'Use as directed, practice open communication with partner',
+                        precautions: 'Not recommended with heart conditions',
+                        price: '$110'
+                    },
+                    {
+                        id: 9,
+                        name: 'Prostate Health Support',
+                        type: 'Men\'s Health',
+                        duration: '6-12 weeks',
+                        effectiveness: '86%',
+                        description: 'Comprehensive support for prostate health and function',
+                        ingredients: ['Saw Palmetto', 'Lycopene', 'Beta-Sitosterol', 'Pumpkin Seed'],
+                        benefits: ['Better urinary flow', 'Reduced inflammation', 'Prostate support', 'Overall wellness'],
+                        instructions: 'Take daily with meals, maintain regular check-ups',
+                        precautions: 'Consult urologist for persistent symptoms',
+                        price: '$75'
+                    },
+                    {
+                        id: 10,
+                        name: 'Sexual Confidence Booster',
+                        type: 'Psychological Support',
+                        duration: '4-8 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural approach to overcome performance anxiety',
+                        ingredients: ['Rhodiola Rosea', 'Passionflower', 'L-Theanine', 'GABA'],
+                        benefits: ['Reduced anxiety', 'Better confidence', 'Improved performance', 'Stress relief'],
+                        instructions: 'Take 30 minutes before intimacy, practice relaxation techniques',
+                        precautions: 'May interact with anxiety medications',
+                        price: '$68'
+                    }
+                ]
+            },
+            'digestive-health': {
+                title: 'Digestive Health Solutions',
+                icon: '🍽️',
+                description: 'Complete digestive wellness programs for optimal gut health',
+                color: 'from-green-500 to-teal-600',
+                cures: [
+                    {
+                        id: 11,
+                        name: 'Complete Gut Restore Program',
+                        type: 'Probiotic Therapy',
+                        duration: '6-8 weeks',
+                        effectiveness: '94%',
+                        description: 'Comprehensive gut microbiome restoration',
+                        ingredients: ['Multi-strain Probiotics', 'Prebiotic Fiber', 'L-Glutamine', 'Digestive Enzymes'],
+                        benefits: ['Improved digestion', 'Better nutrient absorption', 'Reduced bloating', 'Enhanced immunity'],
+                        instructions: 'Take with meals, avoid processed foods, increase fiber intake gradually',
+                        precautions: 'Start with lower dose if sensitive stomach',
+                        price: '$125'
+                    },
+                    {
+                        id: 12,
+                        name: 'IBS Relief Protocol',
+                        type: 'Symptom Management',
+                        duration: '4-6 weeks',
+                        effectiveness: '89%',
+                        description: 'Natural relief for irritable bowel syndrome symptoms',
+                        ingredients: ['Peppermint Oil', 'Psyllium Husk', 'Chamomile', 'Fennel'],
+                        benefits: ['Reduced cramping', 'Better bowel regularity', 'Less gas and bloating', 'Improved comfort'],
+                        instructions: 'Take before meals, follow low-FODMAP diet, manage stress levels',
+                        precautions: 'Consult doctor if symptoms worsen',
+                        price: '$78'
+                    },
+                    {
+                        id: 13,
+                        name: 'Acid Reflux Natural Treatment',
+                        type: 'pH Balance',
+                        duration: '3-4 weeks',
+                        effectiveness: '87%',
+                        description: 'Natural approach to manage acid reflux and heartburn',
+                        ingredients: ['DGL Licorice', 'Aloe Vera', 'Slippery Elm', 'Zinc Carnosine'],
+                        benefits: ['Reduced heartburn', 'Healed esophagus lining', 'Better sleep', 'Improved comfort'],
+                        instructions: 'Take between meals, avoid trigger foods, elevate head while sleeping',
+                        precautions: 'Avoid if allergic to licorice',
+                        price: '$65'
+                    },
+                    {
+                        id: 14,
+                        name: 'Constipation Relief Formula',
+                        type: 'Bowel Regularity',
+                        duration: '2-3 weeks',
+                        effectiveness: '92%',
+                        description: 'Gentle, natural solution for chronic constipation',
+                        ingredients: ['Magnesium Oxide', 'Senna Leaf', 'Cascara Sagrada', 'Prunes Extract'],
+                        benefits: ['Regular bowel movements', 'Reduced straining', 'Better elimination', 'Improved comfort'],
+                        instructions: 'Take at bedtime, increase water intake, add fiber to diet',
+                        precautions: 'Not for long-term use without medical supervision',
+                        price: '$45'
+                    },
+                    {
+                        id: 15,
+                        name: 'Leaky Gut Repair System',
+                        type: 'Intestinal Healing',
+                        duration: '8-12 weeks',
+                        effectiveness: '85%',
+                        description: 'Comprehensive program to heal intestinal permeability',
+                        ingredients: ['L-Glutamine', 'Collagen Peptides', 'Quercetin', 'Butyrate'],
+                        benefits: ['Healed gut lining', 'Reduced inflammation', 'Better immunity', 'Improved energy'],
+                        instructions: 'Take on empty stomach, eliminate inflammatory foods, manage stress',
+                        precautions: 'May cause initial detox symptoms',
+                        price: '$135'
+                    },
+                    {
+                        id: 16,
+                        name: 'Digestive Enzyme Complex',
+                        type: 'Enzyme Support',
+                        duration: '4-6 weeks',
+                        effectiveness: '90%',
+                        description: 'Complete enzyme support for better digestion',
+                        ingredients: ['Amylase', 'Protease', 'Lipase', 'Lactase'],
+                        benefits: ['Better food breakdown', 'Reduced bloating', 'Improved nutrient absorption', 'Less gas'],
+                        instructions: 'Take with each meal, chew food thoroughly, eat mindfully',
+                        precautions: 'Start with one capsule per meal',
+                        price: '$58'
+                    },
+                    {
+                        id: 17,
+                        name: 'Candida Cleanse Program',
+                        type: 'Antifungal Treatment',
+                        duration: '6-8 weeks',
+                        effectiveness: '83%',
+                        description: 'Natural program to eliminate candida overgrowth',
+                        ingredients: ['Caprylic Acid', 'Oregano Oil', 'Grapefruit Seed Extract', 'Pau D\'Arco'],
+                        benefits: ['Reduced yeast overgrowth', 'Better energy', 'Clearer skin', 'Improved digestion'],
+                        instructions: 'Follow anti-candida diet, take probiotics, avoid sugar completely',
+                        precautions: 'May cause die-off symptoms initially',
+                        price: '$95'
+                    },
+                    {
+                        id: 18,
+                        name: 'Ulcer Healing Protocol',
+                        type: 'Gastric Protection',
+                        duration: '6-10 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural approach to heal stomach ulcers',
+                        ingredients: ['Mastic Gum', 'Manuka Honey', 'Cabbage Extract', 'Bismuth'],
+                        benefits: ['Healed ulcer tissue', 'Reduced pain', 'Better stomach lining', 'Improved comfort'],
+                        instructions: 'Take on empty stomach, avoid NSAIDs, manage stress levels',
+                        precautions: 'Monitor for H. pylori infection',
+                        price: '$88'
+                    },
+                    {
+                        id: 19,
+                        name: 'Gallbladder Support Formula',
+                        type: 'Bile Production',
+                        duration: '4-6 weeks',
+                        effectiveness: '86%',
+                        description: 'Natural support for healthy gallbladder function',
+                        ingredients: ['Milk Thistle', 'Dandelion Root', 'Artichoke Extract', 'Turmeric'],
+                        benefits: ['Better bile flow', 'Reduced gallbladder pain', 'Improved fat digestion', 'Liver support'],
+                        instructions: 'Take with fatty meals, reduce processed foods, maintain healthy weight',
+                        precautions: 'Consult doctor if severe pain occurs',
+                        price: '$72'
+                    },
+                    {
+                        id: 20,
+                        name: 'Food Sensitivity Reset',
+                        type: 'Elimination Protocol',
+                        duration: '8-12 weeks',
+                        effectiveness: '91%',
+                        description: 'Comprehensive program to identify and eliminate food sensitivities',
+                        ingredients: ['Quercetin', 'DAO Enzyme', 'Vitamin C', 'Nettle Leaf'],
+                        benefits: ['Identified trigger foods', 'Reduced inflammation', 'Better energy', 'Improved digestion'],
+                        instructions: 'Follow elimination diet, keep food diary, reintroduce foods systematically',
+                        precautions: 'Work with healthcare provider for severe reactions',
+                        price: '$115'
+                    }
+                ]
+            },
+            'mental-wellness': {
+                title: 'Mental Wellness Solutions',
+                icon: '🧠',
+                description: 'Comprehensive mental health support for emotional well-being',
+                color: 'from-blue-500 to-indigo-600',
+                cures: [
+                    {
+                        id: 21,
+                        name: 'Anxiety Relief Program',
+                        type: 'Natural Anxiolytic',
+                        duration: '4-6 weeks',
+                        effectiveness: '89%',
+                        description: 'Natural approach to manage anxiety and stress',
+                        ingredients: ['Ashwagandha', 'L-Theanine', 'GABA', 'Magnesium Glycinate'],
+                        benefits: ['Reduced anxiety', 'Better sleep', 'Improved focus', 'Stress resilience'],
+                        instructions: 'Take twice daily, practice deep breathing, maintain regular exercise',
+                        precautions: 'May cause drowsiness initially',
+                        price: '$75'
+                    },
+                    {
+                        id: 22,
+                        name: 'Depression Support Formula',
+                        type: 'Mood Enhancement',
+                        duration: '6-8 weeks',
+                        effectiveness: '85%',
+                        description: 'Natural support for mood balance and emotional wellness',
+                        ingredients: ['St. John\'s Wort', '5-HTP', 'SAM-e', 'Omega-3 DHA'],
+                        benefits: ['Improved mood', 'Better emotional balance', 'Increased motivation', 'Enhanced well-being'],
+                        instructions: 'Take with meals, get morning sunlight, maintain social connections',
+                        precautions: 'May interact with antidepressants',
+                        price: '$92'
+                    },
+                    {
+                        id: 23,
+                        name: 'Cognitive Enhancement Stack',
+                        type: 'Brain Support',
+                        duration: '8-12 weeks',
+                        effectiveness: '91%',
+                        description: 'Comprehensive support for memory and cognitive function',
+                        ingredients: ['Lion\'s Mane', 'Bacopa Monnieri', 'Phosphatidylserine', 'Ginkgo Biloba'],
+                        benefits: ['Better memory', 'Improved focus', 'Enhanced learning', 'Mental clarity'],
+                        instructions: 'Take with breakfast, engage in mental exercises, get adequate sleep',
+                        precautions: 'May take 4-6 weeks to see full effects',
+                        price: '$105'
+                    },
+                    {
+                        id: 24,
+                        name: 'Sleep Optimization Protocol',
+                        type: 'Sleep Support',
+                        duration: '3-4 weeks',
+                        effectiveness: '93%',
+                        description: 'Natural approach to improve sleep quality and duration',
+                        ingredients: ['Melatonin', 'Valerian Root', 'Passionflower', 'Magnesium'],
+                        benefits: ['Faster sleep onset', 'Deeper sleep', 'Better sleep quality', 'Morning alertness'],
+                        instructions: 'Take 30 minutes before bed, maintain sleep hygiene, avoid screens',
+                        precautions: 'Start with lowest effective dose',
+                        price: '$58'
+                    },
+                    {
+                        id: 25,
+                        name: 'ADHD Focus Formula',
+                        type: 'Attention Support',
+                        duration: '6-10 weeks',
+                        effectiveness: '82%',
+                        description: 'Natural support for attention and hyperactivity management',
+                        ingredients: ['Rhodiola Rosea', 'Ginseng', 'B-Complex', 'Iron'],
+                        benefits: ['Better focus', 'Reduced hyperactivity', 'Improved attention span', 'Enhanced learning'],
+                        instructions: 'Take with breakfast, maintain structured routine, limit sugar intake',
+                        precautions: 'Monitor for overstimulation',
+                        price: '$85'
+                    },
+                    {
+                        id: 26,
+                        name: 'Stress Resilience Builder',
+                        type: 'Adaptogenic Support',
+                        duration: '8-12 weeks',
+                        effectiveness: '88%',
+                        description: 'Build natural resilience to stress and life challenges',
+                        ingredients: ['Rhodiola', 'Holy Basil', 'Schisandra', 'Cordyceps'],
+                        benefits: ['Better stress response', 'Increased energy', 'Improved adaptation', 'Enhanced recovery'],
+                        instructions: 'Take daily, practice stress management, maintain work-life balance',
+                        precautions: 'May increase energy levels',
+                        price: '$98'
+                    },
+                    {
+                        id: 27,
+                        name: 'Panic Attack Prevention',
+                        type: 'Acute Anxiety Support',
+                        duration: '4-6 weeks',
+                        effectiveness: '87%',
+                        description: 'Natural approach to prevent and manage panic attacks',
+                        ingredients: ['Kava Kava', 'Lemon Balm', 'Taurine', 'Inositol'],
+                        benefits: ['Reduced panic frequency', 'Better emotional control', 'Increased confidence', 'Improved quality of life'],
+                        instructions: 'Take as needed, practice breathing techniques, avoid caffeine',
+                        precautions: 'Not recommended with liver conditions',
+                        price: '$78'
+                    },
+                    {
+                        id: 28,
+                        name: 'Seasonal Mood Support',
+                        type: 'Seasonal Affective Support',
+                        duration: '3-6 months',
+                        effectiveness: '84%',
+                        description: 'Natural support for seasonal mood changes',
+                        ingredients: ['Vitamin D3', 'Light Therapy', 'Saffron Extract', 'B-Complex'],
+                        benefits: ['Improved winter mood', 'Better energy levels', 'Reduced seasonal depression', 'Enhanced well-being'],
+                        instructions: 'Take daily, use light therapy morning, maintain exercise routine',
+                        precautions: 'Monitor vitamin D levels',
+                        price: '$68'
+                    },
+                    {
+                        id: 29,
+                        name: 'Memory Enhancement Program',
+                        type: 'Cognitive Support',
+                        duration: '8-16 weeks',
+                        effectiveness: '86%',
+                        description: 'Comprehensive program to enhance memory and recall',
+                        ingredients: ['Huperzine A', 'Vinpocetine', 'Alpha-GPC', 'Curcumin'],
+                        benefits: ['Better memory recall', 'Improved learning ability', 'Enhanced mental clarity', 'Neuroprotection'],
+                        instructions: 'Take with meals, engage in memory exercises, maintain social activity',
+                        precautions: 'May interact with blood thinners',
+                        price: '$115'
+                    },
+                    {
+                        id: 30,
+                        name: 'Emotional Balance Formula',
+                        type: 'Mood Stabilization',
+                        duration: '6-8 weeks',
+                        effectiveness: '90%',
+                        description: 'Natural support for emotional stability and mood swings',
+                        ingredients: ['Lithium Orotate', 'Magnesium', 'B6', 'Evening Primrose Oil'],
+                        benefits: ['Stable mood', 'Reduced mood swings', 'Better emotional control', 'Improved relationships'],
+                        instructions: 'Take with meals, maintain regular sleep schedule, practice mindfulness',
+                        precautions: 'Monitor for any mood changes',
+                        price: '$82'
+                    }
+                ]
+            },
+            'heart-health': {
+                title: 'Heart Health Solutions',
+                icon: '❤️',
+                description: 'Comprehensive cardiovascular wellness programs',
+                color: 'from-red-500 to-pink-600',
+                cures: [
+                    {
+                        id: 31,
+                        name: 'Cholesterol Management Program',
+                        type: 'Lipid Control',
+                        duration: '8-12 weeks',
+                        effectiveness: '91%',
+                        description: 'Natural approach to manage cholesterol levels',
+                        ingredients: ['Red Yeast Rice', 'Plant Sterols', 'Niacin', 'Fiber Complex'],
+                        benefits: ['Lower LDL cholesterol', 'Higher HDL cholesterol', 'Better lipid profile', 'Reduced cardiovascular risk'],
+                        instructions: 'Take with dinner, follow heart-healthy diet, exercise regularly',
+                        precautions: 'Monitor liver function if using statins',
+                        price: '$95'
+                    },
+                    {
+                        id: 32,
+                        name: 'Blood Pressure Support',
+                        type: 'Hypertension Management',
+                        duration: '6-10 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural support for healthy blood pressure levels',
+                        ingredients: ['Hawthorn Berry', 'Garlic Extract', 'CoQ10', 'Magnesium'],
+                        benefits: ['Lower blood pressure', 'Better circulation', 'Reduced arterial stiffness', 'Heart protection'],
+                        instructions: 'Take twice daily, reduce sodium intake, manage stress levels',
+                        precautions: 'Monitor blood pressure regularly',
+                        price: '$78'
+                    },
+                    {
+                        id: 33,
+                        name: 'Arrhythmia Support Formula',
+                        type: 'Heart Rhythm Support',
+                        duration: '4-8 weeks',
+                        effectiveness: '85%',
+                        description: 'Natural support for healthy heart rhythm',
+                        ingredients: ['Magnesium Taurate', 'Potassium', 'Hawthorn', 'L-Carnitine'],
+                        benefits: ['Stable heart rhythm', 'Reduced palpitations', 'Better heart function', 'Improved energy'],
+                        instructions: 'Take with meals, avoid excessive caffeine, maintain electrolyte balance',
+                        precautions: 'Consult cardiologist for serious arrhythmias',
+                        price: '$88'
+                    },
+                    {
+                        id: 34,
+                        name: 'Circulation Enhancement',
+                        type: 'Vascular Support',
+                        duration: '6-8 weeks',
+                        effectiveness: '89%',
+                        description: 'Improve blood circulation and vascular health',
+                        ingredients: ['Ginkgo Biloba', 'Horse Chestnut', 'Butcher\'s Broom', 'Vitamin E'],
+                        benefits: ['Better circulation', 'Reduced leg swelling', 'Improved vascular health', 'Enhanced oxygen delivery'],
+                        instructions: 'Take twice daily, elevate legs when resting, wear compression socks',
+                        precautions: 'May interact with blood thinners',
+                        price: '$72'
+                    },
+                    {
+                        id: 35,
+                        name: 'Heart Attack Recovery',
+                        type: 'Cardiac Rehabilitation',
+                        duration: '12-16 weeks',
+                        effectiveness: '87%',
+                        description: 'Comprehensive support for heart attack recovery',
+                        ingredients: ['CoQ10', 'Omega-3', 'Vitamin D3', 'Resveratrol'],
+                        benefits: ['Improved heart function', 'Reduced inflammation', 'Better recovery', 'Prevention of future events'],
+                        instructions: 'Take as directed, follow cardiac diet, participate in cardiac rehab',
+                        precautions: 'Use under medical supervision only',
+                        price: '$125'
+                    },
+                    {
+                        id: 36,
+                        name: 'Angina Relief Protocol',
+                        type: 'Chest Pain Management',
+                        duration: '6-10 weeks',
+                        effectiveness: '83%',
+                        description: 'Natural support for angina and chest discomfort',
+                        ingredients: ['L-Arginine', 'Ribose', 'Creatine', 'Taurine'],
+                        benefits: ['Reduced chest pain', 'Better exercise tolerance', 'Improved heart function', 'Enhanced quality of life'],
+                        instructions: 'Take before physical activity, avoid overexertion, manage stress',
+                        precautions: 'Seek immediate medical attention for severe chest pain',
+                        price: '$98'
+                    },
+                    {
+                        id: 37,
+                        name: 'Atherosclerosis Prevention',
+                        type: 'Arterial Health',
+                        duration: '12-24 weeks',
+                        effectiveness: '86%',
+                        description: 'Prevent and reverse arterial plaque buildup',
+                        ingredients: ['Nattokinase', 'Vitamin K2', 'Pomegranate', 'Green Tea Extract'],
+                        benefits: ['Reduced plaque buildup', 'Better arterial flexibility', 'Improved blood flow', 'Lower cardiovascular risk'],
+                        instructions: 'Take with meals, maintain anti-inflammatory diet, exercise regularly',
+                        precautions: 'May interact with blood thinners',
+                        price: '$110'
+                    },
+                    {
+                        id: 38,
+                        name: 'Heart Failure Support',
+                        type: 'Cardiac Function Support',
+                        duration: '8-16 weeks',
+                        effectiveness: '84%',
+                        description: 'Natural support for heart failure management',
+                        ingredients: ['Hawthorn', 'CoQ10', 'Carnitine', 'Ribose'],
+                        benefits: ['Improved heart function', 'Better exercise capacity', 'Reduced symptoms', 'Enhanced quality of life'],
+                        instructions: 'Take as directed, monitor fluid intake, weigh daily',
+                        precautions: 'Use under cardiologist supervision',
+                        price: '$135'
+                    },
+                    {
+                        id: 39,
+                        name: 'Stroke Prevention Protocol',
+                        type: 'Cerebrovascular Protection',
+                        duration: '12+ weeks',
+                        effectiveness: '88%',
+                        description: 'Comprehensive stroke prevention program',
+                        ingredients: ['Nattokinase', 'Ginkgo', 'Omega-3', 'Folate'],
+                        benefits: ['Reduced stroke risk', 'Better brain circulation', 'Improved cognitive function', 'Neuroprotection'],
+                        instructions: 'Take daily, control blood pressure, maintain healthy weight',
+                        precautions: 'Monitor for bleeding if on anticoagulants',
+                        price: '$105'
+                    },
+                    {
+                        id: 40,
+                        name: 'Cardiac Stress Management',
+                        type: 'Stress-Related Heart Issues',
+                        duration: '6-8 weeks',
+                        effectiveness: '90%',
+                        description: 'Address stress-related cardiovascular problems',
+                        ingredients: ['Ashwagandha', 'Magnesium', 'B-Complex', 'L-Theanine'],
+                        benefits: ['Reduced stress response', 'Lower cortisol levels', 'Better heart rate variability', 'Improved resilience'],
+                        instructions: 'Take twice daily, practice stress reduction, maintain work-life balance',
+                        precautions: 'May cause drowsiness initially',
+                        price: '$75'
+                    }
+                ]
+            },
+            'skin-beauty': {
+                title: 'Skin & Beauty Solutions',
+                icon: '✨',
+                description: 'Advanced skincare and beauty enhancement programs',
+                color: 'from-purple-500 to-pink-600',
+                cures: [
+                    {
+                        id: 41,
+                        name: 'Anti-Aging Skin Renewal',
+                        type: 'Age Reversal',
+                        duration: '8-12 weeks',
+                        effectiveness: '92%',
+                        description: 'Comprehensive anti-aging skincare program',
+                        ingredients: ['Retinol', 'Vitamin C', 'Hyaluronic Acid', 'Peptides'],
+                        benefits: ['Reduced wrinkles', 'Improved skin texture', 'Better elasticity', 'Youthful glow'],
+                        instructions: 'Apply morning and evening, use sunscreen daily, stay hydrated',
+                        precautions: 'May cause initial skin sensitivity',
+                        price: '$145'
+                    },
+                    {
+                        id: 42,
+                        name: 'Acne Clear Complex',
+                        type: 'Acne Treatment',
+                        duration: '6-10 weeks',
+                        effectiveness: '89%',
+                        description: 'Complete acne treatment and prevention system',
+                        ingredients: ['Salicylic Acid', 'Benzoyl Peroxide', 'Niacinamide', 'Zinc'],
+                        benefits: ['Clearer skin', 'Reduced breakouts', 'Minimized pores', 'Improved skin texture'],
+                        instructions: 'Start slowly, use non-comedogenic products, maintain consistent routine',
+                        precautions: 'May cause dryness initially',
+                        price: '$85'
+                    },
+                    {
+                        id: 43,
+                        name: 'Hyperpigmentation Corrector',
+                        type: 'Skin Brightening',
+                        duration: '8-16 weeks',
+                        effectiveness: '87%',
+                        description: 'Advanced treatment for dark spots and uneven skin tone',
+                        ingredients: ['Hydroquinone', 'Kojic Acid', 'Arbutin', 'Vitamin C'],
+                        benefits: ['Faded dark spots', 'Even skin tone', 'Brighter complexion', 'Reduced melasma'],
+                        instructions: 'Apply to affected areas, use sunscreen religiously, be patient with results',
+                        precautions: 'Avoid sun exposure during treatment',
+                        price: '$98'
+                    },
+                    {
+                        id: 44,
+                        name: 'Sensitive Skin Repair',
+                        type: 'Skin Barrier Restoration',
+                        duration: '4-8 weeks',
+                        effectiveness: '91%',
+                        description: 'Gentle repair program for sensitive and damaged skin',
+                        ingredients: ['Ceramides', 'Niacinamide', 'Centella Asiatica', 'Colloidal Oatmeal'],
+                        benefits: ['Reduced sensitivity', 'Stronger skin barrier', 'Less irritation', 'Improved comfort'],
+                        instructions: 'Use gentle products only, avoid harsh ingredients, patch test everything',
+                        precautions: 'Discontinue if irritation occurs',
+                        price: '$75'
+                    },
+                    {
+                        id: 45,
+                        name: 'Cellulite Reduction Program',
+                        type: 'Body Contouring',
+                        duration: '12-16 weeks',
+                        effectiveness: '78%',
+                        description: 'Comprehensive approach to reduce cellulite appearance',
+                        ingredients: ['Caffeine', 'Retinol', 'Aminophylline', 'Peptides'],
+                        benefits: ['Smoother skin texture', 'Improved circulation', 'Firmer appearance', 'Enhanced confidence'],
+                        instructions: 'Apply with massage, maintain healthy diet, exercise regularly',
+                        precautions: 'Results vary by individual',
+                        price: '$125'
+                    },
+                    {
+                        id: 46,
+                        name: 'Hair Growth Accelerator',
+                        type: 'Hair Restoration',
+                        duration: '12-24 weeks',
+                        effectiveness: '85%',
+                        description: 'Natural program to promote hair growth and thickness',
+                        ingredients: ['Minoxidil', 'Biotin', 'Saw Palmetto', 'Peptides'],
+                        benefits: ['Increased hair growth', 'Thicker hair', 'Reduced hair loss', 'Improved scalp health'],
+                        instructions: 'Apply to scalp daily, massage gently, maintain healthy diet',
+                        precautions: 'May cause initial shedding',
+                        price: '$115'
+                    },
+                    {
+                        id: 47,
+                        name: 'Stretch Mark Minimizer',
+                        type: 'Scar Reduction',
+                        duration: '16-24 weeks',
+                        effectiveness: '73%',
+                        description: 'Advanced treatment to minimize stretch mark appearance',
+                        ingredients: ['Tretinoin', 'Hyaluronic Acid', 'Centella Asiatica', 'Vitamin E'],
+                        benefits: ['Faded stretch marks', 'Improved skin texture', 'Better elasticity', 'Enhanced appearance'],
+                        instructions: 'Apply consistently, massage into skin, maintain skin hydration',
+                        precautions: 'Avoid during pregnancy',
+                        price: '$88'
+                    },
+                    {
+                        id: 48,
+                        name: 'Rosacea Relief System',
+                        type: 'Inflammatory Skin Condition',
+                        duration: '8-12 weeks',
+                        effectiveness: '86%',
+                        description: 'Gentle treatment for rosacea and facial redness',
+                        ingredients: ['Metronidazole', 'Niacinamide', 'Green Tea', 'Azelaic Acid'],
+                        benefits: ['Reduced redness', 'Less inflammation', 'Improved skin comfort', 'Better appearance'],
+                        instructions: 'Use gentle products, avoid triggers, protect from sun',
+                        precautions: 'Identify and avoid personal triggers',
+                        price: '$95'
+                    },
+                    {
+                        id: 49,
+                        name: 'Nail Strengthening Formula',
+                        type: 'Nail Health',
+                        duration: '8-12 weeks',
+                        effectiveness: '89%',
+                        description: 'Comprehensive program for stronger, healthier nails',
+                        ingredients: ['Biotin', 'Keratin', 'Calcium', 'Vitamin E'],
+                        benefits: ['Stronger nails', 'Reduced breaking', 'Faster growth', 'Improved appearance'],
+                        instructions: 'Take supplements daily, use cuticle oil, wear gloves for chores',
+                        precautions: 'Results take time to show',
+                        price: '$58'
+                    },
+                    {
+                        id: 50,
+                        name: 'Under-Eye Rejuvenation',
+                        type: 'Eye Care',
+                        duration: '6-10 weeks',
+                        effectiveness: '88%',
+                        description: 'Specialized treatment for under-eye concerns',
+                        ingredients: ['Caffeine', 'Peptides', 'Vitamin K', 'Hyaluronic Acid'],
+                        benefits: ['Reduced dark circles', 'Less puffiness', 'Smoother fine lines', 'Brighter appearance'],
+                        instructions: 'Apply gently morning and evening, use ring finger, avoid pulling skin',
+                        precautions: 'Avoid getting product in eyes',
+                        price: '$78'
+                    }
+                ]
+            },
+            'immune-system': {
+                title: 'Immune System Solutions',
+                icon: '🛡️',
+                description: 'Comprehensive immune support and enhancement programs',
+                color: 'from-orange-500 to-red-600',
+                cures: [
+                    {
+                        id: 51,
+                        name: 'Immune Boost Protocol',
+                        type: 'Immune Enhancement',
+                        duration: '4-8 weeks',
+                        effectiveness: '93%',
+                        description: 'Comprehensive immune system strengthening program',
+                        ingredients: ['Vitamin C', 'Zinc', 'Elderberry', 'Echinacea'],
+                        benefits: ['Stronger immunity', 'Fewer infections', 'Faster recovery', 'Better overall health'],
+                        instructions: 'Take daily, maintain healthy lifestyle, get adequate sleep',
+                        precautions: 'May interact with immunosuppressive drugs',
+                        price: '$68'
+                    },
+                    {
+                        id: 52,
+                        name: 'Cold & Flu Defense',
+                        type: 'Respiratory Support',
+                        duration: '2-4 weeks',
+                        effectiveness: '89%',
+                        description: 'Natural defense against cold and flu viruses',
+                        ingredients: ['Oscillococcinum', 'Andrographis', 'Astragalus', 'Propolis'],
+                        benefits: ['Reduced illness duration', 'Milder symptoms', 'Faster recovery', 'Prevention support'],
+                        instructions: 'Take at first sign of illness, increase dose during outbreaks',
+                        precautions: 'Start treatment early for best results',
+                        price: '$45'
+                    },
+                    {
+                        id: 53,
+                        name: 'Autoimmune Balance',
+                        type: 'Immune Modulation',
+                        duration: '12-16 weeks',
+                        effectiveness: '82%',
+                        description: 'Natural support for autoimmune condition management',
+                        ingredients: ['Curcumin', 'Omega-3', 'Vitamin D3', 'Probiotics'],
+                        benefits: ['Reduced inflammation', 'Better immune balance', 'Fewer flare-ups', 'Improved quality of life'],
+                        instructions: 'Take consistently, follow anti-inflammatory diet, manage stress',
+                        precautions: 'Work with healthcare provider for autoimmune conditions',
+                        price: '$125'
+                    },
+                    {
+                        id: 54,
+                        name: 'Allergy Relief Formula',
+                        type: 'Histamine Control',
+                        duration: '4-6 weeks',
+                        effectiveness: '87%',
+                        description: 'Natural approach to manage seasonal and environmental allergies',
+                        ingredients: ['Quercetin', 'Butterbur', 'Nettle Leaf', 'Bromelain'],
+                        benefits: ['Reduced allergy symptoms', 'Less congestion', 'Better breathing', 'Improved comfort'],
+                        instructions: 'Start before allergy season, avoid known allergens, use air purifiers',
+                        precautions: 'May cause drowsiness in some individuals',
+                        price: '$58'
+                    },
+                    {
+                        id: 55,
+                        name: 'Chronic Fatigue Recovery',
+                        type: 'Energy Restoration',
+                        duration: '12-24 weeks',
+                        effectiveness: '78%',
+                        description: 'Comprehensive program for chronic fatigue syndrome',
+                        ingredients: ['CoQ10', 'NADH', 'B-Complex', 'Rhodiola'],
+                        benefits: ['Increased energy', 'Better stamina', 'Improved cognitive function', 'Enhanced quality of life'],
+                        instructions: 'Take with meals, pace activities, prioritize sleep quality',
+                        precautions: 'Progress may be gradual',
+                        price: '$135'
+                    },
+                    {
+                        id: 56,
+                        name: 'Lymphatic Drainage Support',
+                        type: 'Detoxification',
+                        duration: '6-8 weeks',
+                        effectiveness: '85%',
+                        description: 'Natural support for lymphatic system function',
+                        ingredients: ['Red Root', 'Cleavers', 'Calendula', 'Echinacea'],
+                        benefits: ['Better lymphatic flow', 'Reduced swelling', 'Enhanced detoxification', 'Improved immunity'],
+                        instructions: 'Take between meals, stay hydrated, practice dry brushing',
+                        precautions: 'May cause initial detox symptoms',
+                        price: '$72'
+                    },
+                    {
+                        id: 57,
+                        name: 'Antiviral Defense System',
+                        type: 'Viral Protection',
+                        duration: '4-12 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural antiviral support for various infections',
+                        ingredients: ['Lysine', 'Monolaurin', 'Olive Leaf', 'Lemon Balm'],
+                        benefits: ['Reduced viral replication', 'Faster recovery', 'Prevention support', 'Immune enhancement'],
+                        instructions: 'Take at first sign of infection, maintain throughout illness',
+                        precautions: 'Consult doctor for serious viral infections',
+                        price: '$78'
+                    },
+                    {
+                        id: 58,
+                        name: 'Candida Immune Support',
+                        type: 'Antifungal Immunity',
+                        duration: '8-12 weeks',
+                        effectiveness: '83%',
+                        description: 'Immune support specifically for fungal overgrowth',
+                        ingredients: ['Caprylic Acid', 'Pau D\'Arco', 'Oregano Oil', 'Probiotics'],
+                        benefits: ['Reduced fungal overgrowth', 'Better immune response', 'Improved gut health', 'Enhanced resistance'],
+                        instructions: 'Follow anti-candida diet, take probiotics separately, avoid sugar',
+                        precautions: 'May cause die-off reactions initially',
+                        price: '$95'
+                    },
+                    {
+                        id: 59,
+                        name: 'Post-Illness Recovery',
+                        type: 'Convalescence Support',
+                        duration: '6-10 weeks',
+                        effectiveness: '91%',
+                        description: 'Comprehensive recovery support after illness',
+                        ingredients: ['Adaptogenic Herbs', 'B-Complex', 'Protein Powder', 'Digestive Enzymes'],
+                        benefits: ['Faster recovery', 'Restored energy', 'Better appetite', 'Improved strength'],
+                        instructions: 'Take with meals, rest adequately, gradually increase activity',
+                        precautions: 'Allow adequate time for full recovery',
+                        price: '$88'
+                    },
+                    {
+                        id: 60,
+                        name: 'Travel Immunity Kit',
+                        type: 'Travel Health',
+                        duration: '2-4 weeks',
+                        effectiveness: '86%',
+                        description: 'Immune support for travelers and frequent flyers',
+                        ingredients: ['Probiotics', 'Immune Boosters', 'Digestive Support', 'Stress Adaptogens'],
+                        benefits: ['Reduced travel illness', 'Better adaptation', 'Digestive comfort', 'Maintained immunity'],
+                        instructions: 'Start before travel, continue during trip, maintain hydration',
+                        precautions: 'Check regulations for international travel',
+                        price: '$65'
+                    }
+                ]
+            },
+            'weight-management': {
+                title: 'Weight Management Solutions',
+                icon: '⚖️',
+                description: 'Comprehensive weight loss and metabolic health programs',
+                color: 'from-yellow-500 to-orange-600',
+                cures: [
+                    {
+                        id: 61,
+                        name: 'Metabolic Reset Program',
+                        type: 'Metabolism Boost',
+                        duration: '12-16 weeks',
+                        effectiveness: '89%',
+                        description: 'Comprehensive program to reset and boost metabolism',
+                        ingredients: ['Green Tea Extract', 'Chromium', 'L-Carnitine', 'CLA'],
+                        benefits: ['Increased metabolism', 'Better fat burning', 'Improved energy', 'Weight loss support'],
+                        instructions: 'Take with meals, combine with exercise, maintain caloric deficit',
+                        precautions: 'May cause jitters if sensitive to caffeine',
+                        price: '$95'
+                    },
+                    {
+                        id: 62,
+                        name: 'Appetite Control Formula',
+                        type: 'Hunger Management',
+                        duration: '8-12 weeks',
+                        effectiveness: '87%',
+                        description: 'Natural appetite suppression and craving control',
+                        ingredients: ['Glucomannan', '5-HTP', 'Garcinia Cambogia', 'Chromium'],
+                        benefits: ['Reduced appetite', 'Fewer cravings', 'Better portion control', 'Weight loss support'],
+                        instructions: 'Take 30 minutes before meals, drink plenty of water, eat mindfully',
+                        precautions: 'Take with adequate water to prevent choking',
+                        price: '$68'
+                    },
+                    {
+                        id: 63,
+                        name: 'Fat Burner Complex',
+                        type: 'Thermogenic Support',
+                        duration: '8-12 weeks',
+                        effectiveness: '85%',
+                        description: 'Advanced thermogenic formula for fat burning',
+                        ingredients: ['Caffeine', 'Capsaicin', 'Yohimbine', 'Forskolin'],
+                        benefits: ['Increased fat burning', 'Higher energy expenditure', 'Better workout performance', 'Accelerated weight loss'],
+                        instructions: 'Take before workouts, start with lower dose, avoid late in day',
+                        precautions: 'Not suitable for those with heart conditions',
+                        price: '$78'
+                    },
+                    {
+                        id: 64,
+                        name: 'Carb Blocker System',
+                        type: 'Carbohydrate Management',
+                        duration: '6-10 weeks',
+                        effectiveness: '82%',
+                        description: 'Natural carbohydrate absorption inhibitor',
+                        ingredients: ['White Kidney Bean', 'Gymnema Sylvestre', 'Cinnamon', 'Alpha-Lipoic Acid'],
+                        benefits: ['Reduced carb absorption', 'Better blood sugar control', 'Weight management', 'Reduced cravings'],
+                        instructions: 'Take before carb-heavy meals, maintain balanced diet, monitor blood sugar',
+                        precautions: 'Monitor blood sugar if diabetic',
+                        price: '$58'
+                    },
+                    {
+                        id: 65,
+                        name: 'Belly Fat Targeting',
+                        type: 'Abdominal Fat Reduction',
+                        duration: '12-16 weeks',
+                        effectiveness: '78%',
+                        description: 'Specialized program for stubborn abdominal fat',
+                        ingredients: ['CLA', 'Green Coffee Bean', 'Raspberry Ketones', 'L-Carnitine'],
+                        benefits: ['Reduced belly fat', 'Better waist circumference', 'Improved body composition', 'Enhanced confidence'],
+                        instructions: 'Combine with core exercises, reduce stress levels, get adequate sleep',
+                        precautions: 'Results vary by individual genetics',
+                        price: '$88'
+                    },
+                    {
+                        id: 66,
+                        name: 'Thyroid Support Weight Loss',
+                        type: 'Thyroid Optimization',
+                        duration: '12-20 weeks',
+                        effectiveness: '84%',
+                        description: 'Weight management support for thyroid-related issues',
+                        ingredients: ['Iodine', 'Tyrosine', 'Selenium', 'Ashwagandha'],
+                        benefits: ['Improved thyroid function', 'Better metabolism', 'Increased energy', 'Weight loss support'],
+                        instructions: 'Take on empty stomach, monitor thyroid levels, work with healthcare provider',
+                        precautions: 'Monitor thyroid function regularly',
+                        price: '$95'
+                    },
+                    {
+                        id: 67,
+                        name: 'Insulin Sensitivity Enhancer',
+                        type: 'Blood Sugar Control',
+                        duration: '10-16 weeks',
+                        effectiveness: '88%',
+                        description: 'Improve insulin sensitivity for better weight management',
+                        ingredients: ['Berberine', 'Metformin Alternative', 'Cinnamon', 'Bitter Melon'],
+                        benefits: ['Better insulin sensitivity', 'Improved glucose metabolism', 'Reduced fat storage', 'Weight loss support'],
+                        instructions: 'Take with meals, follow low-glycemic diet, exercise regularly',
+                        precautions: 'Monitor blood sugar levels',
+                        price: '$78'
+                    },
+                    {
+                        id: 68,
+                        name: 'Stress-Related Weight Support',
+                        type: 'Cortisol Management',
+                        duration: '8-12 weeks',
+                        effectiveness: '86%',
+                        description: 'Address stress-related weight gain and cortisol issues',
+                        ingredients: ['Phosphatidylserine', 'Ashwagandha', 'Rhodiola', 'Magnesium'],
+                        benefits: ['Reduced cortisol levels', 'Less stress eating', 'Better sleep', 'Weight management'],
+                        instructions: 'Take twice daily, practice stress management, prioritize sleep',
+                        precautions: 'May cause drowsiness initially',
+                        price: '$72'
+                    },
+                    {
+                        id: 69,
+                        name: 'Menopause Weight Management',
+                        type: 'Hormonal Weight Support',
+                        duration: '12-24 weeks',
+                        effectiveness: '81%',
+                        description: 'Specialized weight management for menopausal women',
+                        ingredients: ['Black Cohosh', 'Red Clover', 'DIM', 'Calcium'],
+                        benefits: ['Hormonal balance', 'Reduced menopausal weight gain', 'Better metabolism', 'Improved body composition'],
+                        instructions: 'Take daily, maintain strength training, eat adequate protein',
+                        precautions: 'Consult healthcare provider for hormone-related issues',
+                        price: '$98'
+                    },
+                    {
+                        id: 70,
+                        name: 'Post-Workout Recovery & Fat Loss',
+                        type: 'Exercise Enhancement',
+                        duration: '8-12 weeks',
+                        effectiveness: '90%',
+                        description: 'Optimize recovery and fat burning from exercise',
+                        ingredients: ['Protein Powder', 'BCAAs', 'Glutamine', 'Creatine'],
+                        benefits: ['Faster recovery', 'Better muscle preservation', 'Enhanced fat burning', 'Improved performance'],
+                        instructions: 'Take post-workout, maintain consistent exercise routine, get adequate rest',
+                        precautions: 'Adjust protein intake based on total daily needs',
+                        price: '$85'
+                    }
+                ]
+            },
+            'sleep-wellness': {
+                title: 'Sleep Wellness Solutions',
+                icon: '😴',
+                description: 'Comprehensive sleep optimization and insomnia treatment programs',
+                color: 'from-indigo-500 to-purple-600',
+                cures: [
+                    {
+                        id: 71,
+                        name: 'Deep Sleep Optimization',
+                        type: 'Sleep Quality Enhancement',
+                        duration: '4-8 weeks',
+                        effectiveness: '92%',
+                        description: 'Comprehensive program for deeper, more restorative sleep',
+                        ingredients: ['Melatonin', 'Magnesium Glycinate', 'L-Theanine', 'GABA'],
+                        benefits: ['Deeper sleep', 'Better sleep quality', 'Improved recovery', 'Morning alertness'],
+                        instructions: 'Take 30-60 minutes before bed, maintain sleep hygiene, create bedtime routine',
+                        precautions: 'Start with lowest effective dose',
+                        price: '$68'
+                    },
+                    {
+                        id: 72,
+                        name: 'Insomnia Relief Protocol',
+                        type: 'Sleep Initiation Support',
+                        duration: '6-10 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural approach to overcome chronic insomnia',
+                        ingredients: ['Valerian Root', 'Passionflower', 'Chamomile', 'Lemon Balm'],
+                        benefits: ['Faster sleep onset', 'Reduced sleep anxiety', 'Better sleep maintenance', 'Natural relaxation'],
+                        instructions: 'Take 1 hour before bed, avoid screens, practice relaxation techniques',
+                        precautions: 'May cause morning grogginess initially',
+                        price: '$58'
+                    },
+                    {
+                        id: 73,
+                        name: 'Sleep Anxiety Management',
+                        type: 'Bedtime Anxiety Relief',
+                        duration: '4-6 weeks',
+                        effectiveness: '89%',
+                        description: 'Address anxiety that interferes with sleep',
+                        ingredients: ['Ashwagandha', 'L-Theanine', 'Magnesium', 'Taurine'],
+                        benefits: ['Reduced bedtime anxiety', 'Calmer mind', 'Better sleep onset', 'Improved sleep quality'],
+                        instructions: 'Take evening dose, practice mindfulness, create calming environment',
+                        precautions: 'May interact with anxiety medications',
+                        price: '$72'
+                    },
+                    {
+                        id: 74,
+                        name: 'Shift Work Sleep Support',
+                        type: 'Circadian Rhythm Support',
+                        duration: '6-12 weeks',
+                        effectiveness: '85%',
+                        description: 'Specialized support for shift workers and irregular schedules',
+                        ingredients: ['Melatonin', 'Light Therapy', 'B-Complex', 'Adaptogenic Herbs'],
+                        benefits: ['Better sleep adaptation', 'Improved alertness', 'Reduced fatigue', 'Better circadian rhythm'],
+                        instructions: 'Time doses according to shift schedule, use light therapy strategically',
+                        precautions: 'Adjust timing based on work schedule',
+                        price: '$85'
+                    },
+                    {
+                        id: 75,
+                        name: 'Sleep Apnea Support',
+                        type: 'Breathing Support',
+                        duration: '8-16 weeks',
+                        effectiveness: '78%',
+                        description: 'Natural support for sleep apnea and breathing issues',
+                        ingredients: ['NAC', 'Magnesium', 'CoQ10', 'Anti-inflammatory herbs'],
+                        benefits: ['Better breathing', 'Reduced inflammation', 'Improved sleep quality', 'Enhanced recovery'],
+                        instructions: 'Use alongside CPAP if prescribed, maintain healthy weight, sleep on side',
+                        precautions: 'Work with sleep specialist for severe cases',
+                        price: '$95'
+                    },
+                    {
+                        id: 76,
+                        name: 'Restless Leg Syndrome Relief',
+                        type: 'Movement Disorder Support',
+                        duration: '6-10 weeks',
+                        effectiveness: '83%',
+                        description: 'Natural relief for restless leg syndrome',
+                        ingredients: ['Iron', 'Magnesium', 'Folate', 'Dopamine Precursors'],
+                        benefits: ['Reduced leg restlessness', 'Better sleep quality', 'Less sleep disruption', 'Improved comfort'],
+                        instructions: 'Take with vitamin C for iron absorption, check iron levels, avoid caffeine',
+                        precautions: 'Monitor iron levels to avoid excess',
+                        price: '$65'
+                    },
+                    {
+                        id: 77,
+                        name: 'Jet Lag Recovery System',
+                        type: 'Travel Sleep Support',
+                        duration: '1-2 weeks',
+                        effectiveness: '91%',
+                        description: 'Fast recovery from jet lag and time zone changes',
+                        ingredients: ['Melatonin', 'Light Therapy', 'B-Complex', 'Adaptogenic Herbs'],
+                        benefits: ['Faster adjustment', 'Reduced jet lag symptoms', 'Better sleep timing', 'Improved alertness'],
+                        instructions: 'Start before travel, adjust timing to destination, use light strategically',
+                        precautions: 'Follow specific timing protocols',
+                        price: '$48'
+                    },
+                    {
+                        id: 78,
+                        name: 'Night Sweats & Hot Flashes',
+                        type: 'Temperature Regulation',
+                        duration: '6-12 weeks',
+                        effectiveness: '86%',
+                        description: 'Natural relief for night sweats and sleep disruption',
+                        ingredients: ['Black Cohosh', 'Sage', 'Evening Primrose Oil', 'Magnesium'],
+                        benefits: ['Reduced night sweats', 'Better temperature regulation', 'Improved sleep quality', 'Less sleep disruption'],
+                        instructions: 'Take evening dose, use cooling bedding, maintain bedroom temperature',
+                        precautions: 'Monitor for hormonal changes',
+                        price: '$78'
+                    },
+                    {
+                        id: 79,
+                        name: 'Sleep Recovery After Illness',
+                        type: 'Convalescent Sleep Support',
+                        duration: '4-8 weeks',
+                        effectiveness: '87%',
+                        description: 'Restore healthy sleep patterns after illness',
+                        ingredients: ['Adaptogenic Herbs', 'B-Complex', 'Magnesium', 'Immune Support'],
+                        benefits: ['Restored sleep patterns', 'Better recovery', 'Improved energy', 'Enhanced healing'],
+                        instructions: 'Take consistently, prioritize sleep hygiene, allow extra rest time',
+                        precautions: 'Allow adequate recovery time',
+                        price: '$68'
+                    },
+                    {
+                        id: 80,
+                        name: 'Children\'s Sleep Support',
+                        type: 'Pediatric Sleep Aid',
+                        duration: '4-8 weeks',
+                        effectiveness: '89%',
+                        description: 'Safe, natural sleep support for children',
+                        ingredients: ['Chamomile', 'Magnesium', 'L-Theanine', 'Melatonin (low dose)'],
+                        benefits: ['Better bedtime routine', 'Calmer evenings', 'Improved sleep quality', 'Better behavior'],
+                        instructions: 'Use age-appropriate doses, establish consistent routine, create calming environment',
+                        precautions: 'Consult pediatrician before use',
+                        price: '$45'
+                    }
+                ]
+            },
+            'respiratory-health': {
+                title: 'Respiratory Health Solutions',
+                icon: '🫁',
+                description: 'Comprehensive lung health and breathing optimization programs',
+                color: 'from-cyan-500 to-blue-600',
+                cures: [
+                    {
+                        id: 81,
+                        name: 'Asthma Management Program',
+                        type: 'Bronchial Support',
+                        duration: '8-16 weeks',
+                        effectiveness: '87%',
+                        description: 'Natural support for asthma management and prevention',
+                        ingredients: ['Quercetin', 'Butterbur', 'Magnesium', 'Omega-3'],
+                        benefits: ['Reduced asthma attacks', 'Better breathing', 'Less inflammation', 'Improved lung function'],
+                        instructions: 'Take consistently, avoid triggers, use alongside prescribed medications',
+                        precautions: 'Do not replace prescribed asthma medications',
+                        price: '$85'
+                    },
+                    {
+                        id: 82,
+                        name: 'COPD Support Formula',
+                        type: 'Chronic Lung Support',
+                        duration: '12-24 weeks',
+                        effectiveness: '82%',
+                        description: 'Comprehensive support for chronic obstructive pulmonary disease',
+                        ingredients: ['NAC', 'Cordyceps', 'Coenzyme Q10', 'Anti-inflammatory herbs'],
+                        benefits: ['Improved breathing', 'Reduced inflammation', 'Better exercise tolerance', 'Enhanced quality of life'],
+                        instructions: 'Take with meals, practice breathing exercises, maintain physical activity',
+                        precautions: 'Use under medical supervision',
+                        price: '$125'
+                    },
+                    {
+                        id: 83,
+                        name: 'Seasonal Allergy Respiratory Relief',
+                        type: 'Allergy Management',
+                        duration: '4-8 weeks',
+                        effectiveness: '89%',
+                        description: 'Natural relief for seasonal respiratory allergies',
+                        ingredients: ['Quercetin', 'Nettle Leaf', 'Bromelain', 'Vitamin C'],
+                        benefits: ['Reduced congestion', 'Less sneezing', 'Better breathing', 'Improved comfort'],
+                        instructions: 'Start before allergy season, avoid allergens, use air purifiers',
+                        precautions: 'May cause drowsiness in some individuals',
+                        price: '$58'
+                    },
+                    {
+                        id: 84,
+                        name: 'Bronchitis Recovery Support',
+                        type: 'Acute Respiratory Support',
+                        duration: '2-6 weeks',
+                        effectiveness: '91%',
+                        description: 'Natural support for bronchitis recovery and prevention',
+                        ingredients: ['Elderberry', 'Echinacea', 'Zinc', 'Propolis'],
+                        benefits: ['Faster recovery', 'Reduced cough', 'Less congestion', 'Improved breathing'],
+                        instructions: 'Start at first symptoms, increase fluid intake, get adequate rest',
+                        precautions: 'Seek medical attention if symptoms worsen',
+                        price: '$48'
+                    },
+                    {
+                        id: 85,
+                        name: 'Lung Detox & Cleanse',
+                        type: 'Pulmonary Detoxification',
+                        duration: '6-12 weeks',
+                        effectiveness: '85%',
+                        description: 'Comprehensive lung detoxification for smokers and pollution exposure',
+                        ingredients: ['NAC', 'Mullein', 'Plantain', 'Antioxidants'],
+                        benefits: ['Cleaner lungs', 'Better breathing', 'Reduced inflammation', 'Enhanced lung function'],
+                        instructions: 'Take consistently, avoid pollutants, practice deep breathing exercises',
+                        precautions: 'May cause initial detox symptoms',
+                        price: '$78'
+                    },
+                    {
+                        id: 86,
+                        name: 'Chronic Cough Relief',
+                        type: 'Cough Suppression',
+                        duration: '3-8 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural relief for persistent and chronic cough',
+                        ingredients: ['Honey', 'Thyme', 'Licorice Root', 'Marshmallow Root'],
+                        benefits: ['Reduced cough frequency', 'Soothed throat', 'Better sleep', 'Improved comfort'],
+                        instructions: 'Take as needed, stay hydrated, avoid irritants',
+                        precautions: 'Consult doctor if cough persists over 3 weeks',
+                        price: '$42'
+                    },
+                    {
+                        id: 87,
+                        name: 'Pneumonia Recovery Support',
+                        type: 'Post-Infection Recovery',
+                        duration: '6-12 weeks',
+                        effectiveness: '84%',
+                        description: 'Support recovery and prevent complications after pneumonia',
+                        ingredients: ['Immune Boosters', 'Anti-inflammatory herbs', 'Respiratory tonics', 'Probiotics'],
+                        benefits: ['Faster recovery', 'Restored lung function', 'Better immunity', 'Reduced complications'],
+                        instructions: 'Use alongside medical treatment, get adequate rest, maintain nutrition',
+                        precautions: 'Use under medical supervision',
+                        price: '$95'
+                    },
+                    {
+                        id: 88,
+                        name: 'Sleep Apnea Breathing Support',
+                        type: 'Nighttime Breathing',
+                        duration: '8-16 weeks',
+                        effectiveness: '79%',
+                        description: 'Natural support for sleep apnea and nighttime breathing issues',
+                        ingredients: ['Magnesium', 'CoQ10', 'Anti-inflammatory herbs', 'Weight management support'],
+                        benefits: ['Better nighttime breathing', 'Improved sleep quality', 'Reduced snoring', 'Enhanced recovery'],
+                        instructions: 'Use alongside CPAP if prescribed, maintain healthy weight, sleep positioning',
+                        precautions: 'Work with sleep specialist',
+                        price: '$88'
+                    },
+                    {
+                        id: 89,
+                        name: 'Exercise-Induced Asthma Support',
+                        type: 'Athletic Respiratory Support',
+                        duration: '6-10 weeks',
+                        effectiveness: '86%',
+                        description: 'Support for exercise-induced breathing difficulties',
+                        ingredients: ['Magnesium', 'Quercetin', 'Vitamin C', 'Breathing enhancement herbs'],
+                        benefits: ['Better exercise tolerance', 'Reduced breathing difficulties', 'Improved performance', 'Enhanced recovery'],
+                        instructions: 'Take before exercise, warm up properly, use rescue inhaler if prescribed',
+                        precautions: 'Always carry rescue medication during exercise',
+                        price: '$68'
+                    },
+                    {
+                        id: 90,
+                        name: 'Vocal Cord & Throat Health',
+                        type: 'Voice Protection',
+                        duration: '4-8 weeks',
+                        effectiveness: '90%',
+                        description: 'Support for vocal cord health and throat protection',
+                        ingredients: ['Slippery Elm', 'Marshmallow Root', 'Honey', 'Anti-inflammatory herbs'],
+                        benefits: ['Protected vocal cords', 'Reduced throat irritation', 'Better voice quality', 'Faster recovery'],
+                        instructions: 'Take before voice use, stay hydrated, avoid throat irritants',
+                        precautions: 'Rest voice when experiencing problems',
+                        price: '$52'
+                    }
+                ]
+            },
+            'bone-joint': {
+                title: 'Bone & Joint Health Solutions',
+                icon: '🦴',
+                description: 'Comprehensive musculoskeletal health and mobility programs',
+                color: 'from-gray-500 to-slate-600',
+                cures: [
+                    {
+                        id: 91,
+                        name: 'Arthritis Pain Relief',
+                        type: 'Joint Inflammation Support',
+                        duration: '8-16 weeks',
+                        effectiveness: '88%',
+                        description: 'Natural relief for arthritis pain and inflammation',
+                        ingredients: ['Turmeric', 'Glucosamine', 'Chondroitin', 'MSM'],
+                        benefits: ['Reduced joint pain', 'Less inflammation', 'Better mobility', 'Improved quality of life'],
+                        instructions: 'Take with meals, maintain gentle exercise, apply heat/cold as needed',
+                        precautions: 'May interact with blood thinners',
+                        price: '$85'
+                    },
+                    {
+                        id: 92,
+                        name: 'Osteoporosis Prevention',
+                        type: 'Bone Density Support',
+                        duration: '12-24 weeks',
+                        effectiveness: '86%',
+                        description: 'Comprehensive bone health and osteoporosis prevention',
+                        ingredients: ['Calcium', 'Vitamin D3', 'Vitamin K2', 'Magnesium'],
+                        benefits: ['Stronger bones', 'Better bone density', 'Reduced fracture risk', 'Improved balance'],
+                        instructions: 'Take with meals, engage in weight-bearing exercise, get adequate sunlight',
+                        precautions: 'Monitor calcium levels to avoid excess',
+                        price: '$78'
+                    },
+                    {
+                        id: 93,
+                        name: 'Back Pain Relief Program',
+                        type: 'Spinal Support',
+                        duration: '6-12 weeks',
+                        effectiveness: '89%',
+                        description: 'Comprehensive approach to back pain relief and prevention',
+                        ingredients: ['Anti-inflammatory herbs', 'Muscle relaxants', 'Pain relief compounds', 'Nerve support'],
+                        benefits: ['Reduced back pain', 'Better mobility', 'Improved posture', 'Enhanced function'],
+                        instructions: 'Combine with physical therapy, maintain proper posture, use ergonomic support',
+                        precautions: 'Seek medical evaluation for severe or persistent pain',
+                        price: '$95'
+                    },
+                    {
+                        id: 94,
+                        name: 'Joint Mobility Enhancement',
+                        type: 'Flexibility Support',
+                        duration: '8-12 weeks',
+                        effectiveness: '87%',
+                        description: 'Improve joint flexibility and range of motion',
+                        ingredients: ['Hyaluronic Acid', 'Collagen', 'Flexibility herbs', 'Anti-inflammatory compounds'],
+                        benefits: ['Better joint flexibility', 'Improved range of motion', 'Reduced stiffness', 'Enhanced mobility'],
+                        instructions: 'Take daily, practice stretching, maintain regular movement',
+                        precautions: 'Start slowly and progress gradually',
+                        price: '$88'
+                    },
+                    {
+                        id: 95,
+                        name: 'Sports Injury Recovery',
+                        type: 'Athletic Recovery Support',
+                        duration: '4-12 weeks',
+                        effectiveness: '91%',
+                        description: 'Accelerated recovery from sports injuries',
+                        ingredients: ['Proteolytic Enzymes', 'Anti-inflammatory herbs', 'Tissue repair compounds', 'Pain relief'],
+                        benefits: ['Faster healing', 'Reduced inflammation', 'Less pain', 'Quicker return to activity'],
+                        instructions: 'Follow RICE protocol, take as directed, gradually return to activity',
+                        precautions: 'Seek medical evaluation for serious injuries',
+                        price: '$105'
+                    },
+                    {
+                        id: 96,
+                        name: 'Fibromyalgia Support',
+                        type: 'Chronic Pain Management',
+                        duration: '12-24 weeks',
+                        effectiveness: '82%',
+                        description: 'Comprehensive support for fibromyalgia symptoms',
+                        ingredients: ['Magnesium', 'Malic Acid', 'CoQ10', 'Sleep support herbs'],
+                        benefits: ['Reduced pain', 'Better sleep', 'Improved energy', 'Enhanced quality of life'],
+                        instructions: 'Take consistently, maintain gentle exercise, manage stress levels',
+                        precautions: 'Work with healthcare provider for comprehensive management',
+                        price: '$115'
+                    },
+                    {
+                        id: 97,
+                        name: 'Tendonitis Relief Formula',
+                        type: 'Tendon Support',
+                        duration: '6-10 weeks',
+                        effectiveness: '85%',
+                        description: 'Natural relief for tendonitis and tendon injuries',
+                        ingredients: ['Collagen', 'Anti-inflammatory herbs', 'Tissue repair compounds', 'Pain relief'],
+                        benefits: ['Reduced tendon pain', 'Faster healing', 'Better function', 'Prevented re-injury'],
+                        instructions: 'Rest affected area, apply ice, take consistently, gradually return to activity',
+                        precautions: 'Avoid aggravating activities during healing',
+                        price: '$72'
+                    },
+                    {
+                        id: 98,
+                        name: 'Gout Attack Prevention',
+                        type: 'Uric Acid Management',
+                        duration: '8-16 weeks',
+                        effectiveness: '89%',
+                        description: 'Natural prevention and management of gout attacks',
+                        ingredients: ['Cherry Extract', 'Quercetin', 'Celery Seed', 'Uric acid reducers'],
+                        benefits: ['Reduced gout attacks', 'Lower uric acid levels', 'Less joint pain', 'Improved mobility'],
+                        instructions: 'Take daily, avoid trigger foods, stay hydrated, limit alcohol',
+                        precautions: 'Monitor uric acid levels regularly',
+                        price: '$68'
+                    },
+                    {
+                        id: 99,
+                        name: 'Muscle Recovery & Repair',
+                        type: 'Muscle Support',
+                        duration: '4-8 weeks',
+                        effectiveness: '92%',
+                        description: 'Enhanced muscle recovery and repair after exercise',
+                        ingredients: ['Protein', 'BCAAs', 'Creatine', 'Recovery enhancers'],
+                        benefits: ['Faster muscle recovery', 'Reduced soreness', 'Better performance', 'Increased strength'],
+                        instructions: 'Take post-workout, maintain adequate protein intake, get sufficient rest',
+                        precautions: 'Adjust dosing based on training intensity',
+                        price: '$78'
+                    },
+                    {
+                        id: 100,
+                        name: 'Bone Fracture Healing Support',
+                        type: 'Bone Repair',
+                        duration: '8-16 weeks',
+                        effectiveness: '84%',
+                        description: 'Accelerated healing support for bone fractures',
+                        ingredients: ['Calcium', 'Vitamin D3', 'Bone healing herbs', 'Protein'],
+                        benefits: ['Faster bone healing', 'Stronger bone formation', 'Reduced healing time', 'Better recovery'],
+                        instructions: 'Take as directed, follow medical advice, maintain immobilization as needed',
+                        precautions: 'Use under medical supervision',
+                        price: '$95'
+                    }
+                ]
+            }
+        };
+
+        // Global variables
+        let currentUser = null;
+
+        // Initialize page
+        function initializePage() {
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('userName').textContent = `Welcome, ${currentUser.name}!`;
+            }
+        }
+
+        // Search functionality
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.classList.remove('active');
+                return;
+            }
+            
+            let results = [];
+            
+            // Search through all bundles and cures
+            Object.keys(wellnessBundles).forEach(bundleKey => {
+                const bundle = wellnessBundles[bundleKey];
+                
+                // Search bundle titles
+                if (bundle.title.toLowerCase().includes(searchTerm)) {
+                    results.push({
+                        type: 'bundle',
+                        title: bundle.title,
+                        description: bundle.description,
+                        key: bundleKey
+                    });
+                }
+                
+                // Search cure names
+                bundle.cures.forEach(cure => {
+                    if (cure.name.toLowerCase().includes(searchTerm) || 
+                        cure.description.toLowerCase().includes(searchTerm)) {
+                        results.push({
+                            type: 'cure',
+                            title: cure.name,
+                            description: cure.description,
+                            bundle: bundle.title,
+                            bundleKey: bundleKey,
+                            cureId: cure.id
+                        });
+                    }
+                });
+            });
+            
+            if (results.length > 0) {
+                resultsContainer.innerHTML = results.slice(0, 8).map(result => `
+                    <div class="p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100" 
+                         onclick="${result.type === 'bundle' ? `openBundle('${result.key}')` : `openCureFromSearch('${result.bundleKey}', ${result.cureId})`}">
+                        <div class="font-semibold text-blue-800">${result.title}</div>
+                        <div class="text-sm text-gray-600">${result.description.substring(0, 100)}...</div>
+                        ${result.type === 'cure' ? `<div class="text-xs text-blue-600 mt-1">in ${result.bundle}</div>` : ''}
+                    </div>
+                `).join('');
+                resultsContainer.classList.add('active');
+            } else {
+                resultsContainer.innerHTML = '<div class="p-4 text-gray-500">No results found</div>';
+                resultsContainer.classList.add('active');
+            }
+        }
+
+        // Open cure from search
+        function openCureFromSearch(bundleKey, cureId) {
+            document.getElementById('searchResults').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            
+            const bundle = wellnessBundles[bundleKey];
+            const cure = bundle.cures.find(c => c.id === cureId);
+            if (cure) {
+                viewCure(cure);
+            }
+        }
+
+        // Open bundle modal
+        function openBundle(bundleKey) {
+            const bundle = wellnessBundles[bundleKey];
+            if (!bundle) return;
+            
+            const modal = document.getElementById('bundleModal');
+            const content = document.getElementById('bundleContent');
+            
+            content.innerHTML = `
+                <div class="mb-8">
+                    <div class="flex items-center justify-center mb-6">
+                        <div class="w-24 h-24 bg-gradient-to-br ${bundle.color} rounded-full flex items-center justify-center text-4xl text-white shadow-2xl">
+                            ${bundle.icon}
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-display font-bold text-center gradient-text mb-4">${bundle.title}</h2>
+                    <p class="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-8">${bundle.description}</p>
+                    
+                    <div class="grid md:grid-cols-3 gap-6 mb-8">
+                        <div class="text-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl">
+                            <div class="text-3xl mb-2">💊</div>
+                            <div class="text-2xl font-bold text-blue-800">${bundle.cures.length}</div>
+                            <div class="text-sm text-blue-600">Treatment Options</div>
+                        </div>
+                        <div class="text-center p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl">
+                            <div class="text-3xl mb-2">⭐</div>
+                            <div class="text-2xl font-bold text-green-800">${Math.round(bundle.cures.reduce((acc, cure) => acc + parseInt(cure.effectiveness), 0) / bundle.cures.length)}%</div>
+                            <div class="text-sm text-green-600">Average Success Rate</div>
+                        </div>
+                        <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl">
+                            <div class="text-3xl mb-2">🌿</div>
+                            <div class="text-2xl font-bold text-purple-800">100%</div>
+                            <div class="text-sm text-purple-600">Natural Solutions</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="text-3xl font-bold text-gray-800 mb-6 text-center">Available Treatment Options</h3>
+                    <div class="cure-grid">
+                        ${bundle.cures.map(cure => `
+                            <div class="cure-card glass-effect rounded-3xl p-6 shadow-lg" onclick="viewCure(${JSON.stringify(cure).replace(/"/g, '&quot;')})">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="flex-1">
+                                        <h4 class="text-xl font-bold text-gray-800 mb-2">${cure.name}</h4>
+                                        <p class="text-sm text-blue-600 font-medium mb-2">${cure.type}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-2xl font-bold text-green-600">${cure.effectiveness}</div>
+                                        <div class="text-xs text-gray-500">Success Rate</div>
+                                    </div>
+                                </div>
+                                
+                                <p class="text-gray-600 mb-4">${cure.description}</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div class="text-center p-3 bg-blue-50 rounded-xl">
+                                        <div class="text-sm font-semibold text-blue-800">Duration</div>
+                                        <div class="text-lg font-bold text-blue-600">${cure.duration}</div>
+                                    </div>
+                                    <div class="text-center p-3 bg-green-50 rounded-xl">
+                                        <div class="text-sm font-semibold text-green-800">Price</div>
+                                        <div class="text-lg font-bold text-green-600">${cure.price}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h5 class="text-sm font-semibold text-gray-800 mb-2">Key Benefits:</h5>
+                                    <div class="flex flex-wrap gap-1">
+                                        ${cure.benefits.slice(0, 3).map(benefit => `
+                                            <span class="text-xs px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full">${benefit}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                
+                                <button class="w-full bg-gradient-to-r ${bundle.color} text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
+                                    View Full Details
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // View cure details
+        function viewCure(cure) {
+            const modal = document.getElementById('cureModal');
+            const content = document.getElementById('cureContent');
+            
+            content.innerHTML = `
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div>
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 mb-6 text-center">
+                            <div class="text-6xl mb-4">💊</div>
+                            <h2 class="text-3xl font-display font-bold text-gray-800 mb-2">${cure.name}</h2>
+                            <p class="text-lg text-blue-600 font-medium mb-4">${cure.type}</p>
+                            <div class="text-4xl font-bold text-green-600 mb-2">${cure.effectiveness}</div>
+                            <div class="text-sm text-gray-600">Success Rate</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 text-center">
+                                <div class="text-2xl mb-2">⏱️</div>
+                                <div class="text-lg font-bold text-blue-600">${cure.duration}</div>
+                                <div class="text-sm text-gray-600">Treatment Duration</div>
+                            </div>
+                            <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 text-center">
+                                <div class="text-2xl mb-2">💰</div>
+                                <div class="text-lg font-bold text-green-600">${cure.price}</div>
+                                <div class="text-sm text-gray-600">Investment</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mb-4">
+                            <h5 class="font-bold text-yellow-800 mb-2">⚠️ Important Precautions:</h5>
+                            <p class="text-sm text-yellow-700">${cure.precautions}</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button onclick="orderTreatment('${cure.name}')" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg">
+                                Order Treatment ${cure.price}
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4">Treatment Description</h3>
+                            <p class="text-gray-700 text-lg leading-relaxed">${cure.description}</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3">🧪 Key Ingredients</h4>
+                            <div class="grid grid-cols-2 gap-2">
+                                ${cure.ingredients.map(ingredient => `
+                                    <div class="flex items-center text-gray-700 bg-gray-50 rounded-lg p-2">
+                                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                                        ${ingredient}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3">💚 Health Benefits</h4>
+                            <div class="space-y-2">
+                                ${cure.benefits.map(benefit => `
+                                    <div class="flex items-center text-gray-700">
+                                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                                        ${benefit}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3">📋 Usage Instructions</h4>
+                            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4">
+                                <p class="text-blue-800">${cure.instructions}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6">
+                            <h4 class="text-xl font-bold text-purple-800 mb-3">🎯 Why Choose This Treatment?</h4>
+                            <ul class="space-y-2 text-purple-700">
+                                <li>✅ Clinically proven ingredients</li>
+                                <li>✅ Natural and safe approach</li>
+                                <li>✅ Comprehensive health support</li>
+                                <li>✅ Expert-formulated solution</li>
+                                <li>✅ Money-back guarantee</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Order treatment
+        function orderTreatment(treatmentName) {
+            showNotification(`Order placed for ${treatmentName}! You will be contacted within 24 hours.`, 'success');
+            closeCureModal();
+        }
+
+        // Close modals
+        function closeBundleModal() {
+            document.getElementById('bundleModal').classList.remove('active');
+        }
+
+        function closeCureModal() {
+            document.getElementById('cureModal').classList.remove('active');
+        }
+
+        // Show help
+        function showHelp() {
+            showNotification('Need help? Contact our wellness experts at support@wellnesshub.com or call 1-800-WELLNESS', 'info');
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-gradient-to-r from-green-500 to-emerald-500',
+                error: 'bg-gradient-to-r from-red-500 to-pink-500',
+                info: 'bg-gradient-to-r from-blue-500 to-indigo-500'
+            };
+            
+            notification.className = `fixed top-6 right-6 z-50 p-6 rounded-2xl shadow-lg max-w-sm text-white ${colors[type]}`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="flex-1 font-semibold">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white/80 hover:text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize page
+        window.addEventListener('load', initializePage);
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-bar')) {
+                document.getElementById('searchResults').classList.remove('active');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97f03334d4189139',t:'MTc1Nzg1NjIxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

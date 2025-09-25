@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayurveda Games - Interactive Wellness Learning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.1)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><pattern id="ayurveda" patternUnits="userSpaceOnUse" width="120" height="120"><rect width="120" height="120" fill="%23f0fdf4"/><text x="20" y="30" font-size="24" fill="%2322c55e">🌿</text><text x="70" y="30" font-size="24" fill="%233b82f6">🧘</text><text x="20" y="80" font-size="24" fill="%23f59e0b">⚕️</text><text x="70" y="80" font-size="24" fill="%239333ea">🎯</text></pattern></defs><rect width="100%" height="100%" fill="url(%23ayurveda)" opacity="0.3"/></svg>') center/cover;
+            min-height: 100vh;
+        }
+        
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #22c55e, #3b82f6, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .game-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .game-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .game-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 95vw;
+            max-height: 95vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .floating-score {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            z-index: 40;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .game-board {
+            display: grid;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card-flip {
+            perspective: 1000px;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        .card-flip.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        
+        .quiz-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .quiz-option:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quiz-option.correct {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+        
+        .quiz-option.incorrect {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #3b82f6);
+            transition: width 0.3s ease;
+        }
+        
+        .dosha-vata { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .dosha-pitta { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .dosha-kapha { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        
+        .herb-item {
+            transition: all 0.3s ease;
+            cursor: grab;
+        }
+        
+        .herb-item:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+        
+        .drop-zone {
+            min-height: 100px;
+            border: 2px dashed #d1d5db;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .meditation-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .meditation-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+        
+        .breathing-animation {
+            animation: breathe 4s ease-in-out infinite;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="glass-effect sticky top-0 z-40 border-b border-green-200">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.location.href='dashboard.html'" class="text-green-700 hover:text-green-500 transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="text-3xl font-display font-bold text-green-800">Ayurveda Games</h1>
+                        <p class="text-sm text-green-600 font-light">Interactive Wellness Learning Platform</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <div class="text-right">
+                        <p class="text-green-800 font-semibold" id="playerName">Welcome Wellness Seeker!</p>
+                        <p class="text-green-600 text-sm">Total Score: <span id="totalScore">0</span> points</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-12">
+        <div class="text-center mb-16">
+            <h2 class="text-6xl font-display font-bold text-green-800 mb-6">
+                Learn Ayurveda Through
+                <span class="gradient-text">Interactive Games</span>
+            </h2>
+            <p class="text-xl text-green-700 mb-8 max-w-4xl mx-auto">
+                Discover the ancient wisdom of Ayurveda through engaging games that teach you about doshas, 
+                herbs, meditation, and holistic wellness principles in a fun and interactive way.
+            </p>
+            
+            <!-- Player Stats -->
+            <div class="stats-grid mb-12">
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-2">🎮</div>
+                    <div class="text-3xl font-bold text-green-800" id="gamesPlayed">0</div>
+                    <div class="text-sm text-green-600">Games Played</div>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-2">🏆</div>
+                    <div class="text-3xl font-bold text-blue-800" id="highScore">0</div>
+                    <div class="text-sm text-blue-600">High Score</div>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-2">🌿</div>
+                    <div class="text-3xl font-bold text-purple-800" id="knowledgeLevel">Beginner</div>
+                    <div class="text-sm text-purple-600">Knowledge Level</div>
+                </div>
+                <div class="glass-effect rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-2">⭐</div>
+                    <div class="text-3xl font-bold text-yellow-600" id="achievements">0</div>
+                    <div class="text-sm text-yellow-600">Achievements</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games Grid -->
+        <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+            <!-- Game 1: Dosha Quiz Challenge -->
+            <div class="game-card glass-effect rounded-3xl p-8 shadow-lg" onclick="openGame('dosha-quiz')">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-4 pulse-animation">
+                        🧘
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Dosha Discovery Quiz</h3>
+                    <p class="text-gray-600">Discover your Ayurvedic constitution through interactive questions</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Learn about Vata, Pitta, and Kapha
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Personalized constitution analysis
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                        20 interactive questions
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold text-blue-600">Difficulty: Beginner</span>
+                    <span class="text-sm font-semibold text-green-600">Points: 100-500</span>
+                </div>
+                
+                <button class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:from-blue-600 hover:to-indigo-700 transition-all">
+                    Start Quiz Challenge
+                </button>
+            </div>
+
+            <!-- Game 2: Herb Memory Match -->
+            <div class="game-card glass-effect rounded-3xl p-8 shadow-lg" onclick="openGame('herb-memory')">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-4 pulse-animation">
+                        🌿
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Ayurvedic Herb Memory</h3>
+                    <p class="text-gray-600">Match herbs with their healing properties and benefits</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Learn 20+ medicinal herbs
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Memory and concentration training
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                        Multiple difficulty levels
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold text-blue-600">Difficulty: Medium</span>
+                    <span class="text-sm font-semibold text-green-600">Points: 200-800</span>
+                </div>
+                
+                <button class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-semibold hover:from-green-600 hover:to-emerald-700 transition-all">
+                    Play Memory Game
+                </button>
+            </div>
+
+            <!-- Game 3: Chakra Balancing -->
+            <div class="game-card glass-effect rounded-3xl p-8 shadow-lg" onclick="openGame('chakra-balance')">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-4 pulse-animation">
+                        🔮
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Chakra Balancing Game</h3>
+                    <p class="text-gray-600">Align and balance the seven chakras through interactive gameplay</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                        Learn about 7 main chakras
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Energy balancing techniques
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Meditation and mindfulness
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold text-blue-600">Difficulty: Advanced</span>
+                    <span class="text-sm font-semibold text-green-600">Points: 300-1000</span>
+                </div>
+                
+                <button class="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-700 transition-all">
+                    Balance Chakras
+                </button>
+            </div>
+
+            <!-- Game 4: Ayurvedic Recipe Master -->
+            <div class="game-card glass-effect rounded-3xl p-8 shadow-lg" onclick="openGame('recipe-master')">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-4 pulse-animation">
+                        🍲
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Recipe Master Chef</h3>
+                    <p class="text-gray-600">Create healing Ayurvedic recipes by combining the right ingredients</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                        Learn therapeutic cooking
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Dosha-specific recipes
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Seasonal ingredient matching
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold text-blue-600">Difficulty: Medium</span>
+                    <span class="text-sm font-semibold text-green-600">Points: 250-750</span>
+                </div>
+                
+                <button class="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-700 transition-all">
+                    Start Cooking
+                </button>
+            </div>
+
+            <!-- Game 5: Meditation Master -->
+            <div class="game-card glass-effect rounded-3xl p-8 shadow-lg" onclick="openGame('meditation-master')">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-4 pulse-animation">
+                        🧘‍♀️
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Meditation Master</h3>
+                    <p class="text-gray-600">Practice mindfulness and breathing techniques through guided games</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
+                        Breathing pattern training
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                        Mindfulness exercises
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Stress reduction techniques
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold text-blue-600">Difficulty: All Levels</span>
+                    <span class="text-sm font-semibold text-green-600">Points: 150-600</span>
+                </div>
+                
+                <button class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all">
+                    Begin Meditation
+                </button>
+            </div>
+
+            <!-- Game 6: Wellness Wheel -->
+            <div class="game-card glass-effect rounded-3xl p-8 shadow-lg" onclick="openGame('wellness-wheel')">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-4 pulse-animation">
+                        🎯
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Wellness Wheel Spinner</h3>
+                    <p class="text-gray-600">Spin the wheel to learn random Ayurvedic facts and tips</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-teal-500 rounded-full mr-3"></span>
+                        Daily wellness tips
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-cyan-500 rounded-full mr-3"></span>
+                        Random knowledge challenges
+                    </div>
+                    <div class="flex items-center text-sm text-gray-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Surprise bonus points
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold text-blue-600">Difficulty: Fun</span>
+                    <span class="text-sm font-semibold text-green-600">Points: 50-500</span>
+                </div>
+                
+                <button class="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white py-3 rounded-xl font-semibold hover:from-teal-600 hover:to-cyan-700 transition-all">
+                    Spin the Wheel
+                </button>
+            </div>
+        </div>
+
+        <!-- Learning Progress -->
+        <div class="glass-effect rounded-3xl p-8 mb-12">
+            <h3 class="text-3xl font-display font-bold text-center text-green-800 mb-8">
+                Your Ayurveda Learning Journey
+            </h3>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-2xl text-white mx-auto mb-4">
+                        🌱
+                    </div>
+                    <h4 class="text-xl font-bold text-green-800 mb-3">Beginner Level</h4>
+                    <p class="text-green-600">Learn basic Ayurvedic principles and dosha identification</p>
+                    <div class="progress-bar mt-4">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-2xl text-white mx-auto mb-4">
+                        🌿
+                    </div>
+                    <h4 class="text-xl font-bold text-blue-800 mb-3">Intermediate Level</h4>
+                    <p class="text-blue-600">Master herbs, recipes, and healing techniques</p>
+                    <div class="progress-bar mt-4">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-2xl text-white mx-auto mb-4">
+                        🏆
+                    </div>
+                    <h4 class="text-xl font-bold text-purple-800 mb-3">Expert Level</h4>
+                    <p class="text-purple-600">Advanced practices and holistic wellness mastery</p>
+                    <div class="progress-bar mt-4">
+                        <div class="progress-fill" style="width: 15%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Modals -->
+    
+    <!-- Dosha Quiz Modal -->
+    <div id="doshaQuizModal" class="game-modal">
+        <div class="game-content w-full max-w-4xl p-8">
+            <button onclick="closeGame()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="doshaQuizContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Herb Memory Modal -->
+    <div id="herbMemoryModal" class="game-modal">
+        <div class="game-content w-full max-w-5xl p-8">
+            <button onclick="closeGame()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="herbMemoryContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Chakra Balance Modal -->
+    <div id="chakraBalanceModal" class="game-modal">
+        <div class="game-content w-full max-w-4xl p-8">
+            <button onclick="closeGame()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="chakraBalanceContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Master Modal -->
+    <div id="recipeMasterModal" class="game-modal">
+        <div class="game-content w-full max-w-5xl p-8">
+            <button onclick="closeGame()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="recipeMasterContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Meditation Master Modal -->
+    <div id="meditationMasterModal" class="game-modal">
+        <div class="game-content w-full max-w-4xl p-8">
+            <button onclick="closeGame()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="meditationMasterContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Wellness Wheel Modal -->
+    <div id="wellnessWheelModal" class="game-modal">
+        <div class="game-content w-full max-w-4xl p-8">
+            <button onclick="closeGame()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-3xl font-bold z-10">×</button>
+            <div id="wellnessWheelContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Score Display -->
+    <div id="floatingScore" class="floating-score" style="display: none;">
+        Score: <span id="currentGameScore">0</span>
+    </div>
+
+    <script>
+        // Game data and state management
+        let gameState = {
+            totalScore: parseInt(localStorage.getItem('ayurvedaGameScore') || '0'),
+            gamesPlayed: parseInt(localStorage.getItem('ayurvedaGamesPlayed') || '0'),
+            highScore: parseInt(localStorage.getItem('ayurvedaHighScore') || '0'),
+            achievements: parseInt(localStorage.getItem('ayurvedaAchievements') || '0'),
+            currentGameScore: 0,
+            currentGame: null
+        };
+
+        // Dosha Quiz Data
+        const doshaQuestions = [
+            {
+                question: "What is your natural body build?",
+                options: [
+                    { text: "Thin, light frame", dosha: "vata", points: 2 },
+                    { text: "Medium, muscular build", dosha: "pitta", points: 2 },
+                    { text: "Large, heavy frame", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "How do you typically feel in cold weather?",
+                options: [
+                    { text: "Very uncomfortable, need warmth", dosha: "vata", points: 2 },
+                    { text: "Comfortable, enjoy the coolness", dosha: "pitta", points: 2 },
+                    { text: "Don't mind it much", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "What describes your appetite best?",
+                options: [
+                    { text: "Variable, sometimes forget to eat", dosha: "vata", points: 2 },
+                    { text: "Strong, get irritable when hungry", dosha: "pitta", points: 2 },
+                    { text: "Steady, can skip meals easily", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "How do you handle stress?",
+                options: [
+                    { text: "Become anxious and worried", dosha: "vata", points: 2 },
+                    { text: "Get angry and frustrated", dosha: "pitta", points: 2 },
+                    { text: "Withdraw and become sluggish", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "What's your sleep pattern like?",
+                options: [
+                    { text: "Light sleeper, wake up easily", dosha: "vata", points: 2 },
+                    { text: "Moderate sleep, wake up refreshed", dosha: "pitta", points: 2 },
+                    { text: "Deep sleeper, hard to wake up", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "How do you learn new things?",
+                options: [
+                    { text: "Quickly but forget easily", dosha: "vata", points: 2 },
+                    { text: "Moderately fast with good retention", dosha: "pitta", points: 2 },
+                    { text: "Slowly but remember for long time", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "What's your skin type?",
+                options: [
+                    { text: "Dry, rough, thin", dosha: "vata", points: 2 },
+                    { text: "Oily, warm, prone to rashes", dosha: "pitta", points: 2 },
+                    { text: "Thick, oily, smooth", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "How do you make decisions?",
+                options: [
+                    { text: "Quickly but change mind often", dosha: "vata", points: 2 },
+                    { text: "Decisively and stick to them", dosha: "pitta", points: 2 },
+                    { text: "Slowly after much consideration", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "What's your energy level like?",
+                options: [
+                    { text: "Comes in bursts, then crashes", dosha: "vata", points: 2 },
+                    { text: "Steady and intense", dosha: "pitta", points: 2 },
+                    { text: "Steady but slow to start", dosha: "kapha", points: 2 }
+                ]
+            },
+            {
+                question: "How do you prefer to exercise?",
+                options: [
+                    { text: "Light, varied activities", dosha: "vata", points: 2 },
+                    { text: "Competitive, intense workouts", dosha: "pitta", points: 2 },
+                    { text: "Slow, steady, gentle exercise", dosha: "kapha", points: 2 }
+                ]
+            }
+        ];
+
+        // Herb Memory Game Data
+        const herbPairs = [
+            { name: "Turmeric", benefit: "Anti-inflammatory", emoji: "🟡" },
+            { name: "Ashwagandha", benefit: "Stress Relief", emoji: "🌿" },
+            { name: "Ginger", benefit: "Digestive Aid", emoji: "🫚" },
+            { name: "Tulsi", benefit: "Respiratory Health", emoji: "🍃" },
+            { name: "Neem", benefit: "Skin Purifier", emoji: "🌱" },
+            { name: "Brahmi", benefit: "Memory Booster", emoji: "🧠" },
+            { name: "Triphala", benefit: "Detoxification", emoji: "🔄" },
+            { name: "Amla", benefit: "Vitamin C Rich", emoji: "🟢" },
+            { name: "Fenugreek", benefit: "Blood Sugar", emoji: "🌾" },
+            { name: "Cardamom", benefit: "Heart Health", emoji: "💚" }
+        ];
+
+        // Chakra Data
+        const chakras = [
+            { name: "Root Chakra", color: "#ff0000", element: "Earth", location: "Base of spine" },
+            { name: "Sacral Chakra", color: "#ff8c00", element: "Water", location: "Lower abdomen" },
+            { name: "Solar Plexus", color: "#ffd700", element: "Fire", location: "Upper abdomen" },
+            { name: "Heart Chakra", color: "#00ff00", element: "Air", location: "Center of chest" },
+            { name: "Throat Chakra", color: "#0080ff", element: "Space", location: "Throat" },
+            { name: "Third Eye", color: "#4b0082", element: "Light", location: "Between eyebrows" },
+            { name: "Crown Chakra", color: "#8b00ff", element: "Thought", location: "Top of head" }
+        ];
+
+        // Recipe ingredients
+        const recipeIngredients = {
+            vata: ["Ginger", "Cinnamon", "Cardamom", "Ghee", "Warm Milk", "Dates", "Almonds", "Sesame Oil"],
+            pitta: ["Coconut", "Cilantro", "Mint", "Cucumber", "Rose Water", "Fennel", "Lime", "Cooling Herbs"],
+            kapha: ["Black Pepper", "Turmeric", "Honey", "Ginger", "Garlic", "Mustard Seeds", "Chili", "Warming Spices"]
+        };
+
+        // Wellness wheel segments
+        const wellnessSegments = [
+            "Practice deep breathing for 5 minutes daily",
+            "Drink warm water with lemon in the morning",
+            "Eat according to your dosha type",
+            "Practice oil pulling with sesame oil",
+            "Do gentle yoga stretches",
+            "Meditate for 10 minutes daily",
+            "Go to bed before 10 PM",
+            "Eat your largest meal at lunch",
+            "Practice gratitude daily",
+            "Spend time in nature",
+            "Use natural skincare products",
+            "Practice mindful eating"
+        ];
+
+        // Initialize page
+        function initializePage() {
+            updateStats();
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('playerName').textContent = `Welcome, ${currentUser.name}!`;
+            }
+        }
+
+        // Update statistics display
+        function updateStats() {
+            document.getElementById('totalScore').textContent = gameState.totalScore;
+            document.getElementById('gamesPlayed').textContent = gameState.gamesPlayed;
+            document.getElementById('highScore').textContent = gameState.highScore;
+            document.getElementById('achievements').textContent = gameState.achievements;
+            
+            // Update knowledge level based on total score
+            let level = "Beginner";
+            if (gameState.totalScore > 2000) level = "Expert";
+            else if (gameState.totalScore > 1000) level = "Intermediate";
+            document.getElementById('knowledgeLevel').textContent = level;
+        }
+
+        // Save game state to localStorage
+        function saveGameState() {
+            localStorage.setItem('ayurvedaGameScore', gameState.totalScore.toString());
+            localStorage.setItem('ayurvedaGamesPlayed', gameState.gamesPlayed.toString());
+            localStorage.setItem('ayurvedaHighScore', gameState.highScore.toString());
+            localStorage.setItem('ayurvedaAchievements', gameState.achievements.toString());
+        }
+
+        // Open game modal
+        function openGame(gameType) {
+            gameState.currentGame = gameType;
+            gameState.currentGameScore = 0;
+            document.getElementById('floatingScore').style.display = 'block';
+            document.getElementById('currentGameScore').textContent = '0';
+            
+            switch(gameType) {
+                case 'dosha-quiz':
+                    openDoshaQuiz();
+                    break;
+                case 'herb-memory':
+                    openHerbMemory();
+                    break;
+                case 'chakra-balance':
+                    openChakraBalance();
+                    break;
+                case 'recipe-master':
+                    openRecipeMaster();
+                    break;
+                case 'meditation-master':
+                    openMeditationMaster();
+                    break;
+                case 'wellness-wheel':
+                    openWellnessWheel();
+                    break;
+            }
+        }
+
+        // Close game modal
+        function closeGame() {
+            document.querySelectorAll('.game-modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+            document.getElementById('floatingScore').style.display = 'none';
+            
+            if (gameState.currentGameScore > 0) {
+                gameState.totalScore += gameState.currentGameScore;
+                gameState.gamesPlayed++;
+                if (gameState.currentGameScore > gameState.highScore) {
+                    gameState.highScore = gameState.currentGameScore;
+                }
+                saveGameState();
+                updateStats();
+                showNotification(`Game completed! You earned ${gameState.currentGameScore} points!`, 'success');
+            }
+            
+            gameState.currentGame = null;
+            gameState.currentGameScore = 0;
+        }
+
+        // Update current game score
+        function updateGameScore(points) {
+            gameState.currentGameScore += points;
+            document.getElementById('currentGameScore').textContent = gameState.currentGameScore;
+        }
+
+        // Dosha Quiz Game
+        function openDoshaQuiz() {
+            const modal = document.getElementById('doshaQuizModal');
+            const content = document.getElementById('doshaQuizContent');
+            
+            let currentQuestion = 0;
+            let doshaScores = { vata: 0, pitta: 0, kapha: 0 };
+            
+            function showQuestion() {
+                if (currentQuestion >= doshaQuestions.length) {
+                    showResults();
+                    return;
+                }
+                
+                const question = doshaQuestions[currentQuestion];
+                content.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-display font-bold text-blue-800 mb-4">Dosha Discovery Quiz</h2>
+                        <div class="progress-bar mb-4">
+                            <div class="progress-fill" style="width: ${(currentQuestion / doshaQuestions.length) * 100}%"></div>
+                        </div>
+                        <p class="text-lg text-gray-600">Question ${currentQuestion + 1} of ${doshaQuestions.length}</p>
+                    </div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">${question.question}</h3>
+                        
+                        <div class="space-y-4">
+                            ${question.options.map((option, index) => `
+                                <div class="quiz-option p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500" onclick="selectAnswer('${option.dosha}', ${option.points})">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 border-2 border-gray-300 rounded-full mr-4 flex items-center justify-center">
+                                            ${String.fromCharCode(65 + index)}
+                                        </div>
+                                        <span class="text-lg">${option.text}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function selectAnswer(dosha, points) {
+                doshaScores[dosha] += points;
+                updateGameScore(10);
+                currentQuestion++;
+                setTimeout(showQuestion, 300);
+            }
+            
+            function showResults() {
+                const dominantDosha = Object.keys(doshaScores).reduce((a, b) => 
+                    doshaScores[a] > doshaScores[b] ? a : b
+                );
+                
+                const doshaInfo = {
+                    vata: {
+                        name: "Vata",
+                        description: "Air and Space elements. You are creative, energetic, and flexible.",
+                        tips: "Focus on warm, grounding foods and regular routines.",
+                        color: "from-blue-500 to-indigo-600"
+                    },
+                    pitta: {
+                        name: "Pitta", 
+                        description: "Fire and Water elements. You are focused, competitive, and intelligent.",
+                        tips: "Choose cooling foods and avoid excessive heat.",
+                        color: "from-orange-500 to-red-600"
+                    },
+                    kapha: {
+                        name: "Kapha",
+                        description: "Earth and Water elements. You are calm, stable, and nurturing.",
+                        tips: "Incorporate warming spices and regular exercise.",
+                        color: "from-green-500 to-emerald-600"
+                    }
+                };
+                
+                const info = doshaInfo[dominantDosha];
+                updateGameScore(50); // Bonus for completion
+                
+                content.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-3xl font-display font-bold text-gray-800 mb-6">Your Dosha Results</h2>
+                        
+                        <div class="bg-gradient-to-br ${info.color} rounded-3xl p-8 text-white mb-8">
+                            <div class="text-6xl mb-4">🧘</div>
+                            <h3 class="text-4xl font-bold mb-4">You are primarily ${info.name}</h3>
+                            <p class="text-xl mb-4">${info.description}</p>
+                            <p class="text-lg">${info.tips}</p>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-3 gap-4 mb-8">
+                            <div class="dosha-vata rounded-2xl p-4 text-white">
+                                <h4 class="font-bold">Vata</h4>
+                                <div class="text-2xl font-bold">${doshaScores.vata}</div>
+                            </div>
+                            <div class="dosha-pitta rounded-2xl p-4 text-white">
+                                <h4 class="font-bold">Pitta</h4>
+                                <div class="text-2xl font-bold">${doshaScores.pitta}</div>
+                            </div>
+                            <div class="dosha-kapha rounded-2xl p-4 text-white">
+                                <h4 class="font-bold">Kapha</h4>
+                                <div class="text-2xl font-bold">${doshaScores.kapha}</div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="closeGame()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all">
+                            Complete Quiz
+                        </button>
+                    </div>
+                `;
+            }
+            
+            window.selectAnswer = selectAnswer;
+            showQuestion();
+            modal.classList.add('active');
+        }
+
+        // Herb Memory Game
+        function openHerbMemory() {
+            const modal = document.getElementById('herbMemoryModal');
+            const content = document.getElementById('herbMemoryContent');
+            
+            let gameCards = [];
+            let flippedCards = [];
+            let matchedPairs = 0;
+            let moves = 0;
+            
+            // Create card pairs
+            herbPairs.slice(0, 6).forEach(herb => {
+                gameCards.push({ type: 'name', content: herb.name, id: herb.name });
+                gameCards.push({ type: 'benefit', content: herb.benefit, id: herb.name });
+            });
+            
+            // Shuffle cards
+            gameCards = gameCards.sort(() => Math.random() - 0.5);
+            
+            function renderGame() {
+                content.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-display font-bold text-green-800 mb-4">Ayurvedic Herb Memory</h2>
+                        <div class="flex justify-center space-x-8 mb-4">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-600">${moves}</div>
+                                <div class="text-sm text-gray-600">Moves</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-green-600">${matchedPairs}/6</div>
+                                <div class="text-sm text-gray-600">Matches</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="game-board" style="grid-template-columns: repeat(4, 1fr);">
+                        ${gameCards.map((card, index) => `
+                            <div class="card-flip ${flippedCards.includes(index) || card.matched ? 'flipped' : ''}" onclick="flipCard(${index})">
+                                <div class="card-inner">
+                                    <div class="card-front bg-gradient-to-br from-green-500 to-emerald-600 text-white">
+                                        <div class="text-3xl">🌿</div>
+                                    </div>
+                                    <div class="card-back ${card.type === 'name' ? 'bg-blue-100' : 'bg-green-100'}">
+                                        <div class="text-sm font-bold text-gray-800">${card.content}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${matchedPairs === 6 ? `
+                        <div class="text-center mt-8">
+                            <h3 class="text-2xl font-bold text-green-800 mb-4">Congratulations! 🎉</h3>
+                            <p class="text-lg text-gray-600 mb-4">You matched all herbs in ${moves} moves!</p>
+                            <button onclick="closeGame()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-2xl font-bold">
+                                Complete Game
+                            </button>
+                        </div>
+                    ` : ''}
+                `;
+            }
+            
+            function flipCard(index) {
+                if (flippedCards.length >= 2 || flippedCards.includes(index) || gameCards[index].matched) {
+                    return;
+                }
+                
+                flippedCards.push(index);
+                
+                if (flippedCards.length === 2) {
+                    moves++;
+                    const card1 = gameCards[flippedCards[0]];
+                    const card2 = gameCards[flippedCards[1]];
+                    
+                    if (card1.id === card2.id) {
+                        // Match found
+                        card1.matched = true;
+                        card2.matched = true;
+                        matchedPairs++;
+                        updateGameScore(50);
+                        flippedCards = [];
+                    } else {
+                        // No match
+                        setTimeout(() => {
+                            flippedCards = [];
+                            renderGame();
+                        }, 1000);
+                    }
+                }
+                
+                renderGame();
+            }
+            
+            window.flipCard = flipCard;
+            renderGame();
+            modal.classList.add('active');
+        }
+
+        // Chakra Balance Game
+        function openChakraBalance() {
+            const modal = document.getElementById('chakraBalanceModal');
+            const content = document.getElementById('chakraBalanceContent');
+            
+            let balancedChakras = [];
+            let currentChakra = 0;
+            
+            function renderChakraGame() {
+                content.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-display font-bold text-purple-800 mb-4">Chakra Balancing</h2>
+                        <p class="text-lg text-gray-600 mb-6">Click on each chakra to balance your energy centers</p>
+                        <div class="text-xl font-bold text-purple-600">Balanced: ${balancedChakras.length}/7</div>
+                    </div>
+                    
+                    <div class="max-w-md mx-auto">
+                        ${chakras.map((chakra, index) => `
+                            <div class="flex items-center mb-4 p-4 rounded-2xl transition-all ${balancedChakras.includes(index) ? 'bg-green-100 border-2 border-green-500' : 'bg-gray-100 hover:bg-gray-200 cursor-pointer'}" 
+                                 onclick="balanceChakra(${index})" style="border-left: 8px solid ${chakra.color}">
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-gray-800">${chakra.name}</h3>
+                                    <p class="text-sm text-gray-600">${chakra.location} • ${chakra.element}</p>
+                                </div>
+                                <div class="text-2xl">
+                                    ${balancedChakras.includes(index) ? '✅' : '⚪'}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    ${balancedChakras.length === 7 ? `
+                        <div class="text-center mt-8">
+                            <h3 class="text-2xl font-bold text-purple-800 mb-4">Perfect Balance Achieved! 🌟</h3>
+                            <p class="text-lg text-gray-600 mb-4">All your chakras are now balanced and aligned!</p>
+                            <button onclick="closeGame()" class="bg-gradient-to-r from-purple-500 to-pink-600 text-white px-8 py-4 rounded-2xl font-bold">
+                                Complete Balancing
+                            </button>
+                        </div>
+                    ` : ''}
+                `;
+            }
+            
+            function balanceChakra(index) {
+                if (!balancedChakras.includes(index)) {
+                    balancedChakras.push(index);
+                    updateGameScore(30);
+                    renderChakraGame();
+                }
+            }
+            
+            window.balanceChakra = balanceChakra;
+            renderChakraGame();
+            modal.classList.add('active');
+        }
+
+        // Recipe Master Game
+        function openRecipeMaster() {
+            const modal = document.getElementById('recipeMasterModal');
+            const content = document.getElementById('recipeMasterContent');
+            
+            let currentDosha = Object.keys(recipeIngredients)[Math.floor(Math.random() * 3)];
+            let selectedIngredients = [];
+            let correctIngredients = recipeIngredients[currentDosha];
+            
+            function renderRecipeGame() {
+                const allIngredients = [...recipeIngredients.vata, ...recipeIngredients.pitta, ...recipeIngredients.kapha];
+                const shuffledIngredients = [...new Set(allIngredients)].sort(() => Math.random() - 0.5);
+                
+                content.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-display font-bold text-orange-800 mb-4">Recipe Master Chef</h2>
+                        <p class="text-lg text-gray-600 mb-4">Create a healing recipe for <strong>${currentDosha.toUpperCase()}</strong> dosha</p>
+                        <div class="text-lg font-bold text-orange-600">Selected: ${selectedIngredients.length} ingredients</div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Available Ingredients</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                ${shuffledIngredients.map(ingredient => `
+                                    <div class="herb-item p-3 border-2 border-gray-200 rounded-xl text-center cursor-pointer hover:border-orange-500 ${selectedIngredients.includes(ingredient) ? 'bg-orange-100 border-orange-500' : ''}" 
+                                         onclick="toggleIngredient('${ingredient}')">
+                                        <div class="font-semibold">${ingredient}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Your Recipe</h3>
+                            <div class="drop-zone p-6 bg-gray-50 rounded-2xl min-h-48">
+                                ${selectedIngredients.length > 0 ? `
+                                    <div class="space-y-2">
+                                        ${selectedIngredients.map(ingredient => `
+                                            <div class="flex items-center justify-between bg-white p-2 rounded-lg">
+                                                <span>${ingredient}</span>
+                                                <button onclick="removeIngredient('${ingredient}')" class="text-red-500 hover:text-red-700">×</button>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : `
+                                    <div class="text-center text-gray-500">
+                                        <div class="text-4xl mb-2">🍲</div>
+                                        <p>Select ingredients to create your recipe</p>
+                                    </div>
+                                `}
+                            </div>
+                            
+                            ${selectedIngredients.length >= 3 ? `
+                                <button onclick="checkRecipe()" class="w-full mt-4 bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 rounded-xl font-bold">
+                                    Check Recipe
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function toggleIngredient(ingredient) {
+                if (selectedIngredients.includes(ingredient)) {
+                    selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+                } else {
+                    selectedIngredients.push(ingredient);
+                }
+                renderRecipeGame();
+            }
+            
+            function removeIngredient(ingredient) {
+                selectedIngredients = selectedIngredients.filter(i => i !== ingredient);
+                renderRecipeGame();
+            }
+            
+            function checkRecipe() {
+                const correctCount = selectedIngredients.filter(ingredient => 
+                    correctIngredients.includes(ingredient)
+                ).length;
+                
+                const score = correctCount * 20;
+                updateGameScore(score);
+                
+                content.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-3xl font-display font-bold text-orange-800 mb-6">Recipe Results</h2>
+                        
+                        <div class="bg-gradient-to-br from-orange-100 to-red-100 rounded-3xl p-8 mb-8">
+                            <div class="text-6xl mb-4">🍲</div>
+                            <h3 class="text-2xl font-bold text-orange-800 mb-4">
+                                You got ${correctCount}/${correctIngredients.length} ingredients correct!
+                            </h3>
+                            <p class="text-lg text-gray-700 mb-4">Score: ${score} points</p>
+                            
+                            <div class="text-left max-w-md mx-auto">
+                                <h4 class="font-bold text-gray-800 mb-2">Perfect ${currentDosha.toUpperCase()} ingredients:</h4>
+                                <div class="grid grid-cols-2 gap-2">
+                                    ${correctIngredients.map(ingredient => `
+                                        <div class="text-sm p-2 bg-white rounded-lg ${selectedIngredients.includes(ingredient) ? 'text-green-600 font-bold' : 'text-gray-600'}">
+                                            ${selectedIngredients.includes(ingredient) ? '✅' : '•'} ${ingredient}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="closeGame()" class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-8 py-4 rounded-2xl font-bold">
+                            Complete Cooking
+                        </button>
+                    </div>
+                `;
+            }
+            
+            window.toggleIngredient = toggleIngredient;
+            window.removeIngredient = removeIngredient;
+            window.checkRecipe = checkRecipe;
+            
+            renderRecipeGame();
+            modal.classList.add('active');
+        }
+
+        // Meditation Master Game
+        function openMeditationMaster() {
+            const modal = document.getElementById('meditationMasterModal');
+            const content = document.getElementById('meditationMasterContent');
+            
+            let breathingPhase = 'inhale';
+            let breathCount = 0;
+            let isActive = false;
+            let timer = null;
+            
+            function renderMeditationGame() {
+                content.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-3xl font-display font-bold text-indigo-800 mb-6">Meditation Master</h2>
+                        <p class="text-lg text-gray-600 mb-8">Follow the breathing circle to practice mindful breathing</p>
+                        
+                        <div class="meditation-circle ${isActive ? 'breathing-animation' : ''} mb-8" onclick="toggleMeditation()">
+                            <div class="text-center text-white">
+                                <div class="text-4xl mb-2">🧘‍♀️</div>
+                                <div class="text-xl font-bold">${isActive ? breathingPhase.toUpperCase() : 'START'}</div>
+                                <div class="text-sm">${isActive ? `Breath ${breathCount}` : 'Click to begin'}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 mb-8">
+                            <div class="bg-blue-50 rounded-2xl p-6 text-center">
+                                <div class="text-3xl mb-2">💨</div>
+                                <div class="text-2xl font-bold text-blue-600">${breathCount}</div>
+                                <div class="text-sm text-blue-600">Breaths Completed</div>
+                            </div>
+                            <div class="bg-green-50 rounded-2xl p-6 text-center">
+                                <div class="text-3xl mb-2">⏱️</div>
+                                <div class="text-2xl font-bold text-green-600">${Math.floor(breathCount * 8 / 60)}:${String(Math.floor(breathCount * 8) % 60).padStart(2, '0')}</div>
+                                <div class="text-sm text-green-600">Time Meditated</div>
+                            </div>
+                            <div class="bg-purple-50 rounded-2xl p-6 text-center">
+                                <div class="text-3xl mb-2">🎯</div>
+                                <div class="text-2xl font-bold text-purple-600">${Math.min(breathCount * 5, 500)}</div>
+                                <div class="text-sm text-purple-600">Points Earned</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-6 mb-8">
+                            <h3 class="text-xl font-bold text-indigo-800 mb-4">Breathing Instructions</h3>
+                            <div class="text-left space-y-2 text-gray-700">
+                                <p>• Click the circle to start your meditation session</p>
+                                <p>• Follow the circle's expansion and contraction</p>
+                                <p>• Inhale when it grows, exhale when it shrinks</p>
+                                <p>• Complete at least 10 breaths for maximum benefit</p>
+                            </div>
+                        </div>
+                        
+                        ${breathCount >= 10 ? `
+                            <button onclick="completeMeditation()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold text-lg">
+                                Complete Meditation Session
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            function toggleMeditation() {
+                if (!isActive) {
+                    startMeditation();
+                } else {
+                    stopMeditation();
+                }
+            }
+            
+            function startMeditation() {
+                isActive = true;
+                breathingPhase = 'inhale';
+                
+                timer = setInterval(() => {
+                    if (breathingPhase === 'inhale') {
+                        breathingPhase = 'exhale';
+                    } else {
+                        breathingPhase = 'inhale';
+                        breathCount++;
+                        updateGameScore(5);
+                    }
+                    renderMeditationGame();
+                }, 4000);
+                
+                renderMeditationGame();
+            }
+            
+            function stopMeditation() {
+                isActive = false;
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+                renderMeditationGame();
+            }
+            
+            function completeMeditation() {
+                stopMeditation();
+                updateGameScore(50); // Bonus for completion
+                
+                content.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-3xl font-display font-bold text-indigo-800 mb-6">Meditation Complete! 🧘‍♀️</h2>
+                        
+                        <div class="bg-gradient-to-br from-indigo-100 to-purple-100 rounded-3xl p-8 mb-8">
+                            <div class="text-6xl mb-4">🌟</div>
+                            <h3 class="text-2xl font-bold text-indigo-800 mb-4">
+                                Wonderful meditation session!
+                            </h3>
+                            <p class="text-lg text-gray-700 mb-4">
+                                You completed ${breathCount} mindful breaths in ${Math.floor(breathCount * 8 / 60)} minutes and ${Math.floor(breathCount * 8) % 60} seconds.
+                            </p>
+                            <p class="text-lg text-indigo-600 font-semibold">
+                                Total Points Earned: ${Math.min(breathCount * 5 + 50, 550)}
+                            </p>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-6 mb-8">
+                            <h4 class="text-xl font-bold text-indigo-800 mb-4">Benefits of Your Practice:</h4>
+                            <div class="grid md:grid-cols-2 gap-4 text-left">
+                                <div class="space-y-2">
+                                    <p class="text-gray-700">✅ Reduced stress and anxiety</p>
+                                    <p class="text-gray-700">✅ Improved focus and clarity</p>
+                                    <p class="text-gray-700">✅ Better emotional regulation</p>
+                                </div>
+                                <div class="space-y-2">
+                                    <p class="text-gray-700">✅ Enhanced self-awareness</p>
+                                    <p class="text-gray-700">✅ Improved sleep quality</p>
+                                    <p class="text-gray-700">✅ Increased mindfulness</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button onclick="closeGame()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-8 py-4 rounded-2xl font-bold">
+                            Complete Session
+                        </button>
+                    </div>
+                `;
+            }
+            
+            window.toggleMeditation = toggleMeditation;
+            window.completeMeditation = completeMeditation;
+            
+            renderMeditationGame();
+            modal.classList.add('active');
+        }
+
+        // Wellness Wheel Game
+        function openWellnessWheel() {
+            const modal = document.getElementById('wellnessWheelModal');
+            const content = document.getElementById('wellnessWheelContent');
+            
+            let isSpinning = false;
+            let spinsLeft = 3;
+            
+            function renderWheelGame() {
+                content.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-3xl font-display font-bold text-teal-800 mb-6">Wellness Wheel Spinner</h2>
+                        <p class="text-lg text-gray-600 mb-8">Spin the wheel to discover wellness tips and earn points!</p>
+                        
+                        <div class="relative mb-8">
+                            <div class="w-80 h-80 mx-auto relative">
+                                <svg class="w-full h-full ${isSpinning ? 'animate-spin' : ''}" viewBox="0 0 200 200">
+                                    ${wellnessSegments.map((segment, index) => {
+                                        const angle = (360 / wellnessSegments.length) * index;
+                                        const nextAngle = (360 / wellnessSegments.length) * (index + 1);
+                                        const color = `hsl(${angle}, 70%, 60%)`;
+                                        
+                                        return `
+                                            <path d="M 100 100 L ${100 + 90 * Math.cos((angle - 90) * Math.PI / 180)} ${100 + 90 * Math.sin((angle - 90) * Math.PI / 180)} A 90 90 0 0 1 ${100 + 90 * Math.cos((nextAngle - 90) * Math.PI / 180)} ${100 + 90 * Math.sin((nextAngle - 90) * Math.PI / 180)} Z" 
+                                                  fill="${color}" 
+                                                  stroke="white" 
+                                                  stroke-width="2"/>
+                                        `;
+                                    }).join('')}
+                                </svg>
+                                
+                                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white rounded-full border-4 border-teal-500 flex items-center justify-center cursor-pointer ${isSpinning ? 'pointer-events-none' : ''}" onclick="spinWheel()">
+                                    <div class="text-center">
+                                        <div class="text-2xl">🎯</div>
+                                        <div class="text-xs font-bold">SPIN</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2">
+                                    <div class="w-0 h-0 border-l-4 border-r-4 border-b-8 border-l-transparent border-r-transparent border-b-red-500"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 mb-8">
+                            <div class="bg-teal-50 rounded-2xl p-6 text-center">
+                                <div class="text-3xl mb-2">🎲</div>
+                                <div class="text-2xl font-bold text-teal-600">${3 - spinsLeft}</div>
+                                <div class="text-sm text-teal-600">Spins Used</div>
+                            </div>
+                            <div class="bg-blue-50 rounded-2xl p-6 text-center">
+                                <div class="text-3xl mb-2">🎯</div>
+                                <div class="text-2xl font-bold text-blue-600">${spinsLeft}</div>
+                                <div class="text-sm text-blue-600">Spins Left</div>
+                            </div>
+                            <div class="bg-green-50 rounded-2xl p-6 text-center">
+                                <div class="text-3xl mb-2">💎</div>
+                                <div class="text-2xl font-bold text-green-600">${gameState.currentGameScore}</div>
+                                <div class="text-sm text-green-600">Points Earned</div>
+                            </div>
+                        </div>
+                        
+                        ${spinsLeft === 0 ? `
+                            <button onclick="closeGame()" class="bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-8 py-4 rounded-2xl font-bold text-lg">
+                                Complete Wheel Game
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            function spinWheel() {
+                if (isSpinning || spinsLeft === 0) return;
+                
+                isSpinning = true;
+                spinsLeft--;
+                
+                const randomIndex = Math.floor(Math.random() * wellnessSegments.length);
+                const selectedTip = wellnessSegments[randomIndex];
+                const points = Math.floor(Math.random() * 100) + 50;
+                
+                updateGameScore(points);
+                
+                setTimeout(() => {
+                    isSpinning = false;
+                    showWheelResult(selectedTip, points);
+                }, 3000);
+                
+                renderWheelGame();
+            }
+            
+            function showWheelResult(tip, points) {
+                content.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-3xl font-display font-bold text-teal-800 mb-6">Wellness Tip Revealed!</h2>
+                        
+                        <div class="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-3xl p-8 mb-8">
+                            <div class="text-6xl mb-4">🌟</div>
+                            <h3 class="text-2xl font-bold text-teal-800 mb-4">Today's Wellness Wisdom</h3>
+                            <p class="text-xl text-gray-700 mb-4">"${tip}"</p>
+                            <p class="text-lg text-teal-600 font-semibold">+${points} points earned!</p>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl p-6 mb-8">
+                            <h4 class="text-xl font-bold text-teal-800 mb-4">Why This Matters:</h4>
+                            <p class="text-gray-700 text-left">
+                                This Ayurvedic principle helps balance your doshas and promotes overall wellness. 
+                                Try incorporating this practice into your daily routine for optimal health benefits.
+                            </p>
+                        </div>
+                        
+                        ${spinsLeft > 0 ? `
+                            <button onclick="renderWheelGame()" class="bg-gradient-to-r from-teal-500 to-cyan-600 text-white px-8 py-4 rounded-2xl font-bold text-lg mr-4">
+                                Spin Again (${spinsLeft} left)
+                            </button>
+                        ` : ''}
+                        
+                        <button onclick="closeGame()" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg">
+                            ${spinsLeft > 0 ? 'Finish Game' : 'Complete Game'}
+                        </button>
+                    </div>
+                `;
+            }
+            
+            window.spinWheel = spinWheel;
+            
+            renderWheelGame();
+            modal.classList.add('active');
+        }
+
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-gradient-to-r from-green-500 to-emerald-500',
+                error: 'bg-gradient-to-r from-red-500 to-pink-500',
+                info: 'bg-gradient-to-r from-blue-500 to-indigo-500'
+            };
+            
+            notification.className = `fixed top-6 right-6 z-50 p-6 rounded-2xl shadow-lg max-w-sm text-white ${colors[type]} bounce-in`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <div class="flex-1 font-semibold">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-white/80 hover:text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Initialize page
+        window.addEventListener('load', initializePage);
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('game-modal')) {
+                closeGame();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97f03e4bf3527e81',t:'MTc1Nzg1NjY3My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
